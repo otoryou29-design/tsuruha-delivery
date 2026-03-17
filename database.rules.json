@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "deliveryStatus": {
+      ".read": true,
+      "$date": {
+        "$storeId": {
+          ".write": true
+        }
+      }
+    },
+    "drivers": {
+      ".read": true,
+      "$driverId": {
+        ".write": true
+      }
+    }
+  }
+}
