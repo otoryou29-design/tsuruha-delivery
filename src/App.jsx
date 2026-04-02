@@ -46,7 +46,7 @@ export default function App() {
 
       {/* ── ヒーロー（画像の文字を活かす・画面高さに合わせる） */}
       <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
-        <img src={HERO} alt="私たちは、挑戦する。お客様に感動と豊かさを届けるために。" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+        <img src={HERO} alt="音川青果ヒーロー画像" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 70%", transform: "scale(1.4)", transformOrigin: "center 70%" }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.55) 100%)", padding: "80px 24px 36px", textAlign: "center" }}>
           <p style={{ fontSize: 18, color: "#fff", marginBottom: 20, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700 }}>
             福島県内ツルハドラッグ様への販売を行っております。
