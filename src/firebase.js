@@ -50,4 +50,15 @@ export async function getStoresFromFirebase() {
   return snap.val();
 }
 
+// --- Tokubai (お買い得情報) ---
+export function onTokubaiChange(callback) {
+  return onValue(ref(db, "tokubai"), (snap) => {
+    callback(snap.val() || []);
+  });
+}
+
+export function setTokubaiItems(items) {
+  return set(ref(db, "tokubai"), items);
+}
+
 export { db, ref, set, onValue, update, get };

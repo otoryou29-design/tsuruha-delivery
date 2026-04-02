@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomerView from "./components/CustomerView";
+import { onTokubaiChange } from "./firebase";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
 const HERO = "/hero-team.png";
@@ -7,8 +8,8 @@ const FAMILY = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachme
 const INSTAGRAM = "/otokawa-instagram.jpg";
 const TOMATO = "/tomato-kun.png";
 
-/* ── お買い得商品データ（手動で追加・編集） */
-const TOKUBAI_ITEMS = [
+/* ── お買い得商品データ（Firebaseから取得、フォールバック用） */
+const TOKUBAI_FALLBACK = [
   { name: "キャベツ", price: 98, unit: "1玉", tag: "特価" },
   { name: "いちご（とちおとめ）", price: 498, unit: "1パック", tag: "旬" },
   { name: "トマト", price: 128, unit: "1個", tag: "特価" },
@@ -22,10 +23,20 @@ const LIVE_BANNER = "郡山エリア 配送中 — まもなく納品開始で�
 
 export default function App() {
   const [page, setPage] = useState("home");
-  const [contactForm, setContactForm] = useState({ company: "", category: "生産者", message: "" });
+  const [contactType, setContactType] = useState("business"); // "business" | "recruit"
+  const [contactForm, setContactForm] = useState({ company: "", category: "生産者", message: "", name: "", age: "", gender: "女性", email: "", interviewDate: "" });
   const [contactSent, setContactSent] = useState(false);
   const [showNakaoroshi, setShowNakaoroshi] = useState(false);
   const [showNogyo, setShowNogyo] = useState(false);
+  const [tokubaiItems, setTokubaiItems] = useState(TOKUBAI_FALLBACK);
+
+  useEffect(() => {
+    const unsub = onTokubaiChange((items) => {
+      const arr = Array.isArray(items) ? items : Object.values(items || {});
+      if (arr.length > 0) setTokubaiItems(arr);
+    });
+    return () => unsub();
+  }, []);
 
   if (page === "delivery") {
     return (
@@ -156,12 +167,11 @@ export default function App() {
       </section>
 
       {/* ── その他の事業 */}
-      <section id="business" style={{ position: "relative", padding: "80px 24px", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${G} 0%, #2d5a3a 100%)` }} />
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 900, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.7)", letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>BUSINESS</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12, color: "#fff" }}>その他の事業</h2>
-          <p style={{ textAlign: "center", fontSize: 14, color: "rgba(255,255,255,.7)", marginBottom: 40 }}>音川青果は、農業から中卸まで、幅広い事業で食材の流通を支えています。</p>
+      <section id="business" style={{ padding: "80px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>BUSINESS</p>
+          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12, color: "#1a1a1a" }}>その他の事業</h2>
+          <p style={{ textAlign: "center", fontSize: 14, color: "#64748b", marginBottom: 40 }}>音川青果は、農業から中卸まで、幅広い事業で食材の流通を支えています。</p>
           <style>{`@keyframes blink-green { 0%,100%{box-shadow:0 0 0 0 rgba(74,124,89,.4)} 50%{box-shadow:0 0 16px 4px rgba(74,124,89,.3)} } @keyframes blink-red { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)} 50%{box-shadow:0 0 16px 4px rgba(220,38,38,.3)} }`}</style>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
             {/* 農業事業 */}
@@ -224,7 +234,7 @@ export default function App() {
           <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12 }}>お買い得情報</h2>
           <p style={{ textAlign: "center", fontSize: 13, color: "#94a3b8", marginBottom: 24 }}>本日のおすすめ商品</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {TOKUBAI_ITEMS.map((item, i) => (
+            {tokubaiItems.map((item, i) => (
               <div key={i} style={{ background: "#fff", border: "1.5px solid #e5e7eb", borderRadius: 10, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   {item.tag && (
@@ -308,15 +318,27 @@ export default function App() {
       <section id="contact" style={{ padding: "72px 24px", background: BG2 }}>
         <div style={{ maxWidth: 560, margin: "0 auto" }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>CONTACT</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 32 }}>お問い合わせ</h2>
+          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 20 }}>お問い合わせ</h2>
+
+          {/* タブ切替 */}
+          <div style={{ display: "flex", gap: 0, marginBottom: 24, borderRadius: 8, overflow: "hidden", border: "1.5px solid #d1d5db" }}>
+            <button onClick={() => setContactType("business")} style={{ flex: 1, padding: "12px", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", background: contactType === "business" ? G : "#fff", color: contactType === "business" ? "#fff" : "#64748b" }}>
+              取引・一般のお問い合わせ
+            </button>
+            <button onClick={() => setContactType("recruit")} style={{ flex: 1, padding: "12px", border: "none", borderLeft: "1px solid #d1d5db", fontSize: 13, fontWeight: 700, cursor: "pointer", background: contactType === "recruit" ? G : "#fff", color: contactType === "recruit" ? "#fff" : "#64748b" }}>
+              面接・採用応募
+            </button>
+          </div>
 
           {contactSent ? (
             <div style={{ textAlign: "center", padding: "40px 24px", background: "#fff", borderRadius: 12 }}>
               <div style={{ fontSize: 36, marginBottom: 12 }}>✓</div>
               <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>送信完了</div>
-              <div style={{ fontSize: 14, color: "#64748b" }}>お問い合わせありがとうございます。担当者より折り返しご連絡いたします。</div>
+              <div style={{ fontSize: 14, color: "#64748b" }}>
+                {contactType === "recruit" ? "ご応募ありがとうございます。面接日程について折り返しご連絡いたします。" : "お問い合わせありがとうございます。担当者より折り返しご連絡いたします。"}
+              </div>
             </div>
-          ) : (
+          ) : contactType === "business" ? (
             <form onSubmit={handleContactSubmit} style={{ background: "#fff", borderRadius: 12, padding: "32px 28px", border: "1px solid #e5e7eb" }}>
               <div style={{ marginBottom: 20 }}>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>会社名・屋号</label>
@@ -337,6 +359,64 @@ export default function App() {
               </div>
               <button type="submit" style={{ width: "100%", padding: "14px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
                 送信する
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleContactSubmit} style={{ background: "#fff", borderRadius: 12, padding: "32px 28px", border: "1px solid #e5e7eb" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>お名前</label>
+                  <input type="text" required value={contactForm.name} onChange={e => setContactForm({ ...contactForm, name: e.target.value })}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>メールアドレス</label>
+                  <input type="email" required value={contactForm.email} onChange={e => setContactForm({ ...contactForm, email: e.target.value })}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>年齢</label>
+                  <input type="number" required min="15" max="80" value={contactForm.age} onChange={e => setContactForm({ ...contactForm, age: e.target.value })}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>性別</label>
+                  <select value={contactForm.gender} onChange={e => setContactForm({ ...contactForm, gender: e.target.value })}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, background: "#fff", boxSizing: "border-box" }}>
+                    {["女性", "男性", "その他"].map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>面接希望日（午前中）</label>
+                <select required value={contactForm.interviewDate} onChange={e => setContactForm({ ...contactForm, interviewDate: e.target.value })}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, background: "#fff", boxSizing: "border-box" }}>
+                  <option value="">日程を選択してください</option>
+                  {(() => {
+                    const dates = [];
+                    const now = new Date();
+                    for (let i = 1; i <= 14; i++) {
+                      const d = new Date(now);
+                      d.setDate(d.getDate() + i);
+                      const dow = d.getDay();
+                      if (dow === 0 || dow === 3) continue;
+                      const label = d.toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" });
+                      dates.push(<option key={i} value={d.toISOString().slice(0, 10)}>{label} 午前中</option>);
+                    }
+                    return dates;
+                  })()}
+                </select>
+              </div>
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>備考（任意）</label>
+                <textarea rows={3} value={contactForm.message} onChange={e => setContactForm({ ...contactForm, message: e.target.value })}
+                  placeholder="希望職種やご質問など"
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, resize: "vertical", boxSizing: "border-box" }} />
+              </div>
+              <button type="submit" style={{ width: "100%", padding: "14px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+                応募する
               </button>
             </form>
           )}
