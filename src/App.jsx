@@ -2,7 +2,7 @@ import { useState } from "react";
 import CustomerView from "./components/CustomerView";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
-const HERO = "/hero-main.png";
+const HERO = "/hero-team.png";
 const STRAWBERRY = "/strawberry-greenhouse.jpg";
 const FAMILY = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/v0_image-2-8kVfF4q1UlUB2IzKIyXdOncfjEPM1l.png";
 const INSTAGRAM = "/otokawa-instagram.jpg";
@@ -46,8 +46,16 @@ export default function App() {
 
       {/* ── ヒーロー（画像の文字を活かす・画面高さに合わせる） */}
       <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
-        <img src={HERO} alt="音川青果ヒーロー画像" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 70%", transform: "scale(1.4)", transformOrigin: "center 70%" }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.55) 100%)", padding: "80px 24px 36px", textAlign: "center" }}>
+        <img src={HERO} alt="音川青果チーム" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
+        {/* ── 中央テキストオーバーレイ */}
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 4, marginBottom: 16 }}>OTOKAWA SEIKA</p>
+          <h1 style={{ fontSize: "clamp(24px, 5vw, 44px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", margin: "0 0 8px" }}>
+            私たちは、挑戦する。<br />お客様に感動と豊かさを<br />届けるために。
+          </h1>
+        </div>
+        {/* ── 下部ボタン群 */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.5) 100%)", padding: "80px 24px 36px", textAlign: "center" }}>
           <p style={{ fontSize: 18, color: "#fff", marginBottom: 20, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700 }}>
             福島県内ツルハドラッグ様への販売を行っております。
           </p>
