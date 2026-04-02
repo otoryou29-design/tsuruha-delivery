@@ -3,13 +3,26 @@ import CustomerView from "./components/CustomerView";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
 const HERO = "/hero-team.png";
-const STRAWBERRY = "/strawberry-greenhouse.jpg";
 const FAMILY = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/v0_image-2-8kVfF4q1UlUB2IzKIyXdOncfjEPM1l.png";
 const INSTAGRAM = "/otokawa-instagram.jpg";
 
+/* ── お買い得商品データ（手動で追加・編集） */
+const TOKUBAI_ITEMS = [
+  { name: "キャベツ", price: 98, unit: "1玉", tag: "特価" },
+  { name: "いちご（とちおとめ）", price: 498, unit: "1パック", tag: "旬" },
+  { name: "トマト", price: 128, unit: "1個", tag: "特価" },
+  { name: "バナナ", price: 108, unit: "1房", tag: "" },
+  { name: "ほうれん草", price: 128, unit: "1束", tag: "産直" },
+  { name: "りんご（サンふじ）", price: 158, unit: "1個", tag: "おすすめ" },
+];
+
+/* ── ライブバナー（手動で書き換え） */
+const LIVE_BANNER = "郡山エリア 配送中 — まもなく納品開始です";
+
 export default function App() {
   const [page, setPage] = useState("home");
-  const [faqOpen, setFaqOpen] = useState(null);
+  const [contactForm, setContactForm] = useState({ company: "", category: "生産者", message: "" });
+  const [contactSent, setContactSent] = useState(false);
 
   if (page === "delivery") {
     return (
@@ -31,6 +44,16 @@ export default function App() {
   const BG2 = "#f7f7f5";
   const pulseKeyframes = `@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,255,255,.7); } 50% { opacity: .85; box-shadow: 0 0 16px 4px rgba(255,255,255,.5); } }`;
 
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    fetch("https://formspree.io/f/xpwzgkvl", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ company: contactForm.company, category: contactForm.category, message: contactForm.message, _replyto: "info@otokawa.com" }),
+    }).then(() => setContactSent(true));
+  };
+
   return (
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", overflowX: "hidden" }}>
 
@@ -41,10 +64,10 @@ export default function App() {
           <span style={{ fontSize: 17, fontWeight: 900, color: G, letterSpacing: 1 }}>音川青果</span>
         </div>
         <nav style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 600 }}>
-          <a href="#service" style={{ color: "#666", textDecoration: "none" }}>事業・サービス</a>
+          <a href="#business" style={{ color: "#666", textDecoration: "none" }}>事業紹介</a>
           <a href="#safety" style={{ color: "#666", textDecoration: "none" }}>安全・安心</a>
-          <a href="#about" style={{ color: "#666", textDecoration: "none" }}>会社案内</a>
-          <a href="#delivery" style={{ color: "#666", textDecoration: "none" }}>納品状況</a>
+          <a href="#tokubai" style={{ color: "#666", textDecoration: "none" }}>お買い得</a>
+          <a href="#contact" style={{ color: "#666", textDecoration: "none" }}>お問い合わせ</a>
         </nav>
       </header>
 
@@ -60,10 +83,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* ── ヒーロー（画像の文字を活かす・画面高さに合わせる） */}
+      {/* ── ヒーロー */}
       <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
         <img src={HERO} alt="音川青果チーム" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
-        {/* ── 中央テキストオーバーレイ */}
         <style>{`@media(max-width:768px){.hero-text-overlay{padding-bottom:25%!important;}}`}</style>
         <div className="hero-text-overlay" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)", paddingBottom: "10%" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 4, marginBottom: 16 }}>OTOKAWA SEIKA</p>
@@ -71,13 +93,12 @@ export default function App() {
             私たちは、挑戦する。<br />お客様に感動と豊かさを<br />届けるために。
           </h1>
         </div>
-        {/* ── 下部ボタン群 */}
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.5) 100%)", padding: "60px 24px 36px", textAlign: "center" }}>
           <p style={{ fontSize: 16, color: "#fff", marginBottom: 24, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, marginTop: 32 }}>
             福島県内ツルハドラッグ様への販売を行っております。
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="/tokubai" style={{ padding: "12px 28px", borderRadius: 8, background: "#fff", color: G, fontSize: 14, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, textDecoration: "none", transition: "background 0.2s" }}>
+            <a href="#tokubai" style={{ padding: "12px 28px", borderRadius: 8, background: "#fff", color: G, fontSize: 14, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, textDecoration: "none", transition: "background 0.2s" }}>
               お買い得情報を確認する
             </a>
             <style>{pulseKeyframes}</style>
@@ -88,8 +109,16 @@ export default function App() {
         </div>
       </section>
 
+      {/* ── ライブバナー */}
+      {LIVE_BANNER && (
+        <div style={{ background: "#1a1a1a", color: "#fff", padding: "12px 24px", textAlign: "center", fontSize: 13, fontWeight: 700, letterSpacing: 1 }}>
+          <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#ef4444", marginRight: 10, animation: "livePulse 1.5s infinite" }} />
+          LIVE — {LIVE_BANNER}
+          <style>{`@keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.3} }`}</style>
+        </div>
+      )}
 
-      {/* ── 青果をもっと身近に（画像付き） */}
+      {/* ── 青果をもっと身近に */}
       <section style={{ padding: "80px 24px", background: "#fff" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, alignItems: "center" }}>
           <div>
@@ -103,80 +132,43 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── OTOKAWAブランド */}
+      {/* ── OTOKAWAブランド + Instagram */}
       <section style={{ padding: "72px 24px", background: BG2 }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, alignItems: "center" }}>
           <div>
             <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>OTOKAWA BRAND</p>
             <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.4 }}>毎日がお買い得の<br />ヒミツ</h2>
-            <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2 }}>
+            <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2, marginBottom: 20 }}>
               独自の仕入れネットワークと効率的な物流システムにより、高品質な青果をお手頃価格で提供。市場価格の変動にも柔軟に対応し、安定した価格と品質を実現しています。
             </p>
+            <a href="https://instagram.com/otokawa_official" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "12px 24px", borderRadius: 8, background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)", color: "#fff", fontSize: 14, fontWeight: 700, textDecoration: "none" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              フォローして最新のお買い得情報をチェック
+            </a>
           </div>
-          <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)" }}>
-            <img src={INSTAGRAM} alt="Instagram集客力 - お得な青果情報をリアルタイムで配信" style={{ width: "100%", height: 320, objectFit: "cover" }} />
-          </div>
-        </div>
-      </section>
-
-      {/* ── 提供価値（3カード） */}
-      <section id="service" style={{ padding: "72px 24px", background: "#fff" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>SERVICE</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 36 }}>提供価値</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
-            {[
-              { icon: "🏪", title: "店舗納品", desc: "ツルハドラッグ各店舗へ毎日新鮮な青果を配送。自社便とアサヒ物流の2系統で確実にお届けします。" },
-              { icon: "🧑‍🌾", title: "売場支援", desc: "専任の青果アドバイザーが店舗を巡回。売場づくりのご提案や売上分析で店舗の売上向上を支援します。" },
-              { icon: "📊", title: "発注サポート", desc: "需要予測に基づく最適な発注提案。催事企画や季節商品の提案で売場の鮮度と魅力を維持します。" },
-            ].map(s => (
-              <div key={s.title} style={{ background: BG2, borderRadius: 14, padding: "32px 24px", border: "1px solid #eee", textAlign: "center" }}>
-                <div style={{ width: 60, height: 60, borderRadius: "50%", background: `${G}15`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 28 }}>{s.icon}</div>
-                <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 10 }}>{s.title}</div>
-                <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.9 }}>{s.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── ご利用の流れ */}
-      <section style={{ padding: "72px 24px", background: BG2 }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 40 }}>ご利用の流れ</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 24 }}>
-            {[
-              { step: 1, title: "お問い合わせ", desc: "まずはお気軽にご連絡ください" },
-              { step: 2, title: "お打ち合わせ", desc: "ご要望をヒアリングし最適なプランをご提案" },
-              { step: 3, title: "納品開始", desc: "配送スケジュールを決定し納品スタート" },
-              { step: 4, title: "継続サポート", desc: "アドバイザーが定期的に巡回・改善提案" },
-            ].map(s => (
-              <div key={s.step} style={{ textAlign: "center" }}>
-                <div style={{ width: 48, height: 48, borderRadius: "50%", background: G, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", fontSize: 18, fontWeight: 900 }}>{s.step}</div>
-                <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>{s.title}</div>
-                <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>{s.desc}</div>
-              </div>
-            ))}
+          <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)" }}>
+            <img src={INSTAGRAM} alt="Instagram — お得な青果情報をリアルタイムで配信" style={{ width: "100%", height: 360, objectFit: "cover", objectPosition: "center center", display: "block" }} />
           </div>
         </div>
       </section>
 
       {/* ── その他の事業 */}
-      <section style={{ padding: "72px 24px", background: "#fff" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>BUSINESS</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12 }}>その他の事業</h2>
-          <p style={{ textAlign: "center", fontSize: 14, color: "#64748b", marginBottom: 36 }}>音川青果は、農業から中卸まで、幅広い事業で食材の流通を支えています。</p>
+      <section id="business" style={{ position: "relative", padding: "80px 24px", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${G} 0%, #2d5a3a 100%)` }} />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 900, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.7)", letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>BUSINESS</p>
+          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12, color: "#fff" }}>その他の事業</h2>
+          <p style={{ textAlign: "center", fontSize: 14, color: "rgba(255,255,255,.7)", marginBottom: 40 }}>音川青果は、農業から中卸まで、幅広い事業で食材の流通を支えています。</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
             {[
               { icon: "🌱", title: "農業事業", sub: "生産への取り組み", desc: "施設園芸による品質管理と安定供給を実現。産地との連携により、新鮮な食材をお届けします。" },
               { icon: "🏭", title: "中卸事業", sub: "目利き・仕入・物流", desc: "確かな目利きによる厳選仕入れと効率的な物流システムで、業務用のニーズにも対応します。" },
             ].map(s => (
-              <div key={s.title} style={{ background: BG2, borderRadius: 14, padding: "28px 24px", border: "1px solid #eee" }}>
-                <div style={{ fontSize: 36, marginBottom: 12 }}>{s.icon}</div>
-                <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>{s.title}</div>
-                <div style={{ fontSize: 12, color: G, fontWeight: 600, marginBottom: 10 }}>{s.sub}</div>
-                <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.9 }}>{s.desc}</div>
+              <div key={s.title} style={{ background: "rgba(255,255,255,.1)", backdropFilter: "blur(8px)", borderRadius: 14, padding: "32px 24px", border: "1px solid rgba(255,255,255,.15)" }}>
+                <div style={{ fontSize: 40, marginBottom: 14 }}>{s.icon}</div>
+                <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: "#fff" }}>{s.title}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,.6)", fontWeight: 600, marginBottom: 12 }}>{s.sub}</div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,.85)", lineHeight: 1.9 }}>{s.desc}</div>
               </div>
             ))}
           </div>
@@ -218,55 +210,80 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── 数字で見る音川青果 */}
-      <section id="about" style={{ padding: "72px 24px", background: "#fff" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 36 }}>数字で見る音川青果</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16, textAlign: "center" }}>
-            {[
-              { num: "40+", label: "取引店舗", icon: "🏪" },
-              { num: "30+", label: "取扱品目", icon: "📦" },
-              { num: "6", label: "対応エリア", icon: "📍" },
-              { num: "15+", label: "品質チェック工程", icon: "🛡️" },
-            ].map(d => (
-              <div key={d.label} style={{ padding: 24, background: BG2, borderRadius: 14, border: "1px solid #eee" }}>
-                <div style={{ fontSize: 24, marginBottom: 8 }}>{d.icon}</div>
-                <div style={{ fontSize: 36, fontWeight: 900, color: G }}>{d.num}</div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b", marginTop: 4 }}>{d.label}</div>
+      {/* ── お買い得情報 */}
+      <section id="tokubai" style={{ padding: "72px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>PRODUCTS</p>
+          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12 }}>お買い得情報</h2>
+          <p style={{ textAlign: "center", fontSize: 13, color: "#94a3b8", marginBottom: 24 }}>本日のおすすめ商品</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {TOKUBAI_ITEMS.map((item, i) => (
+              <div key={i} style={{ background: "#fff", border: "1.5px solid #e5e7eb", borderRadius: 10, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  {item.tag && (
+                    <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: item.tag === "特価" ? "#ef4444" : item.tag === "旬" ? "#f59e0b" : G, padding: "2px 8px", borderRadius: 4 }}>{item.tag}</span>
+                  )}
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>{item.name}</div>
+                    <div style={{ fontSize: 11, color: "#94a3b8" }}>{item.unit}</div>
+                  </div>
+                </div>
+                <div style={{ fontSize: 20, fontWeight: 900, color: G }}>
+                  <span style={{ fontSize: 12, fontWeight: 700 }}>¥</span>{item.price.toLocaleString()}
+                  <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", marginLeft: 2 }}>（税込）</span>
+                </div>
               </div>
             ))}
           </div>
+          <p style={{ textAlign: "center", fontSize: 12, color: "#94a3b8", marginTop: 16 }}>※ 価格は店舗・時期により異なる場合があります</p>
         </div>
       </section>
 
-      {/* ── よくある質問 */}
+      {/* ── 採用情報 */}
       <section style={{ padding: "72px 24px", background: BG2 }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 36 }}>よくある質問</h2>
-          {[
-            { q: "サービスの料金はどのくらいですか？", a: "商品や配送条件により異なります。まずはお気軽にお問い合わせください。" },
-            { q: "いつからサービスを開始できますか？", a: "お打ち合わせ後、最短1週間程度で納品を開始できます。" },
-            { q: "どのようなサポートが提供されますか？", a: "青果アドバイザーによる店舗巡回、売場提案、需要予測に基づく発注サポートなどを行っています。" },
-          ].map((f, i) => (
-            <div key={i} style={{ borderBottom: "1px solid #ddd" }}>
-              <button onClick={() => setFaqOpen(faqOpen === i ? null : i)} style={{ width: "100%", padding: "18px 0", background: "none", border: "none", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left" }}>
-                <span style={{ fontSize: 15, fontWeight: 700 }}>{f.q}</span>
-                <span style={{ fontSize: 20, color: "#94a3b8", flexShrink: 0, marginLeft: 12 }}>{faqOpen === i ? "−" : "+"}</span>
-              </button>
-              {faqOpen === i && <div style={{ padding: "0 0 18px", fontSize: 14, color: "#64748b", lineHeight: 1.8 }}>{f.a}</div>}
-            </div>
-          ))}
-        </div>
-      </section>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>RECRUIT</p>
+          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 32 }}>一緒に働きませんか？</h2>
 
-      {/* ── 採用 */}
-      <section style={{ padding: "72px 24px", background: "linear-gradient(135deg, rgba(74,124,89,.08), rgba(59,130,246,.06))" }}>
-        <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 12 }}>一緒に働きませんか？</h2>
-          <p style={{ fontSize: 14, color: "#64748b", marginBottom: 28, lineHeight: 1.8 }}>音川青果では、共に成長し、地域の食を支える仲間を募集しています。</p>
-          <a href="#" style={{ padding: "14px 32px", borderRadius: 8, background: G, color: "#fff", fontSize: 15, fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-            採用情報を見る →
-          </a>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+            {/* 正社員 */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: "28px 24px", border: `2px solid ${G}` }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "#fff", background: G, display: "inline-block", padding: "3px 12px", borderRadius: 4, marginBottom: 14 }}>正社員</div>
+              <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 4 }}>青果売場スタッフ</div>
+              <div style={{ fontSize: 13, color: "#64748b", marginBottom: 16 }}>仕入れ・在庫管理・価格設定・SV業務</div>
+              <div style={{ display: "grid", gap: 8, fontSize: 13 }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>月給</span><span style={{ fontWeight: 800 }}>20万円〜</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>時間</span><span style={{ fontWeight: 800 }}>6:00 - 15:00</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>休日</span><span style={{ fontWeight: 800 }}>週休2日（水・日）</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>待遇</span><span style={{ fontWeight: 800 }}>社保完備・通勤手当・残業なし</span></div>
+              </div>
+            </div>
+
+            {/* 巡回パート */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: "28px 24px", border: "1.5px solid #e5e7eb" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: G, background: `${G}15`, display: "inline-block", padding: "3px 12px", borderRadius: 4, marginBottom: 14 }}>パート</div>
+              <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 4 }}>巡回スタッフ</div>
+              <div style={{ fontSize: 13, color: "#64748b", marginBottom: 16 }}>品出し・陳列・補充・品質チェック・POP作成</div>
+              <div style={{ display: "grid", gap: 8, fontSize: 13 }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>時給</span><span style={{ fontWeight: 800 }}>1,055円〜</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>時間</span><span style={{ fontWeight: 800 }}>9:00-13:00 / 10:00-15:00 等</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>日数</span><span style={{ fontWeight: 800 }}>週2〜3日OK・扶養内OK</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>備考</span><span style={{ fontWeight: 800 }}>軽バン・ハイエース運転あり</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 20, background: "#fff", borderRadius: 12, padding: "20px 24px", border: "1.5px solid #e5e7eb", fontSize: 13, color: "#64748b", lineHeight: 1.9 }}>
+            <div style={{ fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>入社祝金あり（Instagram限定）</div>
+            入社時 5,000円 → 30日後 10,000円 → 90日後 15,000円<br />
+            エリア：いわき・郡山・会津若松・福島｜女性活躍中・小さなお子さんいる方も歓迎
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 24 }}>
+            <a href="#contact" style={{ padding: "14px 32px", borderRadius: 8, background: G, color: "#fff", fontSize: 15, fontWeight: 700, textDecoration: "none" }}>
+              応募・お問い合わせ →
+            </a>
+          </div>
         </div>
       </section>
 
@@ -282,45 +299,96 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── CTA */}
-      <section style={{ padding: "64px 24px", background: G, textAlign: "center" }}>
-        <h2 style={{ fontSize: "clamp(20px, 3.5vw, 32px)", fontWeight: 900, color: "#fff", marginBottom: 12 }}>お気軽にご相談ください</h2>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,.75)", marginBottom: 28 }}>商品のご相談、取引のお問い合わせなど、お気軽にご連絡ください。</p>
-        <a href="mailto:contact@otokawa.com" style={{ padding: "14px 36px", borderRadius: 8, background: "#fff", color: G, fontSize: 15, fontWeight: 800, textDecoration: "none" }}>
-          お問い合わせフォームへ →
-        </a>
+      {/* ── お問い合わせフォーム */}
+      <section id="contact" style={{ padding: "72px 24px", background: BG2 }}>
+        <div style={{ maxWidth: 560, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>CONTACT</p>
+          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 32 }}>お問い合わせ</h2>
+
+          {contactSent ? (
+            <div style={{ textAlign: "center", padding: "40px 24px", background: "#fff", borderRadius: 12 }}>
+              <div style={{ fontSize: 36, marginBottom: 12 }}>✓</div>
+              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>送信完了</div>
+              <div style={{ fontSize: 14, color: "#64748b" }}>お問い合わせありがとうございます。担当者より折り返しご連絡いたします。</div>
+            </div>
+          ) : (
+            <form onSubmit={handleContactSubmit} style={{ background: "#fff", borderRadius: 12, padding: "32px 28px", border: "1px solid #e5e7eb" }}>
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>会社名・屋号</label>
+                <input type="text" required value={contactForm.company} onChange={e => setContactForm({ ...contactForm, company: e.target.value })}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>区分</label>
+                <select value={contactForm.category} onChange={e => setContactForm({ ...contactForm, category: e.target.value })}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, background: "#fff", boxSizing: "border-box" }}>
+                  {["生産者", "市場", "小売店", "飲食店", "その他業者"].map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>用件</label>
+                <textarea required rows={5} value={contactForm.message} onChange={e => setContactForm({ ...contactForm, message: e.target.value })}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, resize: "vertical", boxSizing: "border-box" }} />
+              </div>
+              <button type="submit" style={{ width: "100%", padding: "14px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+                送信する
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* ── よくある質問（テキスト版） */}
+      <section style={{ padding: "48px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <div style={{ display: "grid", gap: 16 }}>
+            {[
+              { q: "ツルハドラッグはどの店舗に納品していますか？", a: "納品店舗一覧をご確認ください。" },
+              { q: "お問い合わせはどこから？", a: "上記のお問い合わせフォームよりお送りください。" },
+              { q: "商品についての問い合わせは？", a: "各店舗の店頭にお問い合わせください。直接のご連絡は受け付けておりません。" },
+            ].map((f, i) => (
+              <div key={i} style={{ padding: "16px 20px", background: BG2, borderRadius: 8 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 6 }}>Q. {f.q}</div>
+                <div style={{ fontSize: 13, color: "#64748b" }}>A. {f.a}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── フッター */}
-      <footer style={{ background: BG2, borderTop: "1px solid #e5e7eb", padding: "48px 24px 32px" }}>
+      <footer style={{ background: "#1a1a1a", padding: "48px 24px 32px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32, marginBottom: 32 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <img src={LOGO} alt="音川青果" style={{ height: 28, borderRadius: 4 }} />
-              <span style={{ fontSize: 14, fontWeight: 900, color: G }}>音川青果</span>
+              <span style={{ fontSize: 14, fontWeight: 900, color: "#fff" }}>音川青果</span>
             </div>
-            <p style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.8 }}>美味しいは、いい食材から。産地・鮮度・流通・安全管理にこだわり、信頼される食材をお届けします。</p>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,.5)", lineHeight: 1.8 }}>美味しいは、いい食材から。産地・鮮度・流通・安全管理にこだわり、信頼される食材をお届けします。</p>
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>事業・サービス</div>
-            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#94a3b8" }}>
-              <span>otokawa</span><span>農業事業</span><span>中卸事業</span>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>会社情報</div>
-            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#94a3b8" }}>
-              <span>安全・安心の取り組み</span><span>会社案内</span><span>採用情報</span><span>お問い合わせ</span>
+            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: "#fff" }}>事業紹介</div>
+            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+              <a href="#business" style={{ color: "inherit", textDecoration: "none" }}>農業事業</a>
+              <a href="#business" style={{ color: "inherit", textDecoration: "none" }}>中卸事業</a>
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>その他</div>
-            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#94a3b8" }}>
-              <span>プライバシーポリシー</span>
+            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: "#fff" }}>情報</div>
+            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
+              <a href="#safety" style={{ color: "inherit", textDecoration: "none" }}>安全・安心</a>
+              <a href="#tokubai" style={{ color: "inherit", textDecoration: "none" }}>お買い得情報</a>
+              <a href="#contact" style={{ color: "inherit", textDecoration: "none" }}>お問い合わせ</a>
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: "#fff" }}>SNS</div>
+            <div style={{ display: "grid", gap: 6, fontSize: 12 }}>
+              <a href="https://instagram.com/otokawa_official" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none" }}>Instagram</a>
             </div>
           </div>
         </div>
-        <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 20, textAlign: "center", fontSize: 12, color: "#b0b0b0" }}>
+        <div style={{ borderTop: "1px solid rgba(255,255,255,.1)", paddingTop: 20, textAlign: "center", fontSize: 12, color: "rgba(255,255,255,.3)" }}>
           &copy; {new Date().getFullYear()} 株式会社音川青果. All rights reserved.
         </div>
       </footer>
