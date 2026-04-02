@@ -46,10 +46,15 @@ export default function App() {
       </header>
 
       {/* ── ニュースバナー */}
-      <div onClick={() => setPage("delivery")} style={{ background: G, color: "#fff", textAlign: "center", padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: 1 }}>
-        <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
-        納品状況がリアルタイムで確認できるようになりました！
-        <span style={{ marginLeft: 8, fontSize: 12 }}>→</span>
+      <div style={{ background: G, color: "#fff", overflow: "hidden", padding: "10px 24px", fontSize: 13, fontWeight: 700, letterSpacing: 1, whiteSpace: "nowrap" }}>
+        <style>{`@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }`}</style>
+        <div style={{ display: "inline-block", animation: "marquee 20s linear infinite" }}>
+          <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
+          納品状況がリアルタイムで確認できるようになりました！
+          <span style={{ margin: "0 32px", opacity: 0.5 }}>|</span>
+          <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
+          ドン・キホーテ米沢店で青果納品 4月20日からスタート！
+        </div>
       </div>
 
       {/* ── ヒーロー（画像の文字を活かす・画面高さに合わせる） */}
