@@ -147,7 +147,7 @@ export default function App() {
             </a>
           </div>
           <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)" }}>
-            <img src={INSTAGRAM} alt="Instagram — お得な青果情報をリアルタイムで配信" style={{ width: "100%", height: 360, objectFit: "cover", objectPosition: "center center", display: "block" }} />
+            <img src={INSTAGRAM} alt="Instagram — お得な青果情報をリアルタイムで配信" style={{ width: "100%", display: "block" }} />
           </div>
         </div>
       </section>
@@ -274,8 +274,6 @@ export default function App() {
           </div>
 
           <div style={{ marginTop: 20, background: "#fff", borderRadius: 12, padding: "20px 24px", border: "1.5px solid #e5e7eb", fontSize: 13, color: "#64748b", lineHeight: 1.9 }}>
-            <div style={{ fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>入社祝金あり（Instagram限定）</div>
-            入社時 5,000円 → 30日後 10,000円 → 90日後 15,000円<br />
             エリア：いわき・郡山・会津若松・福島｜女性活躍中・小さなお子さんいる方も歓迎
           </div>
 
