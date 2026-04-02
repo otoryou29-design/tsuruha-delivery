@@ -48,9 +48,6 @@ export default function App() {
       <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
         <img src={HERO} alt="私たちは、挑戦する。お客様に感動と豊かさを届けるために。" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.55) 100%)", padding: "80px 24px 36px", textAlign: "center" }}>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,.8)", marginBottom: 8 }}>
-            福島県郡山市を拠点に、新鮮な青果を毎日お届けしています。
-          </p>
           <p style={{ fontSize: 18, color: "#fff", marginBottom: 20, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700 }}>
             福島県内ツルハドラッグ様への販売を行っております。
           </p>
