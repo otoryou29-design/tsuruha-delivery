@@ -96,7 +96,7 @@ export default function App() {
             <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>CONCEPT</p>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.4 }}>青果をもっと身近に</h2>
             <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2 }}>
-              音川青果は「美味しいは、いい食材から」をモットーに、産地から店舗まで一貫した品質管理で新鮮な野菜・果物をお届けしています。ツルハドラッグ各店舗の青果売場を通じて、地域のお客様の食卓を豊かにすることが私たちの使命です。
+              音川青果は「美味しいは、いい食材から」をモットーに、産地から店舗まで一貫した品質管理で新鮮な野菜・果物をお届けしています。各取引先様の青果売場を通じて、地域のお客様の食卓を豊かにすることが私たちの使命です。
             </p>
           </div>
           <img src={FAMILY} alt="家族の食卓" style={{ width: "100%", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,.1)", objectFit: "cover", maxHeight: 360 }} />
