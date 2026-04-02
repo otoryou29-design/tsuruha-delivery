@@ -63,13 +63,13 @@ export default function App() {
         {/* ── 中央テキストオーバーレイ */}
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 4, marginBottom: 16 }}>OTOKAWA SEIKA</p>
-          <h1 style={{ fontSize: "clamp(24px, 5vw, 44px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", margin: "0 0 8px" }}>
+          <h1 style={{ fontSize: "clamp(24px, 5vw, 44px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", margin: 0 }}>
             私たちは、挑戦する。<br />お客様に感動と豊かさを<br />届けるために。
           </h1>
         </div>
         {/* ── 下部ボタン群 */}
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.5) 100%)", padding: "80px 24px 36px", textAlign: "center" }}>
-          <p style={{ fontSize: 18, color: "#fff", marginBottom: 20, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700 }}>
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.5) 100%)", padding: "60px 24px 36px", textAlign: "center" }}>
+          <p style={{ fontSize: 16, color: "#fff", marginBottom: 24, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, marginTop: 32 }}>
             福島県内ツルハドラッグ様への販売を行っております。
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
@@ -87,10 +87,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── イチゴハウス画像 */}
-      <section style={{ height: 300, overflow: "hidden" }}>
-        <img src={STRAWBERRY} alt="イチゴ栽培のハウス内" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
-      </section>
 
       {/* ── 青果をもっと身近に（画像付き） */}
       <section style={{ padding: "80px 24px", background: "#fff" }}>
