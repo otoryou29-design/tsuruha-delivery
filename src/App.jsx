@@ -24,6 +24,7 @@ export default function App() {
   const [page, setPage] = useState("home");
   const [contactForm, setContactForm] = useState({ company: "", category: "生産者", message: "" });
   const [contactSent, setContactSent] = useState(false);
+  const [showNakaoroshi, setShowNakaoroshi] = useState(false);
 
   if (page === "delivery") {
     return (
@@ -173,11 +174,12 @@ export default function App() {
               </div>
             </a>
             {/* 中卸事業 */}
-            <div style={{ background: "rgba(255,255,255,.1)", backdropFilter: "blur(8px)", borderRadius: 14, padding: "32px 24px", border: "1px solid rgba(255,255,255,.15)" }}>
+            <div onClick={() => setShowNakaoroshi(true)} style={{ background: "rgba(255,255,255,.1)", backdropFilter: "blur(8px)", borderRadius: 14, padding: "32px 24px", border: "1px solid rgba(255,255,255,.15)", cursor: "pointer", transition: "background .2s" }}>
               <div style={{ fontSize: 40, marginBottom: 14 }}>🏭</div>
               <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: "#fff" }}>中卸事業</div>
               <div style={{ fontSize: 12, color: "rgba(255,255,255,.6)", fontWeight: 600, marginBottom: 12 }}>目利き・仕入・物流</div>
               <div style={{ fontSize: 14, color: "rgba(255,255,255,.85)", lineHeight: 1.9 }}>確かな目利きによる厳選仕入れと効率的な物流システムで、業務用のニーズにも対応します。</div>
+              <div style={{ marginTop: 14, fontSize: 12, color: "#fff", fontWeight: 700 }}>詳しく見る →</div>
             </div>
           </div>
         </div>
@@ -361,6 +363,90 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* ── 中卸事業モーダル */}
+      {showNakaoroshi && (
+        <div onClick={() => setShowNakaoroshi(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, maxWidth: 700, width: "100%", maxHeight: "90vh", overflow: "auto", position: "relative" }}>
+            <button onClick={() => setShowNakaoroshi(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
+
+            {/* ヘッダー */}
+            <div style={{ background: `linear-gradient(135deg, ${G}, #2d5a3a)`, padding: "40px 28px 32px", borderRadius: "16px 16px 0 0" }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.6)", letterSpacing: 2, marginBottom: 8 }}>WHOLESALE</p>
+              <h2 style={{ fontSize: 28, fontWeight: 900, color: "#fff", margin: 0 }}>中卸事業</h2>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,.7)", marginTop: 8 }}>目利き・仕入・物流加工・輸送</p>
+            </div>
+
+            <div style={{ padding: "32px 28px" }}>
+              {/* 会社紹介 */}
+              <p style={{ fontSize: 14, color: "#475569", lineHeight: 2, marginBottom: 32 }}>
+                創業40年を誇る弊社は、青果業界において大きな信頼を築き上げてまいりました。長年培ってきた青果ノウハウと豊富な経験を基盤に、お客様に最高品質の商品とサービスを提供してまいりました。<br /><br />
+                青果業界での40年に及ぶ経験は、我々に豊富なノウハウをもたらしました。市場の動向や消費者のニーズを的確に把握し、最適な商品ラインナップをご提供することで、各お取引様に満足いただいております。
+              </p>
+
+              {/* 強力な加工能力 */}
+              <div style={{ marginBottom: 32 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 900, marginBottom: 12, paddingBottom: 8, borderBottom: `2px solid ${G}` }}>強力な加工能力</h3>
+                <p style={{ fontSize: 14, color: "#475569", lineHeight: 2 }}>
+                  加工能力の高さは、弊社の大きな強みの一つです。青果物の加工からパッケージングまでを一貫して行うことで、お客様のニーズに応える柔軟性と効率性を確保しています。品質の維持と安全性の確保に常に努め、お客様に安心してご利用いただける商品をお届けしております。白菜1/4やキャベツ1/2など、店舗の負担となるカット商品などを大型シュリンク機による梱包からラベル貼り付けまで弊社が行っております。
+                </p>
+              </div>
+
+              {/* 在庫を抱えない鮮度コントロール */}
+              <div style={{ marginBottom: 32 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 900, marginBottom: 12, paddingBottom: 8, borderBottom: `2px solid ${G}` }}>在庫を抱えない鮮度コントロール</h3>
+                <p style={{ fontSize: 14, color: "#475569", lineHeight: 2 }}>
+                  各お取引先様からの受注から仕入れを行う場合、前日や当日に調達することと、不必要な在庫を抱えず、大型冷蔵庫で青果物は適正保管。仕入れが起きたら必ず当日に売り切るという目標を実行しています。鮮度コントロールを維持することで商品が店舗に並ぶまで、お客様に喜んでいただける商品を並べることを心がけております。
+                </p>
+              </div>
+
+              {/* 安定した物流・輸送 */}
+              <div style={{ marginBottom: 32 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 900, marginBottom: 12, paddingBottom: 8, borderBottom: `2px solid ${G}` }}>安定した物流・輸送</h3>
+                <p style={{ fontSize: 14, color: "#475569", lineHeight: 2, marginBottom: 16 }}>
+                  物量に応じた物流を手配し、チャーター便で宮城方面：大型1台、郡山・須賀川：4t1台その他、定期便で県内横持（合積み）など、安定した物流を維持しております。必要な量を最適な時間帯に納品する物流網を持つ安定した物流・輸送を保持しています。
+                </p>
+              </div>
+
+              {/* 業務フロー */}
+              <div style={{ background: BG2, borderRadius: 12, padding: "24px 20px", marginBottom: 32 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: G, letterSpacing: 2, marginBottom: 16 }}>業務フロー</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", justifyContent: "center" }}>
+                  {["受注", "仕入", "カット加工", "包装", "ラベル貼付", "店舗別分荷", "出荷", "トラック輸送", "納品"].map((s, i) => (
+                    <div key={s} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <div style={{ padding: "6px 12px", background: "#fff", borderRadius: 6, fontSize: 12, fontWeight: 700, border: "1px solid #e5e7eb", whiteSpace: "nowrap" }}>{s}</div>
+                      {i < 8 && <span style={{ color: "#94a3b8", fontSize: 12 }}>→</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 会社概要 */}
+              <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 24 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: G, letterSpacing: 2, marginBottom: 16 }}>COMPANY</div>
+                <div style={{ display: "grid", gap: 10, fontSize: 13 }}>
+                  {[
+                    ["会社名", "株式会社音川青果"],
+                    ["代表取締役", "音川充輝（おとかわみつてる）"],
+                    ["設立日", "平成6年5月30日"],
+                    ["所在地", "福島県郡山市富久山町久保田字太郎殿前2"],
+                    ["電話番号", "024-956-6606"],
+                    ["メール", "info@otokawa.com"],
+                    ["事業内容", "青果卸・小売業・物流加工・農作物生産・販売"],
+                    ["資本金", "1,000万円"],
+                    ["従業員数", "32名（正社員3名・準社員・パート27名）"],
+                  ].map(([k, v]) => (
+                    <div key={k} style={{ display: "flex", borderBottom: "1px solid #f1f5f9", paddingBottom: 10 }}>
+                      <span style={{ width: 100, flexShrink: 0, color: "#94a3b8", fontWeight: 600 }}>{k}</span>
+                      <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── フッター */}
       <footer style={{ background: "#1a1a1a", padding: "48px 24px 32px" }}>
