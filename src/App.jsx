@@ -73,9 +73,6 @@ export default function App() {
             福島県内ツルハドラッグ様への販売を行っております。
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="#service" style={{ padding: "12px 28px", borderRadius: 8, background: "#fff", color: G, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>
-              事業内容を見る →
-            </a>
             <a href="/tokubai" style={{ padding: "12px 28px", borderRadius: 8, background: "#fff", color: G, fontSize: 14, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, textDecoration: "none", transition: "background 0.2s" }}>
               お買い得情報を確認する
             </a>
