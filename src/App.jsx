@@ -13,12 +13,15 @@ export default function App() {
 
   if (page === "delivery") {
     return (
-      <div style={{ minHeight: "100vh", background: "#fafafa", fontFamily: "'Noto Sans JP', sans-serif" }}>
-        <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", color: "#4a7c59", fontSize: 14, cursor: "pointer", fontWeight: 700 }}>← トップへ</button>
-          <span style={{ fontWeight: 800, fontSize: 15 }}>本日の納品状況</span>
-          <span style={{ fontSize: 12, color: "#94a3b8" }}>{new Date().toLocaleDateString("ja-JP")}</span>
-        </div>
+      <div style={{ minHeight: "100vh", background: "#f7f7f5", fontFamily: "'Yu Gothic', 'YuGothic', 'Noto Sans JP', sans-serif" }}>
+        <header style={{ background: "#4a7c59", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,.15)" }}>
+          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 700, letterSpacing: 1 }}>← トップへ</button>
+          <div style={{ textAlign: "center" }}>
+            <span style={{ fontWeight: 900, fontSize: 16, color: "#fff", letterSpacing: 2 }}>本日の納品状況</span>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 2 }}>{new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" })}</div>
+          </div>
+          <img src={LOGO} alt="音川青果" style={{ height: 32, borderRadius: 4 }} />
+        </header>
         <CustomerView />
       </div>
     );
