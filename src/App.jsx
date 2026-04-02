@@ -26,6 +26,7 @@ export default function App() {
 
   const G = "#4a7c59";
   const BG2 = "#f7f7f5";
+  const pulseKeyframes = `@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,255,255,.7); } 50% { opacity: .85; box-shadow: 0 0 16px 4px rgba(255,255,255,.5); } }`;
 
   return (
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", overflowX: "hidden" }}>
@@ -43,6 +44,13 @@ export default function App() {
           <a href="#delivery" style={{ color: "#666", textDecoration: "none" }}>納品状況</a>
         </nav>
       </header>
+
+      {/* ── ニュースバナー */}
+      <div onClick={() => setPage("delivery")} style={{ background: G, color: "#fff", textAlign: "center", padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: 1 }}>
+        <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
+        納品状況がリアルタイムで確認できるようになりました！
+        <span style={{ marginLeft: 8, fontSize: 12 }}>→</span>
+      </div>
 
       {/* ── ヒーロー（画像の文字を活かす・画面高さに合わせる） */}
       <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
@@ -66,7 +74,8 @@ export default function App() {
             <a href="/tokubai" style={{ padding: "12px 28px", borderRadius: 8, background: "#fff", color: G, fontSize: 14, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, textDecoration: "none", transition: "background 0.2s" }}>
               お買い得情報を確認する
             </a>
-            <button onClick={() => setPage("delivery")} style={{ padding: "12px 28px", borderRadius: 8, background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,.8)", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+            <style>{pulseKeyframes}</style>
+            <button onClick={() => setPage("delivery")} style={{ padding: "12px 28px", borderRadius: 8, background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,.8)", fontSize: 14, fontWeight: 700, cursor: "pointer", animation: "pulse 2s ease-in-out infinite" }}>
               本日の納品状況
             </button>
           </div>
