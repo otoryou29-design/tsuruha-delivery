@@ -25,6 +25,7 @@ export default function App() {
   const [contactForm, setContactForm] = useState({ company: "", category: "生産者", message: "" });
   const [contactSent, setContactSent] = useState(false);
   const [showNakaoroshi, setShowNakaoroshi] = useState(false);
+  const [showNogyo, setShowNogyo] = useState(false);
 
   if (page === "delivery") {
     return (
@@ -161,25 +162,21 @@ export default function App() {
           <p style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.7)", letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>BUSINESS</p>
           <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12, color: "#fff" }}>その他の事業</h2>
           <p style={{ textAlign: "center", fontSize: 14, color: "rgba(255,255,255,.7)", marginBottom: 40 }}>音川青果は、農業から中卸まで、幅広い事業で食材の流通を支えています。</p>
+          <style>{`@keyframes blink-green { 0%,100%{box-shadow:0 0 0 0 rgba(74,124,89,.4)} 50%{box-shadow:0 0 16px 4px rgba(74,124,89,.3)} } @keyframes blink-red { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)} 50%{box-shadow:0 0 16px 4px rgba(220,38,38,.3)} }`}</style>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-            {/* 農業事業 → Instagram */}
-            <a href="https://instagram.com/cocofarm_official" target="_blank" rel="noopener noreferrer" style={{ background: "rgba(255,255,255,.1)", backdropFilter: "blur(8px)", borderRadius: 14, padding: "32px 24px", border: "1px solid rgba(255,255,255,.15)", textDecoration: "none", transition: "background .2s", cursor: "pointer" }}>
-              <img src={TOMATO} alt="ココファーム" style={{ width: 56, height: 56, marginBottom: 14 }} />
-              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: "#fff" }}>農業事業</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,.6)", fontWeight: 600, marginBottom: 12 }}>COCOFARM | ココファーム</div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,.85)", lineHeight: 1.9 }}>施設園芸による品質管理と安定供給を実現。産地との連携により、新鮮な食材をお届けします。</div>
-              <div style={{ marginTop: 14, fontSize: 12, color: "#fff", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                @cocofarm_official →
-              </div>
-            </a>
+            {/* 農業事業 */}
+            <div onClick={() => setShowNogyo(true)} style={{ background: "#fff", borderRadius: 14, padding: "32px 24px", border: "2px solid #dc2626", cursor: "pointer", animation: "blink-red 2s infinite" }}>
+              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: "#dc2626" }}>農業事業</div>
+              <div style={{ fontSize: 12, color: "#dc2626", fontWeight: 600, marginBottom: 12, opacity: .7 }}>COCOFARM | ココファーム</div>
+              <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.9 }}>施設園芸による品質管理と安定供給を実現。産地との連携により、新鮮な食材をお届けします。</div>
+              <div style={{ marginTop: 14, fontSize: 13, color: "#dc2626", fontWeight: 800 }}>農業事業を見る →</div>
+            </div>
             {/* 中卸事業 */}
-            <div onClick={() => setShowNakaoroshi(true)} style={{ background: "rgba(255,255,255,.1)", backdropFilter: "blur(8px)", borderRadius: 14, padding: "32px 24px", border: "1px solid rgba(255,255,255,.15)", cursor: "pointer", transition: "background .2s" }}>
-              <div style={{ fontSize: 40, marginBottom: 14 }}>🏭</div>
-              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: "#fff" }}>中卸事業</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,.6)", fontWeight: 600, marginBottom: 12 }}>目利き・仕入・物流</div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,.85)", lineHeight: 1.9 }}>確かな目利きによる厳選仕入れと効率的な物流システムで、業務用のニーズにも対応します。</div>
-              <div style={{ marginTop: 14, fontSize: 12, color: "#fff", fontWeight: 700 }}>詳しく見る →</div>
+            <div onClick={() => setShowNakaoroshi(true)} style={{ background: "#fff", borderRadius: 14, padding: "32px 24px", border: `2px solid ${G}`, cursor: "pointer", animation: "blink-green 2s infinite" }}>
+              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: G }}>中卸事業</div>
+              <div style={{ fontSize: 12, color: G, fontWeight: 600, marginBottom: 12, opacity: .7 }}>目利き・仕入・物流</div>
+              <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.9 }}>確かな目利きによる厳選仕入れと効率的な物流システムで、業務用のニーズにも対応します。</div>
+              <div style={{ marginTop: 14, fontSize: 13, color: G, fontWeight: 800 }}>中卸事業を見る →</div>
             </div>
           </div>
         </div>
@@ -371,6 +368,17 @@ export default function App() {
             <button onClick={() => setShowNakaoroshi(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
             <img src="/nakaoroshi-1.jpg" alt="株式会社音川青果の紹介" style={{ width: "100%", display: "block", borderRadius: "16px 16px 0 0" }} />
             <img src="/nakaoroshi-2.jpg" alt="強力な加工能力・鮮度コントロール・安定した物流輸送" style={{ width: "100%", display: "block", borderRadius: "0 0 16px 16px" }} />
+          </div>
+        </div>
+      )}
+
+      {/* ── 農業事業モーダル */}
+      {showNogyo && (
+        <div onClick={() => setShowNogyo(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, maxWidth: 700, width: "100%", maxHeight: "90vh", overflow: "auto", position: "relative" }}>
+            <button onClick={() => setShowNogyo(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
+            <img src="/nogyo-1.jpg" alt="自社栽培の濃厚トマト＆ミニトマト" style={{ width: "100%", display: "block", borderRadius: "16px 16px 0 0" }} />
+            <img src="/nogyo-2.jpg" alt="農場長・代表取締役の紹介" style={{ width: "100%", display: "block", borderRadius: "0 0 16px 16px" }} />
           </div>
         </div>
       )}
