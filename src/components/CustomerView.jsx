@@ -137,6 +137,7 @@ function StoreCard({ store, expanded, onToggle }) {
     enroute:   { icon: "🚚", label: "移動中",       bg: "#fff",     border: G,         color: G,         accent: "#f0fdf4", pulse: true },
     arrived:   { icon: "📦", label: "納品作業中",   bg: "#fff",     border: "#3b82f6", color: "#2563eb", accent: "#eff6ff" },
     completed: { icon: "✓",  label: "完了",         bg: "#fff",     border: "#22c55e", color: "#16a34a", accent: "#f0fdf4" },
+    skipped:   { icon: "−",  label: "本日訪問不可", bg: "#fff",     border: "#f59e0b", color: "#d97706", accent: "#fffbeb" },
     delayed:   { icon: "!",  label: "遅延",         bg: "#fff",     border: "#ef4444", color: "#dc2626", accent: "#fef2f2", pulse: true },
   };
   const c = config[status] || config.pending;
@@ -186,6 +187,12 @@ function StoreCard({ store, expanded, onToggle }) {
               {expanded ? "▲" : "▼ 詳細"}
             </span>
           )}
+        </div>
+      )}
+
+      {status === "skipped" && (
+        <div style={{ marginTop: 8, fontSize: 12, color: "#d97706", paddingLeft: 42 }}>
+          {store.skipReason || "都合により本日の訪問ができません"}
         </div>
       )}
 
