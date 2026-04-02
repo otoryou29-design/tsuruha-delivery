@@ -61,9 +61,9 @@ export default function App() {
       <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
         <img src={HERO} alt="音川青果チーム" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
         {/* ── 中央テキストオーバーレイ */}
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)" }}>
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)", paddingBottom: "30%" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 4, marginBottom: 16 }}>OTOKAWA SEIKA</p>
-          <h1 style={{ fontSize: "clamp(24px, 5vw, 44px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", margin: 0 }}>
+          <h1 style={{ fontSize: "clamp(28px, 6vw, 52px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", margin: 0 }}>
             私たちは、挑戦する。<br />お客様に感動と豊かさを<br />届けるために。
           </h1>
         </div>
