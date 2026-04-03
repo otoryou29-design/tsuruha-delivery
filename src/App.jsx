@@ -229,11 +229,23 @@ export default function App() {
 
       {/* ── お買い得情報（スーパーチラシ風） */}
       {/* ── お買い得情報（シンプルモダン） */}
-      <section id="tokubai" style={{ padding: "64px 24px", background: "#f0fdf4", position: "relative", overflow: "hidden" }}>
-        {/* 野菜絵文字の背景 */}
-        <div style={{ position: "absolute", inset: 0, opacity: 0.12, fontSize: 36, lineHeight: 1.8, wordBreak: "break-all", pointerEvents: "none", userSelect: "none", padding: 10 }}>
-          {"🥬🍅🍓🥕🍌🍎🥒🍊🌽🍆🥦🍋🍑🫑🧅🥬🍅🍓🥕🍌🍎🥒🍊🌽🍆🥦🍋🍑🫑🧅🥬🍅🍓🥕🍌🍎🥒🍊🌽🍆🥦🍋🍑🫑🧅🥬🍅🍓🥕🍌🍎🥒🍊🌽🍆🥦🍋🍑🫑🧅🥬🍅🍓🥕🍌🍎🥒🍊🌽🍆🥦🍋🍑🫑🧅🥬🍅🍓🥕🍌🍎🥒🍊🌽🍆🥦🍋🍑🫑🧅"}
-        </div>
+      <section id="tokubai" style={{ padding: "64px 24px", background: "#fff", position: "relative", overflow: "hidden" }}>
+        {/* 野菜絵文字の散らばり背景（Instagram QR風） */}
+        {(() => {
+          const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅","🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅","🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆"];
+          return emojis.map((e, i) => (
+            <span key={i} style={{
+              position: "absolute",
+              top: `${(i * 67 + i * 13) % 100}%`,
+              left: `${(i * 41 + i * 7) % 100}%`,
+              fontSize: 20 + (i % 3) * 8,
+              transform: `rotate(${(i * 37) % 360}deg)`,
+              opacity: 0.15,
+              pointerEvents: "none",
+              userSelect: "none",
+            }}>{e}</span>
+          ));
+        })()}
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#dc2626", letterSpacing: 2, marginBottom: 8, textAlign: "center" }}>SPECIAL PRICE</p>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 6, color: "#1a1a1a" }}>お買い得情報</h2>
