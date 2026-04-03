@@ -87,7 +87,7 @@ export default function App() {
 
       {/* ── ニュースバナー */}
       <div style={{ background: G, color: "#fff", overflow: "hidden", padding: "10px 24px", fontSize: 13, fontWeight: 700, letterSpacing: 1, whiteSpace: "nowrap" }}>
-        <style>{`@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }`}</style>
+        <style>{`@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } } @keyframes tokubaiSlide { 0%,20% { transform: translateX(0); } 80%,100% { transform: translateX(-50%); } }`}</style>
         <div style={{ display: "inline-block", animation: "marquee 20s linear infinite" }}>
           <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
           納品状況がリアルタイムで確認できるようになりました！
@@ -269,32 +269,47 @@ export default function App() {
           </div>
         <div style={{ maxWidth: 600, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {tokubaiItems.map((item, i) => {
               const taxIncl = Math.ceil(item.price * 1.08);
+              const corners = [
+                "48% 52% 45% 55% / 52% 48% 52% 48%",
+                "52% 48% 55% 45% / 48% 52% 48% 52%",
+                "45% 55% 52% 48% / 55% 45% 50% 50%",
+                "50% 50% 48% 52% / 45% 55% 52% 48%",
+                "55% 45% 50% 50% / 48% 52% 55% 45%",
+                "48% 52% 52% 48% / 50% 50% 45% 55%",
+              ];
               return (
-                <div key={i} style={{ display: "flex", alignItems: "center", padding: "16px 18px", background: i % 2 === 0 ? "#fff" : "#fafafa", borderBottom: i < tokubaiItems.length - 1 ? "1px solid #f1f1f1" : "none" }}>
-                  {/* 左: 商品情報 */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                      <span style={{ fontSize: 18, fontWeight: 900, color: "#1a1a1a", fontFamily: "'Yu Gothic','YuGothic',sans-serif", letterSpacing: "0.02em" }}>{item.name}</span>
-                      {item.tag && (
-                        <span style={{ fontSize: 10, fontWeight: 800, color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : item.tag === "産直" ? G : "#2563eb", background: item.tag === "特価" ? "#fef2f2" : item.tag === "旬" ? "#fffbeb" : item.tag === "産直" ? "#f0fdf4" : "#eff6ff", padding: "2px 8px", borderRadius: 3 }}>{item.tag}</span>
-                      )}
+                <div key={i} style={{
+                  background: "#fff", border: "2px solid #1a1a1a",
+                  borderRadius: corners[i % corners.length],
+                  padding: "16px 14px", textAlign: "center",
+                  display: "flex", flexDirection: "column", justifyContent: "space-between",
+                  minHeight: 140,
+                }}>
+                  {/* タグ */}
+                  {item.tag && (
+                    <div style={{ marginBottom: 6 }}>
+                      <span style={{ fontSize: 10, fontWeight: "bold", color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : item.tag === "産直" ? G : "#2563eb", background: item.tag === "特価" ? "#fef2f2" : item.tag === "旬" ? "#fffbeb" : item.tag === "産直" ? "#f0fdf4" : "#eff6ff", padding: "2px 10px", borderRadius: 3, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>{item.tag}</span>
                     </div>
-                    <div style={{ display: "flex", gap: 8, fontSize: 12, color: "#94a3b8" }}>
-                      {item.origin && <span>{item.origin}</span>}
-                      <span>{item.unit}</span>
-                    </div>
+                  )}
+                  {/* 商品名（はみ出す場合はスライド） */}
+                  <div style={{ overflow: "hidden", marginBottom: 4 }}>
+                    <div style={{ fontSize: 17, fontWeight: "bold", color: "#1a1a1a", fontFamily: "'YuGothic','Yu Gothic',sans-serif", lineHeight: 1.3, whiteSpace: "nowrap", animation: item.name.length > 8 ? "tokubaiSlide 6s linear infinite" : "none" }}>{item.name}</div>
                   </div>
-                  {/* 右: 税別+値段 → 税込 */}
-                  <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end", gap: 2 }}>
-                      <span style={{ fontSize: 12, color: "#64748b", fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 900 }}>税別</span>
-                      <span style={{ fontSize: 16, fontWeight: 900, color: "#dc2626", fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>¥</span>
-                      <span style={{ fontSize: 34, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.price.toLocaleString()}</span>
+                  {/* 産地・単位 */}
+                  <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 8, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>
+                    {item.origin && <span>{item.origin} </span>}{item.unit}
+                  </div>
+                  {/* 価格 */}
+                  <div>
+                    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 2 }}>
+                      <span style={{ fontSize: 11, color: "#64748b", fontWeight: "bold", fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>税別</span>
+                      <span style={{ fontSize: 14, fontWeight: "bold", color: "#dc2626", fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>¥</span>
+                      <span style={{ fontSize: 32, fontWeight: "bold", color: "#dc2626", lineHeight: 1, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>{item.price.toLocaleString()}</span>
                     </div>
-                    <div style={{ fontSize: 12, color: "#64748b", marginTop: 3, fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 900 }}>税込 ¥{taxIncl.toLocaleString()}</div>
+                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 4, fontFamily: "'YuGothic','Yu Gothic',sans-serif", fontWeight: "bold" }}>税込 ¥{taxIncl.toLocaleString()}</div>
                   </div>
                 </div>
               );
