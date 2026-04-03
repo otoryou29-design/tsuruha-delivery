@@ -228,62 +228,47 @@ export default function App() {
       </section>
 
       {/* ── お買い得情報（スーパーチラシ風） */}
-      <style>{`.c-price { -webkit-text-stroke: 4px #CC0000; paint-order: stroke fill; } .c-yen { -webkit-text-stroke: 2px #CC0000; paint-order: stroke fill; }`}</style>
-      <section id="tokubai" style={{ padding: 0, background: "#CC0000" }}>
-        <div style={{ height: 6, background: "#FFE000" }} />
-        <div style={{ padding: "3px", background: "#FFE000" }}>
-          <div style={{ background: "#CC0000" }}>
-            {/* ヘッダー */}
-            <div style={{ padding: "12px 8px 10px", textAlign: "center", background: "linear-gradient(180deg,#880000,#CC0000)" }}>
-              <div style={{ display: "inline-block", background: "#FFE000", color: "#CC0000", padding: "2px 16px", fontSize: 10, fontWeight: 900, letterSpacing: 2, marginBottom: 4 }}>音川青果</div>
-              <h2 style={{ fontSize: "clamp(28px,6.5vw,42px)", fontWeight: 900, color: "#FFE000", margin: 0, fontFamily: "'Noto Serif JP',serif", textShadow: "2px 2px 0 #660000", lineHeight: 1.1 }}>本日のお買い得</h2>
-              <div style={{ fontSize: 11, color: "#fff", marginTop: 4, fontWeight: 700 }}>数量限定！お早めに！</div>
-            </div>
+      {/* ── お買い得情報（シンプルモダン） */}
+      <section id="tokubai" style={{ padding: "64px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#dc2626", letterSpacing: 2, marginBottom: 8, textAlign: "center" }}>SPECIAL PRICE</p>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 6, color: "#1a1a1a" }}>お買い得情報</h2>
+          <p style={{ textAlign: "center", fontSize: 13, color: "#94a3b8", marginBottom: 28 }}>本日のおすすめ商品をご紹介</p>
 
-            {/* 商品グリッド */}
-            <div style={{ padding: "3px 3px 4px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}>
-              {tokubaiItems.map((item, i) => {
-                const taxIncl = Math.ceil(item.price * 1.08);
-                return (
-                  <div key={i} style={{ background: "#111111", border: "4px solid #FFE000", position: "relative", overflow: "hidden" }}>
-                    {/* タグバッジ */}
-                    {item.tag && (
-                      <div style={{ position: "absolute", top: 6, right: 6, zIndex: 3, background: "#FFE000", color: "#CC0000", fontSize: 12, fontWeight: 900, padding: "3px 10px", border: "3px solid #CC0000", borderRadius: 4 }}>{item.tag}</div>
-                    )}
-                    {/* 商品名帯 */}
-                    <div style={{ background: "#CC0000", padding: "8px 10px" }}>
-                      <div style={{ color: "#fff", fontSize: "clamp(18px,4.5vw,24px)", fontWeight: 700, letterSpacing: "0.05em", fontFamily: "'Yu Gothic','YuGothic',sans-serif", lineHeight: 1.2 }}>{item.name}</div>
-                      <div style={{ display: "flex", gap: 8, marginTop: 3 }}>
-                        {item.origin && <span style={{ color: "#FFE000", fontSize: 11, fontWeight: 700 }}>{item.origin}</span>}
-                        <span style={{ color: "rgba(255,255,255,.6)", fontSize: 11 }}>{item.unit}</span>
-                      </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
+            {tokubaiItems.map((item, i) => {
+              const taxIncl = Math.ceil(item.price * 1.08);
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", padding: "16px 18px", background: i % 2 === 0 ? "#fff" : "#fafafa", borderBottom: i < tokubaiItems.length - 1 ? "1px solid #f1f1f1" : "none" }}>
+                  {/* 左: 商品情報 */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                      <span style={{ fontSize: 17, fontWeight: 900, color: "#1a1a1a", fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.name}</span>
+                      {item.tag && (
+                        <span style={{ fontSize: 10, fontWeight: 800, color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : item.tag === "産直" ? G : "#2563eb", background: item.tag === "特価" ? "#fef2f2" : item.tag === "旬" ? "#fffbeb" : item.tag === "産直" ? "#f0fdf4" : "#eff6ff", padding: "2px 8px", borderRadius: 3 }}>{item.tag}</span>
+                      )}
                     </div>
-                    {/* 価格エリア */}
-                    <div style={{ padding: "6px 4px 8px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 80 }}>
-                      {/* 税別価格（メイン） */}
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "center" }}>
-                        <span className="c-yen" style={{ fontSize: "clamp(18px,4.5vw,26px)", fontWeight: 700, color: "#FFE000", fontFamily: "'Oswald','DIN Alternate',sans-serif", marginTop: 10 }}>¥</span>
-                        <span className="c-price" style={{ fontSize: "clamp(56px,15vw,88px)", fontWeight: 700, color: "#fff", lineHeight: .85, fontFamily: "'Oswald','DIN Alternate',sans-serif", textShadow: "3px 3px 0 #CC0000", letterSpacing: "-2px" }}>{item.price.toLocaleString()}</span>
-                      </div>
-                      {/* 税込価格 */}
-                      <div style={{ marginTop: 4, display: "flex", alignItems: "baseline", gap: 3 }}>
-                        <span style={{ fontSize: 10, color: "rgba(255,255,255,.4)" }}>税別</span>
-                        <span style={{ fontSize: 13, color: "#FFE000", fontWeight: 700, fontFamily: "'Oswald','DIN Alternate',sans-serif" }}>税込 ¥{taxIncl.toLocaleString()}</span>
-                      </div>
+                    <div style={{ display: "flex", gap: 8, fontSize: 12, color: "#94a3b8" }}>
+                      {item.origin && <span>{item.origin}</span>}
+                      <span>{item.unit}</span>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-
-            {/* フッター */}
-            <div style={{ background: "#111", margin: "0 3px", padding: "6px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: 9, color: "#666" }}>※ 価格は店舗・時期により異なる場合があります</span>
-              <span style={{ fontSize: 11, fontWeight: 900, color: "#FFE000", fontFamily: "'Noto Serif JP',serif" }}>音川青果</span>
-            </div>
+                  {/* 右: 価格 */}
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end" }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#dc2626", marginRight: 1 }}>¥</span>
+                      <span style={{ fontSize: 32, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Oswald',sans-serif", letterSpacing: "-1px" }}>{item.price.toLocaleString()}</span>
+                      <span style={{ fontSize: 11, color: "#94a3b8", marginLeft: 2 }}>税別</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>税込 ¥{taxIncl.toLocaleString()}</div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
+          <p style={{ textAlign: "center", fontSize: 11, color: "#c4c4c4", marginTop: 14 }}>※ 価格は店舗・時期により異なる場合があります</p>
         </div>
-        <div style={{ height: 6, background: "#FFE000" }} />
       </section>
 
       {/* ── 採用情報 */}
