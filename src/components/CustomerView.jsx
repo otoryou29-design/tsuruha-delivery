@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { STORES } from "../stores";
+import { STORES, getTodayStores } from "../stores";
 import { onDeliveryStatusChange } from "../firebase";
 
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -11,22 +11,24 @@ export default function CustomerView() {
   const [selectedArea, setSelectedArea] = useState("全エリア");
   const [expandedStore, setExpandedStore] = useState(null);
 
+  const todayStores = useMemo(() => getTodayStores(), []);
+
   const areas = useMemo(() => {
-    const a = [...new Set(STORES.map((s) => s.area))];
+    const a = [...new Set(todayStores.map((s) => s.area))];
     return ["全エリア", ...a];
-  }, []);
+  }, [todayStores]);
 
   const sortedStores = useMemo(() => {
-    const list = selectedArea === "全エリア" ? STORES : STORES.filter((s) => s.area === selectedArea);
+    const list = selectedArea === "全エリア" ? todayStores : todayStores.filter((s) => s.area === selectedArea);
     const merged = list.map((s) => ({ ...s, ...(statuses[s.id] || {}) }));
     return merged.sort((a, b) => {
       const order = { completed: 0, enroute: 1, arrived: 2, skipped: 3, pending: 4 };
-      const aO = order[a.status] ?? 4, bO = order[b.status] ?? 4;
+      const aO = order[a.status] ?? 5, bO = order[b.status] ?? 5;
       if (aO !== bO) return aO - bO;
       if (a.status === "completed" && b.status === "completed") return new Date(b.completedAt || 0) - new Date(a.completedAt || 0);
       return 0;
     });
-  }, [selectedArea, statuses]);
+  }, [selectedArea, statuses, todayStores]);
 
   useEffect(() => {
     const unsub = onDeliveryStatusChange(TODAY, setStatuses);
@@ -34,9 +36,10 @@ export default function CustomerView() {
   }, []);
 
   const completedCount = Object.values(statuses).filter(s => s.status === "completed").length;
-  const totalRoute = Object.keys(statuses).length;
+  const totalRoute = todayStores.length;
   const enrouteStore = Object.values(statuses).find(s => s.status === "enroute");
-  const pct = totalRoute > 0 ? Math.round(completedCount / totalRoute * 100) : 0;
+  const activeCount = Object.keys(statuses).length;
+  const pct = activeCount > 0 ? Math.round(completedCount / activeCount * 100) : 0;
 
   return (
     <div style={{ padding: "20px 16px", maxWidth: 600, margin: "0 auto" }}>
@@ -60,23 +63,31 @@ export default function CustomerView() {
       )}
 
       {/* 進捗バー */}
-      {totalRoute > 0 && (
+      {activeCount > 0 && (
         <div style={{ background: "#fff", borderRadius: 12, padding: "16px 20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>納品進捗</span>
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>巡回進捗</span>
             <span style={{ fontSize: 22, fontWeight: 900, color: G }}>{pct}<span style={{ fontSize: 12, fontWeight: 700 }}>%</span></span>
           </div>
           <div style={{ height: 8, background: "#e5e7eb", borderRadius: 4, overflow: "hidden" }}>
             <div style={{ width: `${pct}%`, height: "100%", background: `linear-gradient(90deg, ${G}, #6aad7b)`, borderRadius: 4, transition: "width .6s ease" }} />
           </div>
           <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 8, textAlign: "right" }}>
-            {completedCount} / {totalRoute} 店舗完了
+            {completedCount} / {activeCount} 店舗完了
           </div>
         </div>
       )}
 
+      {/* 本日の配送予定 */}
+      <div style={{ background: "#fff", borderRadius: 12, padding: "12px 16px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
+        <div style={{ fontSize: 12, color: "#94a3b8" }}>
+          本日の配送予定: <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{totalRoute}店舗</span>
+          （アサヒ物流 {todayStores.filter(s => s.logistics === "アサヒ").length}店 / 自社便 {todayStores.filter(s => s.logistics === "自社").length}店）
+        </div>
+      </div>
+
       {/* ルート表示 */}
-      {totalRoute > 0 && (
+      {activeCount > 0 && (
         <div style={{ background: "#fff", borderRadius: 12, padding: "16px 20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
           <div style={{ fontSize: 11, fontWeight: 800, color: G, letterSpacing: 2, marginBottom: 8 }}>ROUTE</div>
           <div style={{ fontSize: 12, color: "#475569", lineHeight: 2 }}>
@@ -160,7 +171,14 @@ function StoreCard({ store, expanded, onToggle }) {
           }}>
             {c.icon}
           </div>
-          <span style={{ fontWeight: 800, fontSize: 14, color: "#1a1a1a" }}>{store.name}</span>
+          <div>
+            <span style={{ fontWeight: 800, fontSize: 14, color: "#1a1a1a" }}>{store.name}</span>
+            {store.logistics && status !== "completed" && status !== "enroute" && (
+              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>
+                {store.logistics === "アサヒ" ? "アサヒ物流 配送" : "自社便 配送"}{store.time && store.time !== "―" ? ` ${store.time}` : ""}
+              </div>
+            )}
+          </div>
         </div>
         <span style={{
           fontSize: 11, fontWeight: 700, color: c.color, padding: "3px 10px",
