@@ -243,7 +243,7 @@ export default function App() {
                   {/* 左: 商品情報 */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                      <span style={{ fontSize: 17, fontWeight: 900, color: "#1a1a1a", fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.name}</span>
+                      <span style={{ fontSize: 18, fontWeight: 900, color: "#1a1a1a", fontFamily: "'Yu Gothic','YuGothic',sans-serif", letterSpacing: "0.02em" }}>{item.name}</span>
                       {item.tag && (
                         <span style={{ fontSize: 10, fontWeight: 800, color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : item.tag === "産直" ? G : "#2563eb", background: item.tag === "特価" ? "#fef2f2" : item.tag === "旬" ? "#fffbeb" : item.tag === "産直" ? "#f0fdf4" : "#eff6ff", padding: "2px 8px", borderRadius: 3 }}>{item.tag}</span>
                       )}
@@ -253,15 +253,14 @@ export default function App() {
                       <span>{item.unit}</span>
                     </div>
                   </div>
-                  {/* 右: 売価・税別・値段の順 */}
+                  {/* 右: 税別 → 値段 → 税込 */}
                   <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 700 }}>売価</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 700, marginBottom: 2 }}>税別</div>
+                    <div style={{ fontSize: 12, color: "#64748b", fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 900, marginBottom: 2 }}>税別</div>
                     <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end" }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: "#dc2626", fontFamily: "'Yu Gothic','YuGothic',sans-serif", marginRight: 1 }}>¥</span>
-                      <span style={{ fontSize: 32, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.price.toLocaleString()}</span>
+                      <span style={{ fontSize: 16, fontWeight: 900, color: "#dc2626", fontFamily: "'Yu Gothic','YuGothic',sans-serif", marginRight: 1 }}>¥</span>
+                      <span style={{ fontSize: 34, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.price.toLocaleString()}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 3, fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 700 }}>税込 ¥{taxIncl.toLocaleString()}</div>
+                    <div style={{ fontSize: 12, color: "#64748b", marginTop: 3, fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 900 }}>税込 ¥{taxIncl.toLocaleString()}</div>
                   </div>
                 </div>
               );
