@@ -227,32 +227,53 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── お買い得情報 */}
-      <section id="tokubai" style={{ padding: "72px 24px", background: "#fff" }}>
-        <div style={{ maxWidth: 600, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>PRODUCTS</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12 }}>お買い得情報</h2>
-          <p style={{ textAlign: "center", fontSize: 13, color: "#94a3b8", marginBottom: 24 }}>本日のおすすめ商品</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {/* ── お買い得情報（チラシ風） */}
+      <section id="tokubai" style={{ padding: "48px 16px 64px", background: "#fff200", position: "relative", overflow: "hidden" }}>
+        {/* 背景のギザギザ装飾 */}
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 12, background: "repeating-linear-gradient(90deg, #dc2626 0px, #dc2626 12px, transparent 12px, transparent 24px)", opacity: 0.8 }} />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 12, background: "repeating-linear-gradient(90deg, #dc2626 0px, #dc2626 12px, transparent 12px, transparent 24px)", opacity: 0.8 }} />
+
+        <div style={{ maxWidth: 600, margin: "0 auto", position: "relative" }}>
+          {/* ヘッダー */}
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ display: "inline-block", background: "#dc2626", color: "#fff", padding: "6px 24px", borderRadius: 4, fontSize: 13, fontWeight: 900, letterSpacing: 2, marginBottom: 10, transform: "rotate(-2deg)" }}>本日のおすすめ</div>
+            <h2 style={{ fontSize: "clamp(28px, 6vw, 44px)", fontWeight: 900, color: "#dc2626", margin: "0 0 4px", fontFamily: "'Yu Gothic','YuGothic',sans-serif", textShadow: "2px 2px 0 #fff" }}>
+              お買い得情報
+            </h2>
+            <div style={{ fontSize: 13, color: "#92400e", fontWeight: 700 }}>音川青果 厳選青果</div>
+          </div>
+
+          {/* 商品グリッド */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
             {tokubaiItems.map((item, i) => (
-              <div key={i} style={{ background: "#fff", border: "1.5px solid #e5e7eb", borderRadius: 10, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  {item.tag && (
-                    <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: item.tag === "特価" ? "#ef4444" : item.tag === "旬" ? "#f59e0b" : G, padding: "2px 8px", borderRadius: 4 }}>{item.tag}</span>
-                  )}
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>{item.name}</div>
-                    <div style={{ fontSize: 11, color: "#94a3b8" }}>{item.unit}</div>
-                  </div>
-                </div>
-                <div style={{ fontSize: 20, fontWeight: 900, color: G }}>
-                  <span style={{ fontSize: 12, fontWeight: 700 }}>¥</span>{item.price.toLocaleString()}
-                  <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", marginLeft: 2 }}>（税込）</span>
+              <div key={i} style={{
+                background: "#fff", borderRadius: 8, padding: "16px 12px", textAlign: "center",
+                border: "3px solid #dc2626", position: "relative",
+                boxShadow: "3px 3px 0 rgba(220,38,38,.2)",
+                transform: i % 2 === 0 ? "rotate(-1deg)" : "rotate(1deg)",
+              }}>
+                {item.tag && (
+                  <div style={{
+                    position: "absolute", top: -8, right: -8,
+                    background: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#f59e0b" : G,
+                    color: "#fff", fontSize: 11, fontWeight: 900, padding: "4px 10px",
+                    borderRadius: "50%", transform: "rotate(12deg)",
+                    boxShadow: "1px 1px 3px rgba(0,0,0,.2)",
+                    minWidth: 20, textAlign: "center",
+                  }}>{item.tag}</div>
+                )}
+                <div style={{ fontSize: 16, fontWeight: 900, color: "#1a1a1a", marginBottom: 4 }}>{item.name}</div>
+                <div style={{ fontSize: 11, color: "#92400e", marginBottom: 8 }}>{item.unit}</div>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 2 }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: "#dc2626" }}>¥</span>
+                  <span style={{ fontSize: 36, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.price.toLocaleString()}</span>
+                  <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>税込</span>
                 </div>
               </div>
             ))}
           </div>
-          <p style={{ textAlign: "center", fontSize: 12, color: "#94a3b8", marginTop: 16 }}>※ 価格は店舗・時期により異なる場合があります</p>
+
+          <p style={{ textAlign: "center", fontSize: 11, color: "#92400e", marginTop: 16 }}>※ 価格は店舗・時期により異なる場合があります</p>
         </div>
       </section>
 
