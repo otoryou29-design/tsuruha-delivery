@@ -230,28 +230,26 @@ export default function App() {
       {/* ── お買い得情報（スーパーチラシ風） */}
       {/* ── お買い得情報（シンプルモダン） */}
       <section id="tokubai" style={{ padding: "64px 24px", background: "#fff", position: "relative", overflow: "hidden" }}>
-        {/* 野菜絵文字の散らばり背景（Instagram QR風） */}
-        {(() => {
-          const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅","🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅","🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆"];
-          return emojis.map((e, i) => (
-            <span key={i} style={{
-              position: "absolute",
-              top: `${(i * 67 + i * 13) % 100}%`,
-              left: `${(i * 41 + i * 7) % 100}%`,
-              fontSize: 20 + (i % 3) * 8,
-              transform: `rotate(${(i * 37) % 360}deg)`,
-              opacity: 0.15,
-              pointerEvents: "none",
-              userSelect: "none",
-            }}>{e}</span>
-          ));
-        })()}
-        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        {/* 野菜絵文字の背景パターン（Instagram QR風） */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", userSelect: "none", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 8, padding: 12, alignContent: "start" }}>
+          {Array.from({ length: 120 }, (_, i) => {
+            const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅"];
+            return (
+              <span key={i} style={{
+                fontSize: 32,
+                transform: `rotate(${(i * 47 + 10) % 50 - 25}deg)`,
+                opacity: 0.13,
+                textAlign: "center",
+              }}>{emojis[i % emojis.length]}</span>
+            );
+          })}
+        </div>
+        <div style={{ maxWidth: 600, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#dc2626", letterSpacing: 2, marginBottom: 8, textAlign: "center" }}>SPECIAL PRICE</p>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 6, color: "#1a1a1a" }}>お買い得情報</h2>
           <p style={{ textAlign: "center", fontSize: 13, color: "#94a3b8", marginBottom: 28 }}>本日のおすすめ商品をご紹介</p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
             {tokubaiItems.map((item, i) => {
               const taxIncl = Math.ceil(item.price * 1.08);
               return (
