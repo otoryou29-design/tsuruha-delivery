@@ -47,7 +47,7 @@ export default function CustomerView() {
   }, []);
 
   const completedCount = Object.values(statuses).filter(s => s.status === "completed").length;
-  const totalRoute = todayStores.length;
+  const totalRoute = allTodayStores.length;
   const enrouteStore = Object.values(statuses).find(s => s.status === "enroute");
   const activeCount = Object.keys(statuses).length;
   const pct = activeCount > 0 ? Math.round(completedCount / activeCount * 100) : 0;
