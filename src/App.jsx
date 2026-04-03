@@ -276,9 +276,10 @@ export default function App() {
                 <div key={i} style={{
                   background: "#fff", border: "1.5px solid #e5e7eb",
                   borderRadius: 8,
-                  padding: "16px 14px", textAlign: "center",
+                  padding: "16px 10px", textAlign: "center",
                   display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
-                  height: 160,
+                  height: 160, position: "relative", zIndex: 2, overflow: "hidden",
+                  boxShadow: "0 1px 4px rgba(0,0,0,.06)",
                 }}>
                   {/* タグ */}
                   {item.tag && (
