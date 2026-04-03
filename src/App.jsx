@@ -225,8 +225,8 @@ export default function App() {
         <div style={{ background: "#e8630a", padding: "32px 24px 28px", textAlign: "center", position: "relative" }}>
 
           <div style={{ position: "relative", zIndex: 1 }}>
-            <div style={{ fontSize: 15, fontWeight: 900, color: "#fff", letterSpacing: 3, marginBottom: 8, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>OTOKAWA SPECIAL</div>
-            <h2 style={{ fontSize: "clamp(34px, 9vw, 54px)", fontWeight: 900, color: "#fff", margin: "0 0 10px", fontFamily: "'Yu Gothic','YuGothic',sans-serif", lineHeight: 1.2, textShadow: "2px 2px 0 rgba(0,0,0,.2)" }}>
+            <div style={{ fontSize: 15, fontWeight: "bold", color: "#fff", letterSpacing: 3, marginBottom: 8, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>OTOKAWA SPECIAL</div>
+            <h2 style={{ fontSize: "clamp(34px, 9vw, 54px)", fontWeight: "bold", color: "#fff", margin: "0 0 10px", fontFamily: "'YuGothic','Yu Gothic',sans-serif", lineHeight: 1.2, WebkitTextStroke: "1px #fff", textShadow: "2px 2px 0 rgba(0,0,0,.2)" }}>
               超絶怒涛の<br />お買い得セール！
             </h2>
 
@@ -241,11 +241,11 @@ export default function App() {
               const s = Math.floor((diff % 60000) / 1000);
               return (
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,.3)", borderRadius: 8, padding: "8px 16px", marginTop: 4 }}>
-                  <span style={{ fontSize: 13, color: "#fff", fontWeight: 900, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>次回更新まで</span>
+                  <span style={{ fontSize: 13, color: "#fff", fontWeight: "bold", fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>次回更新まで</span>
                   <div style={{ display: "flex", gap: 4 }}>
                     {[String(h).padStart(2,"0"), String(m).padStart(2,"0"), String(s).padStart(2,"0")].map((v, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: 2 }}>
-                        <span style={{ background: "#1a1a1a", color: "#fff", padding: "6px 9px", borderRadius: 5, fontSize: 22, fontWeight: 900, fontFamily: "'Yu Gothic','YuGothic',sans-serif", minWidth: 36, textAlign: "center" }}>{v}</span>
+                        <span style={{ background: "#1a1a1a", color: "#fff", padding: "6px 9px", borderRadius: 5, fontSize: 22, fontWeight: "bold", fontFamily: "'YuGothic','Yu Gothic',sans-serif", minWidth: 36, textAlign: "center" }}>{v}</span>
                         {i < 2 && <span style={{ color: "#fff", fontSize: 20, fontWeight: 900 }}>:</span>}
                       </div>
                     ))}
