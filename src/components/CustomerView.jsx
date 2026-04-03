@@ -33,7 +33,7 @@ export default function CustomerView() {
     const list = selectedArea === "全エリア" ? allTodayStores : allTodayStores.filter((s) => s.area === selectedArea);
     const merged = list.map((s) => ({ ...s, ...(statuses[s.id] || {}) }));
     return merged.sort((a, b) => {
-      const order = { completed: 0, enroute: 1, arrived: 2, skipped: 3, pending: 4 };
+      const order = { completed: 0, enroute: 1, arrived: 2, skipped: 3, pending: 4, scheduled: 5 };
       const aO = order[a.status] ?? 5, bO = order[b.status] ?? 5;
       if (aO !== bO) return aO - bO;
       if (a.status === "completed" && b.status === "completed") return new Date(b.completedAt || 0) - new Date(a.completedAt || 0);
@@ -152,18 +152,22 @@ export default function CustomerView() {
 }
 
 function StoreCard({ store, expanded, onToggle }) {
-  const status = store.status || "pending";
+  const isJisha = store.logistics === "自社";
+  const hasFirebaseStatus = !!store.status;
+  const status = store.status || (isJisha ? "pending" : "scheduled");
 
   const config = {
-    pending:   { icon: "−", label: "配送予定",     bg: "#fff",     border: "#e5e7eb", color: "#94a3b8", accent: "#f9fafb" },
+    scheduled: { icon: "🚛", label: "通常便配送",   bg: "#fff",     border: "#e5e7eb", color: "#94a3b8", accent: "#f9fafb" },
+    pending:   { icon: "−",  label: "配送予定",     bg: "#fff",     border: G,         color: G,         accent: "#f0fdf4" },
     enroute:   { icon: "🚚", label: "移動中",       bg: "#fff",     border: G,         color: G,         accent: "#f0fdf4", pulse: true },
     arrived:   { icon: "📦", label: "納品作業中",   bg: "#fff",     border: "#3b82f6", color: "#2563eb", accent: "#eff6ff" },
     completed: { icon: "✓",  label: "完了",         bg: "#fff",     border: "#22c55e", color: "#16a34a", accent: "#f0fdf4" },
     skipped:   { icon: "−",  label: "本日訪問不可", bg: "#fff",     border: "#f59e0b", color: "#d97706", accent: "#fffbeb" },
     delayed:   { icon: "!",  label: "遅延",         bg: "#fff",     border: "#ef4444", color: "#dc2626", accent: "#fef2f2", pulse: true },
   };
-  const c = config[status] || config.pending;
+  const c = config[status] || config.scheduled;
   const hasItems = store.items && store.items.length > 0;
+  const trackable = isJisha || hasFirebaseStatus;
 
   return (
     <div onClick={onToggle} style={{
@@ -171,6 +175,7 @@ function StoreCard({ store, expanded, onToggle }) {
       cursor: hasItems ? "pointer" : "default",
       animation: c.pulse ? "enroutePulse 2.5s infinite" : status === "completed" ? "fadeIn .4s" : "none",
       transition: "all .2s",
+      opacity: status === "scheduled" ? 0.7 : 1,
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -184,11 +189,14 @@ function StoreCard({ store, expanded, onToggle }) {
           </div>
           <div>
             <span style={{ fontWeight: 800, fontSize: 14, color: "#1a1a1a" }}>{store.name}</span>
-            {store.logistics && status !== "completed" && status !== "enroute" && (
-              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>
-                {store.logistics === "アサヒ" ? "アサヒ物流 配送" : "自社便 配送"}{store.time && store.time !== "―" ? ` ${store.time}` : ""}
-              </div>
-            )}
+            <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2, display: "flex", alignItems: "center", gap: 4 }}>
+              {isJisha ? (
+                <><span style={{ color: G, fontWeight: 700 }}>自社便</span>{trackable && <span style={{ background: G, color: "#fff", padding: "0 4px", borderRadius: 2, fontSize: 9 }}>LIVE</span>}</>
+              ) : (
+                <span>アサヒ物流（通常便）</span>
+              )}
+              {store.time && store.time !== "―" && store.time !== "自社(午前)" && <span> {store.time}</span>}
+            </div>
           </div>
         </div>
         <span style={{
@@ -203,6 +211,12 @@ function StoreCard({ store, expanded, onToggle }) {
       {status === "enroute" && (
         <div style={{ marginTop: 8, fontSize: 12, color: G, fontWeight: 700, paddingLeft: 42 }}>
           スタッフが向かっています
+        </div>
+      )}
+
+      {status === "scheduled" && (
+        <div style={{ marginTop: 6, fontSize: 11, color: "#94a3b8", paddingLeft: 42 }}>
+          アサヒ物流による配送のためリアルタイム追跡はできません
         </div>
       )}
 
