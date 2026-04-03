@@ -227,54 +227,64 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── お買い得情報（チラシ風） */}
-      <section id="tokubai" style={{ padding: "48px 16px 64px", background: "#fff200", position: "relative", overflow: "hidden" }}>
-        {/* 背景のギザギザ装飾 */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 12, background: "repeating-linear-gradient(90deg, #dc2626 0px, #dc2626 12px, transparent 12px, transparent 24px)", opacity: 0.8 }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 12, background: "repeating-linear-gradient(90deg, #dc2626 0px, #dc2626 12px, transparent 12px, transparent 24px)", opacity: 0.8 }} />
-
-        <div style={{ maxWidth: 600, margin: "0 auto", position: "relative" }}>
-          {/* ヘッダー */}
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <div style={{ display: "inline-block", background: "#dc2626", color: "#fff", padding: "6px 24px", borderRadius: 4, fontSize: 14, fontWeight: 900, letterSpacing: 3, marginBottom: 10, transform: "rotate(-2deg)", fontFamily: "'Yuji Boku',serif" }}>本日のおすすめ</div>
-            <h2 style={{ fontSize: "clamp(36px, 8vw, 56px)", fontWeight: 900, color: "#dc2626", margin: "0 0 4px", fontFamily: "'Yuji Boku',serif", textShadow: "3px 3px 0 rgba(0,0,0,.08)" }}>
-              お買い得情報
-            </h2>
-            <div style={{ fontSize: 15, color: "#92400e", fontWeight: 700, fontFamily: "'Yuji Boku',serif" }}>音川青果 厳選青果</div>
-          </div>
-
-          {/* 商品グリッド */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
-            {tokubaiItems.map((item, i) => (
-              <div key={i} style={{
-                background: "#fff", borderRadius: 8, padding: "16px 12px", textAlign: "center",
-                border: "3px solid #dc2626", position: "relative",
-                boxShadow: "3px 3px 0 rgba(220,38,38,.2)",
-                transform: i % 2 === 0 ? "rotate(-1deg)" : "rotate(1deg)",
-              }}>
-                {item.tag && (
-                  <div style={{
-                    position: "absolute", top: -8, right: -8,
-                    background: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#f59e0b" : G,
-                    color: "#fff", fontSize: 11, fontWeight: 900, padding: "4px 10px",
-                    borderRadius: "50%", transform: "rotate(12deg)",
-                    boxShadow: "1px 1px 3px rgba(0,0,0,.2)",
-                    minWidth: 20, textAlign: "center",
-                  }}>{item.tag}</div>
-                )}
-                <div style={{ fontSize: 20, fontWeight: 900, color: "#1a1a1a", marginBottom: 2, fontFamily: "'Yuji Boku',serif" }}>{item.name}</div>
-                <div style={{ fontSize: 11, color: "#92400e", marginBottom: 8 }}>{item.unit}</div>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 2 }}>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: "#dc2626", fontFamily: "'Yuji Boku',serif" }}>¥</span>
-                  <span style={{ fontSize: 40, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yuji Boku',serif" }}>{item.price.toLocaleString()}</span>
-                  <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>税込</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p style={{ textAlign: "center", fontSize: 11, color: "#92400e", marginTop: 16 }}>※ 価格は店舗・時期により異なる場合があります</p>
+      {/* ── お買い得情報（スーパーチラシ風） */}
+      <section id="tokubai" style={{ padding: "0 0 8px", background: "#dc2626", position: "relative", overflow: "hidden" }}>
+        {/* 上部ヘッダー帯 */}
+        <div style={{ background: "linear-gradient(180deg, #b91c1c 0%, #dc2626 100%)", padding: "16px 16px 12px", textAlign: "center", position: "relative" }}>
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 6, background: "repeating-linear-gradient(90deg, #fff200 0px, #fff200 8px, #dc2626 8px, #dc2626 16px)" }} />
+          <div style={{ display: "inline-block", background: "#fff200", color: "#dc2626", padding: "4px 20px", fontSize: 12, fontWeight: 900, letterSpacing: 2, marginBottom: 6 }}>音川青果</div>
+          <h2 style={{ fontSize: "clamp(32px, 7vw, 48px)", fontWeight: 900, color: "#fff200", margin: "0", fontFamily: "'Yuji Boku',serif", textShadow: "2px 2px 0 rgba(0,0,0,.3)", lineHeight: 1.2 }}>
+            本日の<br />お買い得情報
+          </h2>
+          <div style={{ fontSize: 13, color: "#fff", fontWeight: 700, marginTop: 4, opacity: .9 }}>厳選青果を特別価格でご提供！</div>
         </div>
+
+        {/* 商品エリア（黄色背景） */}
+        <div style={{ background: "#fff200", margin: "0 6px", padding: "10px 6px 16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+            {tokubaiItems.map((item, i) => {
+              const tagColors = { "特価": "#dc2626", "旬": "#f59e0b", "産直": G, "おすすめ": "#2563eb" };
+              const tagBg = tagColors[item.tag] || "#dc2626";
+              return (
+                <div key={i} style={{
+                  background: "#fff", border: "3px solid #dc2626", position: "relative",
+                  padding: "10px 6px 10px", textAlign: "center",
+                }}>
+                  {/* 斜めリボン */}
+                  {item.tag && (
+                    <div style={{
+                      position: "absolute", top: -1, left: -1, width: 0, height: 0,
+                      borderTop: `36px solid ${tagBg}`, borderRight: "36px solid transparent",
+                    }}>
+                      <span style={{ position: "absolute", top: -32, left: 1, fontSize: 9, fontWeight: 900, color: "#fff", transform: "rotate(-45deg)", transformOrigin: "center", whiteSpace: "nowrap" }}>{item.tag}</span>
+                    </div>
+                  )}
+                  {/* 商品名 */}
+                  <div style={{ fontSize: "clamp(16px, 4vw, 22px)", fontWeight: 900, color: "#1a1a1a", fontFamily: "'Yuji Boku',serif", marginBottom: 2, marginTop: item.tag ? 4 : 0 }}>{item.name}</div>
+                  <div style={{ fontSize: 11, color: "#92400e", marginBottom: 6 }}>{item.unit}</div>
+                  {/* 価格（スターバースト風背景） */}
+                  <div style={{ position: "relative", display: "inline-block", padding: "8px 16px" }}>
+                    <div style={{ position: "absolute", inset: -6, background: "#fff200", borderRadius: "50%", transform: "rotate(15deg)" }} />
+                    <div style={{ position: "absolute", inset: -6, background: "#fff200", borderRadius: "50%", transform: "rotate(45deg)" }} />
+                    <div style={{ position: "absolute", inset: -6, background: "#fff200", borderRadius: "50%", transform: "rotate(75deg)" }} />
+                    <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "baseline", justifyContent: "center", gap: 1 }}>
+                      <span style={{ fontSize: 14, fontWeight: 900, color: "#dc2626" }}>¥</span>
+                      <span style={{ fontSize: "clamp(36px, 9vw, 52px)", fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yuji Boku',serif", WebkitTextStroke: "1px #b91c1c" }}>{item.price.toLocaleString()}</span>
+                    </div>
+                    <div style={{ position: "relative", zIndex: 1, fontSize: 10, color: "#666", fontWeight: 600 }}>税込</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* フッター帯 */}
+        <div style={{ margin: "0 6px", background: "#fff", padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontSize: 10, color: "#666" }}>※ 価格は店舗・時期により異なる場合があります</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#dc2626", fontFamily: "'Yuji Boku',serif" }}>音川青果</div>
+        </div>
+        <div style={{ height: 6, margin: "0 6px 0", background: "repeating-linear-gradient(90deg, #fff200 0px, #fff200 8px, #dc2626 8px, #dc2626 16px)" }} />
       </section>
 
       {/* ── 採用情報 */}
