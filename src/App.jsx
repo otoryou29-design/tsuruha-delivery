@@ -277,8 +277,8 @@ export default function App() {
                   background: "#fff", border: "1.5px solid #e5e7eb",
                   borderRadius: 8,
                   padding: "16px 14px", textAlign: "center",
-                  display: "flex", flexDirection: "column", justifyContent: "space-between",
-                  minHeight: 140,
+                  display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
+                  height: 160,
                 }}>
                   {/* タグ */}
                   {item.tag && (
