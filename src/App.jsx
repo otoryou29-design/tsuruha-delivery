@@ -21,6 +21,8 @@ const TOKUBAI_FALLBACK = [
 
 export default function App() {
   const [page, setPage] = useState("home");
+  const [now, setNow] = useState(new Date());
+  useEffect(() => { const t = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(t); }, []);
   const [contactType, setContactType] = useState("business"); // "business" | "recruit"
   const [contactForm, setContactForm] = useState({ company: "", category: "生産者", message: "", name: "", age: "", gender: "女性", email: "", interviewDate: "" });
   const [contactSent, setContactSent] = useState(false);
@@ -217,26 +219,49 @@ export default function App() {
       </section>
 
       {/* ── お買い得情報（スーパーチラシ風） */}
-      {/* ── お買い得情報（シンプルモダン） */}
-      <section id="tokubai" style={{ padding: "64px 24px", background: "#fff", position: "relative", overflow: "hidden" }}>
-        {/* 野菜絵文字の背景パターン（Instagram QR風） */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", userSelect: "none", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 8, padding: 12, alignContent: "start" }}>
-          {Array.from({ length: 120 }, (_, i) => {
-            const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅"];
-            return (
-              <span key={i} style={{
-                fontSize: 32,
-                transform: `rotate(${(i * 47 + 10) % 50 - 25}deg)`,
-                opacity: 0.7,
-                textAlign: "center",
-              }}>{emojis[i % emojis.length]}</span>
-            );
-          })}
+      {/* ── お買い得情報（Amazonセール風） */}
+      <section id="tokubai" style={{ padding: 0, background: "#fff", position: "relative", overflow: "hidden" }}>
+        {/* ヒーローバナー */}
+        <div style={{ background: "linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%)", padding: "32px 24px 28px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+          {/* 装飾の光 */}
+          <div style={{ position: "absolute", top: -40, right: -40, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,.15)" }} />
+          <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,.1)" }} />
+
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.85)", letterSpacing: 2, marginBottom: 6 }}>OTOKAWA SPECIAL</div>
+            <h2 style={{ fontSize: "clamp(28px, 7vw, 44px)", fontWeight: 900, color: "#fff", margin: "0 0 8px", fontFamily: "'Yu Gothic','YuGothic',sans-serif", lineHeight: 1.2, textShadow: "2px 2px 4px rgba(0,0,0,.15)" }}>
+              超絶怒涛の<br />お買い得セール！
+            </h2>
+
+            {/* カウントダウンタイマー */}
+            {(() => {
+              const tomorrow9 = new Date(now);
+              tomorrow9.setDate(tomorrow9.getDate() + 1);
+              tomorrow9.setHours(9, 0, 0, 0);
+              const diff = Math.max(0, tomorrow9 - now);
+              const h = Math.floor(diff / 3600000);
+              const m = Math.floor((diff % 3600000) / 60000);
+              const s = Math.floor((diff % 60000) / 1000);
+              return (
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,.3)", borderRadius: 8, padding: "8px 16px", marginTop: 4 }}>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,.8)", fontWeight: 700 }}>次回更新まで</span>
+                  <div style={{ display: "flex", gap: 4 }}>
+                    {[String(h).padStart(2,"0"), String(m).padStart(2,"0"), String(s).padStart(2,"0")].map((v, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <span style={{ background: "#1a1a1a", color: "#fff", padding: "4px 7px", borderRadius: 4, fontSize: 18, fontWeight: 900, fontFamily: "'Yu Gothic','YuGothic',sans-serif", minWidth: 32, textAlign: "center" }}>{v}</span>
+                        {i < 2 && <span style={{ color: "#fff", fontSize: 16, fontWeight: 900 }}>:</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
         </div>
+
+        {/* 商品リスト */}
+        <div style={{ padding: "0 24px 48px", background: "#fff" }}>
         <div style={{ maxWidth: 600, margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#dc2626", letterSpacing: 2, marginBottom: 8, textAlign: "center" }}>SPECIAL PRICE</p>
-          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 6, color: "#1a1a1a" }}>お買い得情報</h2>
-          <p style={{ textAlign: "center", fontSize: 13, color: "#94a3b8", marginBottom: 28 }}>本日のおすすめ商品をご紹介</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
             {tokubaiItems.map((item, i) => {
@@ -271,6 +296,7 @@ export default function App() {
           </div>
 
           <p style={{ textAlign: "center", fontSize: 11, color: "#c4c4c4", marginTop: 14 }}>※ 価格は店舗・時期により異なる場合があります</p>
+        </div>
         </div>
       </section>
 
