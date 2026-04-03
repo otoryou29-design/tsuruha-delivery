@@ -253,14 +253,15 @@ export default function App() {
                       <span>{item.unit}</span>
                     </div>
                   </div>
-                  {/* 右: 価格 */}
+                  {/* 右: 売価・税別・値段の順 */}
                   <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 700 }}>売価</div>
+                    <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 700, marginBottom: 2 }}>税別</div>
                     <div style={{ display: "flex", alignItems: "baseline", justifyContent: "flex-end" }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: "#dc2626", marginRight: 1 }}>¥</span>
-                      <span style={{ fontSize: 32, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Oswald',sans-serif", letterSpacing: "-1px" }}>{item.price.toLocaleString()}</span>
-                      <span style={{ fontSize: 11, color: "#94a3b8", marginLeft: 2 }}>税別</span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#dc2626", fontFamily: "'Yu Gothic','YuGothic',sans-serif", marginRight: 1 }}>¥</span>
+                      <span style={{ fontSize: 32, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.price.toLocaleString()}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>税込 ¥{taxIncl.toLocaleString()}</div>
+                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 3, fontFamily: "'Yu Gothic','YuGothic',sans-serif", fontWeight: 700 }}>税込 ¥{taxIncl.toLocaleString()}</div>
                   </div>
                 </div>
               );
