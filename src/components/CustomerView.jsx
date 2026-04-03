@@ -93,7 +93,7 @@ export default function CustomerView() {
       <div style={{ background: "#fff", borderRadius: 12, padding: "12px 16px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
         <div style={{ fontSize: 12, color: "#94a3b8" }}>
           本日の配送予定: <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{allTodayStores.length}店舗</span>
-          （アサヒ物流 {allTodayStores.filter(s => s.logistics === "アサヒ").length}店 / 自社便 {allTodayStores.filter(s => s.logistics === "自社").length}店）
+          （アサヒロジスティクス {allTodayStores.filter(s => s.logistics === "アサヒ").length}店 / 自社便 {allTodayStores.filter(s => s.logistics === "自社").length}店）
         </div>
       </div>
 
@@ -193,7 +193,7 @@ function StoreCard({ store, expanded, onToggle }) {
               {isJisha ? (
                 <><span style={{ color: G, fontWeight: 700 }}>自社便</span>{trackable && <span style={{ background: G, color: "#fff", padding: "0 4px", borderRadius: 2, fontSize: 9 }}>LIVE</span>}</>
               ) : (
-                <span>アサヒ物流（通常便）</span>
+                <span>アサヒロジスティクス（通常便）</span>
               )}
               {store.time && store.time !== "―" && store.time !== "自社(午前)" && <span> {store.time}</span>}
             </div>
@@ -216,7 +216,7 @@ function StoreCard({ store, expanded, onToggle }) {
 
       {status === "scheduled" && (
         <div style={{ marginTop: 6, fontSize: 11, color: "#94a3b8", paddingLeft: 42 }}>
-          アサヒ物流による配送のためリアルタイム追跡はできません
+          アサヒロジスティクスによる配送のためリアルタイム追跡はできません
         </div>
       )}
 
