@@ -20,7 +20,7 @@ export default function CustomerView() {
     const list = selectedArea === "全エリア" ? STORES : STORES.filter((s) => s.area === selectedArea);
     const merged = list.map((s) => ({ ...s, ...(statuses[s.id] || {}) }));
     return merged.sort((a, b) => {
-      const order = { completed: 0, enroute: 1, arrived: 2, pending: 3 };
+      const order = { completed: 0, enroute: 1, arrived: 2, skipped: 3, pending: 4 };
       const aO = order[a.status] ?? 4, bO = order[b.status] ?? 4;
       if (aO !== bO) return aO - bO;
       if (a.status === "completed" && b.status === "completed") return new Date(b.completedAt || 0) - new Date(a.completedAt || 0);
