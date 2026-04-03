@@ -238,7 +238,7 @@ export default function App() {
               <span key={i} style={{
                 fontSize: 32,
                 transform: `rotate(${(i * 47 + 10) % 50 - 25}deg)`,
-                opacity: 0.13,
+                opacity: 0.7,
                 textAlign: "center",
               }}>{emojis[i % emojis.length]}</span>
             );
