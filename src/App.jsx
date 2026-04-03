@@ -272,18 +272,10 @@ export default function App() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {tokubaiItems.map((item, i) => {
               const taxIncl = Math.ceil(item.price * 1.08);
-              const corners = [
-                "48% 52% 45% 55% / 52% 48% 52% 48%",
-                "52% 48% 55% 45% / 48% 52% 48% 52%",
-                "45% 55% 52% 48% / 55% 45% 50% 50%",
-                "50% 50% 48% 52% / 45% 55% 52% 48%",
-                "55% 45% 50% 50% / 48% 52% 55% 45%",
-                "48% 52% 52% 48% / 50% 50% 45% 55%",
-              ];
               return (
                 <div key={i} style={{
-                  background: "#fff", border: "2px solid #1a1a1a",
-                  borderRadius: corners[i % corners.length],
+                  background: "#fff", border: "1.5px solid #e5e7eb",
+                  borderRadius: 8,
                   padding: "16px 14px", textAlign: "center",
                   display: "flex", flexDirection: "column", justifyContent: "space-between",
                   minHeight: 140,
