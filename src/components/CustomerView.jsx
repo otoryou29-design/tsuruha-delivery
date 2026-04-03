@@ -11,15 +11,26 @@ export default function CustomerView() {
   const [selectedArea, setSelectedArea] = useState("全エリア");
   const [expandedStore, setExpandedStore] = useState(null);
 
-  const todayStores = useMemo(() => getTodayStores(), []);
+  const scheduledStores = useMemo(() => getTodayStores(), []);
+
+  // 今日の配送予定店舗 + Firebaseにステータスがある店舗（青果AD巡回含む）を統合
+  const allTodayStores = useMemo(() => {
+    const ids = new Set(scheduledStores.map(s => s.id));
+    const extra = Object.keys(statuses)
+      .map(id => Number(id))
+      .filter(id => !ids.has(id))
+      .map(id => STORES.find(s => s.id === id))
+      .filter(Boolean);
+    return [...scheduledStores, ...extra];
+  }, [scheduledStores, statuses]);
 
   const areas = useMemo(() => {
-    const a = [...new Set(todayStores.map((s) => s.area))];
+    const a = [...new Set(allTodayStores.map((s) => s.area))];
     return ["全エリア", ...a];
-  }, [todayStores]);
+  }, [allTodayStores]);
 
   const sortedStores = useMemo(() => {
-    const list = selectedArea === "全エリア" ? todayStores : todayStores.filter((s) => s.area === selectedArea);
+    const list = selectedArea === "全エリア" ? allTodayStores : allTodayStores.filter((s) => s.area === selectedArea);
     const merged = list.map((s) => ({ ...s, ...(statuses[s.id] || {}) }));
     return merged.sort((a, b) => {
       const order = { completed: 0, enroute: 1, arrived: 2, skipped: 3, pending: 4 };
@@ -28,7 +39,7 @@ export default function CustomerView() {
       if (a.status === "completed" && b.status === "completed") return new Date(b.completedAt || 0) - new Date(a.completedAt || 0);
       return 0;
     });
-  }, [selectedArea, statuses, todayStores]);
+  }, [selectedArea, statuses, allTodayStores]);
 
   useEffect(() => {
     const unsub = onDeliveryStatusChange(TODAY, setStatuses);
@@ -81,8 +92,8 @@ export default function CustomerView() {
       {/* 本日の配送予定 */}
       <div style={{ background: "#fff", borderRadius: 12, padding: "12px 16px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
         <div style={{ fontSize: 12, color: "#94a3b8" }}>
-          本日の配送予定: <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{totalRoute}店舗</span>
-          （アサヒ物流 {todayStores.filter(s => s.logistics === "アサヒ").length}店 / 自社便 {todayStores.filter(s => s.logistics === "自社").length}店）
+          本日の配送予定: <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{allTodayStores.length}店舗</span>
+          （アサヒ物流 {allTodayStores.filter(s => s.logistics === "アサヒ").length}店 / 自社便 {allTodayStores.filter(s => s.logistics === "自社").length}店）
         </div>
       </div>
 
