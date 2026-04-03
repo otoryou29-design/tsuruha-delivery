@@ -222,7 +222,7 @@ export default function App() {
       {/* ── お買い得情報（Amazonセール風） */}
       <section id="tokubai" style={{ padding: 0, background: "#fff", position: "relative", overflow: "hidden" }}>
         {/* ヒーローバナー */}
-        <div style={{ background: "#e8630a", padding: "32px 24px 28px", textAlign: "center", position: "relative" }}>
+        <div style={{ background: "#ff8c00", padding: "32px 24px 28px", textAlign: "center", position: "relative" }}>
 
           <div style={{ position: "relative", zIndex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: "bold", color: "#fff", letterSpacing: 3, marginBottom: 8, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>OTOKAWA SPECIAL</div>
