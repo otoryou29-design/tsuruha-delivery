@@ -236,11 +236,11 @@ export default function App() {
         <div style={{ maxWidth: 600, margin: "0 auto", position: "relative" }}>
           {/* ヘッダー */}
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <div style={{ display: "inline-block", background: "#dc2626", color: "#fff", padding: "6px 24px", borderRadius: 4, fontSize: 13, fontWeight: 900, letterSpacing: 2, marginBottom: 10, transform: "rotate(-2deg)" }}>本日のおすすめ</div>
-            <h2 style={{ fontSize: "clamp(28px, 6vw, 44px)", fontWeight: 900, color: "#dc2626", margin: "0 0 4px", fontFamily: "'Yu Gothic','YuGothic',sans-serif", textShadow: "2px 2px 0 #fff" }}>
+            <div style={{ display: "inline-block", background: "#dc2626", color: "#fff", padding: "6px 24px", borderRadius: 4, fontSize: 14, fontWeight: 900, letterSpacing: 3, marginBottom: 10, transform: "rotate(-2deg)", fontFamily: "'Yuji Boku',serif" }}>本日のおすすめ</div>
+            <h2 style={{ fontSize: "clamp(36px, 8vw, 56px)", fontWeight: 900, color: "#dc2626", margin: "0 0 4px", fontFamily: "'Yuji Boku',serif", textShadow: "3px 3px 0 rgba(0,0,0,.08)" }}>
               お買い得情報
             </h2>
-            <div style={{ fontSize: 13, color: "#92400e", fontWeight: 700 }}>音川青果 厳選青果</div>
+            <div style={{ fontSize: 15, color: "#92400e", fontWeight: 700, fontFamily: "'Yuji Boku',serif" }}>音川青果 厳選青果</div>
           </div>
 
           {/* 商品グリッド */}
@@ -262,11 +262,11 @@ export default function App() {
                     minWidth: 20, textAlign: "center",
                   }}>{item.tag}</div>
                 )}
-                <div style={{ fontSize: 16, fontWeight: 900, color: "#1a1a1a", marginBottom: 4 }}>{item.name}</div>
+                <div style={{ fontSize: 20, fontWeight: 900, color: "#1a1a1a", marginBottom: 2, fontFamily: "'Yuji Boku',serif" }}>{item.name}</div>
                 <div style={{ fontSize: 11, color: "#92400e", marginBottom: 8 }}>{item.unit}</div>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 2 }}>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: "#dc2626" }}>¥</span>
-                  <span style={{ fontSize: 36, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yu Gothic','YuGothic',sans-serif" }}>{item.price.toLocaleString()}</span>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: "#dc2626", fontFamily: "'Yuji Boku',serif" }}>¥</span>
+                  <span style={{ fontSize: 40, fontWeight: 900, color: "#dc2626", lineHeight: 1, fontFamily: "'Yuji Boku',serif" }}>{item.price.toLocaleString()}</span>
                   <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>税込</span>
                 </div>
               </div>
