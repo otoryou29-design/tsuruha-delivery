@@ -222,7 +222,7 @@ export default function App() {
       {/* ── お買い得情報（Amazonセール風） */}
       <section id="tokubai" style={{ padding: 0, background: "#fff", position: "relative", overflow: "hidden" }}>
         {/* ヒーローバナー */}
-        <div style={{ background: "linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%)", padding: "32px 24px 28px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ background: "linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #c2410c 100%)", padding: "32px 24px 28px", textAlign: "center", position: "relative", overflow: "hidden" }}>
           {/* 装飾の光 */}
           <div style={{ position: "absolute", top: -40, right: -40, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,.15)" }} />
           <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,.1)" }} />
@@ -270,7 +270,7 @@ export default function App() {
         </div>
 
         {/* 商品リスト */}
-        <div style={{ padding: "0 24px 48px", position: "relative" }}>
+        <div style={{ padding: "32px 24px 48px", position: "relative" }}>
         <div style={{ maxWidth: 600, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
