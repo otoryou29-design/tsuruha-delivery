@@ -259,8 +259,18 @@ export default function App() {
           </div>
         </div>
 
+        {/* 野菜絵文字の背景（Instagram QR風） */}
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none", userSelect: "none", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 8, padding: 12, alignContent: "start" }}>
+          {Array.from({ length: 120 }, (_, i) => {
+            const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅"];
+            return (
+              <span key={i} style={{ fontSize: 32, transform: `rotate(${(i * 47 + 10) % 50 - 25}deg)`, opacity: 0.7, textAlign: "center" }}>{emojis[i % emojis.length]}</span>
+            );
+          })}
+        </div>
+
         {/* 商品リスト */}
-        <div style={{ padding: "0 24px 48px", background: "#fff" }}>
+        <div style={{ padding: "0 24px 48px", position: "relative" }}>
         <div style={{ maxWidth: 600, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
