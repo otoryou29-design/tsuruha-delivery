@@ -222,10 +222,7 @@ export default function App() {
       {/* ── お買い得情報（Amazonセール風） */}
       <section id="tokubai" style={{ padding: 0, background: "#fff", position: "relative", overflow: "hidden" }}>
         {/* ヒーローバナー */}
-        <div style={{ background: "linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #c2410c 100%)", padding: "32px 24px 28px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-          {/* 装飾の光 */}
-          <div style={{ position: "absolute", top: -40, right: -40, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,.15)" }} />
-          <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,.1)" }} />
+        <div style={{ background: "#c2410c", padding: "32px 24px 28px", textAlign: "center", position: "relative" }}>
 
           <div style={{ position: "relative", zIndex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.85)", letterSpacing: 2, marginBottom: 6 }}>OTOKAWA SPECIAL</div>
@@ -259,18 +256,17 @@ export default function App() {
           </div>
         </div>
 
-        {/* 野菜絵文字の背景（Instagram QR風） */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none", userSelect: "none", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 8, padding: 12, alignContent: "start" }}>
-          {Array.from({ length: 120 }, (_, i) => {
-            const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅"];
-            return (
-              <span key={i} style={{ fontSize: 32, transform: `rotate(${(i * 47 + 10) % 50 - 25}deg)`, opacity: 0.7, textAlign: "center" }}>{emojis[i % emojis.length]}</span>
-            );
-          })}
-        </div>
-
         {/* 商品リスト */}
-        <div style={{ padding: "32px 24px 48px", position: "relative" }}>
+        <div style={{ padding: "32px 24px 48px", position: "relative", overflow: "hidden" }}>
+          {/* 野菜絵文字の背景（商品リスト部分のみ） */}
+          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", userSelect: "none", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 8, padding: 12, alignContent: "start" }}>
+            {Array.from({ length: 120 }, (_, i) => {
+              const emojis = ["🥬","🍅","🍓","🥕","🍌","🍎","🥒","🍊","🌽","🍆","🥦","🍋","🍑","🫑","🧅"];
+              return (
+                <span key={i} style={{ fontSize: 32, transform: `rotate(${(i * 47 + 10) % 50 - 25}deg)`, opacity: 0.7, textAlign: "center" }}>{emojis[i % emojis.length]}</span>
+              );
+            })}
+          </div>
         <div style={{ maxWidth: 600, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
