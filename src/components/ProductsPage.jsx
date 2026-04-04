@@ -41,7 +41,7 @@ const IMAGE_MAP = [
   [["りんご", "サンふじ", "サンフジ"], "apple.jpg"],
 ]
 
-const IMG_VERSION = "v3"
+const IMG_VERSION = "v4"
 function getProductImage(name) {
   for (const [keys, file] of IMAGE_MAP) {
     if (keys.some(k => name.includes(k))) return `/products/${file}?${IMG_VERSION}`
