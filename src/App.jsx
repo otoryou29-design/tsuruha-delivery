@@ -39,6 +39,9 @@ export default function App() {
     return () => unsub();
   }, []);
 
+  const G = "#4a7c59";
+  const BG2 = "#f7f7f5";
+
   // 共通タブバー
   const TabBar = () => (
     <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-around", alignItems: "center", paddingTop: 8, paddingBottom: "max(12px, env(safe-area-inset-bottom, 12px))", zIndex: 150 }}>
@@ -224,8 +227,6 @@ export default function App() {
     );
   }
 
-  const G = "#4a7c59";
-  const BG2 = "#f7f7f5";
   const pulseKeyframes = `@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,255,255,.7); } 50% { opacity: .85; box-shadow: 0 0 16px 4px rgba(255,255,255,.5); } }`;
 
   const handleContactSubmit = (e) => {
