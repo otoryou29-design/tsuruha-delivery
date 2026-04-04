@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import CustomerView from "./components/CustomerView";
+import ProductsPage from "./components/ProductsPage";
 import { onTokubaiChange } from "./firebase";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
@@ -37,6 +38,10 @@ export default function App() {
     });
     return () => unsub();
   }, []);
+
+  if (page === "products") {
+    return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} />
+  }
 
   if (page === "delivery") {
     return (
@@ -79,7 +84,7 @@ export default function App() {
         </div>
         <nav style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 600 }}>
           <a href="#business" style={{ color: "#666", textDecoration: "none" }}>事業紹介</a>
-          <a href="#safety" style={{ color: "#666", textDecoration: "none" }}>安全・安心</a>
+          <a href="#" onClick={e => { e.preventDefault(); setPage("products") }} style={{ color: "#666", textDecoration: "none", cursor: "pointer" }}>商品</a>
           <a href="#tokubai" style={{ color: "#666", textDecoration: "none" }}>お買い得</a>
           <a href="#contact" style={{ color: "#666", textDecoration: "none" }}>お問い合わせ</a>
         </nav>
