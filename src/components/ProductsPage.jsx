@@ -1,36 +1,51 @@
 import { useState, useEffect } from "react"
 import { onValue, ref, db, set, get } from "../firebase"
 
-// 野菜の絵文字マップ（商品名→画像代わり）
-const EMOJI_MAP = {
-  "レタス": "🥬", "フリルレタス": "🥬", "サニーレタス": "🥬",
-  "キャベツ": "🥬", "白菜": "🥬", "ほうれん草": "🥬", "小松菜": "🥬",
-  "トマト": "🍅", "ミニトマト": "🍅",
-  "きゅうり": "🥒", "ズッキーニ": "🥒",
-  "にんじん": "🥕", "人参": "🥕",
-  "玉ねぎ": "🧅", "たまねぎ": "🧅", "長ネギ": "🧅", "ながねぎ": "🧅", "ねぎ": "🧅",
-  "じゃがいも": "🥔", "ジャガイモ": "🥔",
-  "さつまいも": "🍠",
-  "なす": "🍆", "ナス": "🍆",
-  "ピーマン": "🫑", "パプリカ": "🫑",
-  "とうもろこし": "🌽", "コーン": "🌽",
-  "ブロッコリー": "🥦",
-  "りんご": "🍎", "サンふじ": "🍎", "サンフジ": "🍎",
-  "いちご": "🍓",
-  "バナナ": "🍌",
-  "みかん": "🍊", "オレンジ": "🍊",
-  "レモン": "🍋",
-  "もも": "🍑", "桃": "🍑",
-  "しいたけ": "🍄", "しめじ": "🍄", "えのき": "🍄", "エリンギ": "🍄", "まいたけ": "🍄",
-  "ごぼう": "🥕", "大根": "🥕",
-  "にんにく": "🧄", "しょうが": "🫚", "生姜": "🫚",
-}
+// 商品名→画像ファイルマップ
+const IMAGE_MAP = [
+  [["レタス"], "lettuce.jpg"],
+  [["フリルレタス", "サニーレタス"], "frill-lettuce.jpg"],
+  [["水菜"], "mizuna.jpg"],
+  [["小松菜"], "komatsuna.jpg"],
+  [["ほうれん草"], "spinach.jpg"],
+  [["青梗菜", "チンゲン"], "chingensai.jpg"],
+  [["ブロッコリー"], "broccoli.jpg"],
+  [["ねぎ", "ネギ", "長ねぎ", "土ネギ"], "negi.jpg"],
+  [["にら"], "nira.jpg"],
+  [["ミニトマト", "アイコ"], "mini-tomato.jpg"],
+  [["トマト", "房取りトマト"], "tomato.jpg"],
+  [["きゅうり"], "cucumber.jpg"],
+  [["ピーマン"], "piman.jpg"],
+  [["なす", "ナス"], "nasu.jpg"],
+  [["生姜", "しょうが"], "ginger.jpg"],
+  [["春菊"], "shungiku.jpg"],
+  [["ニンニク", "にんにく"], "garlic.jpg"],
+  [["ゆず", "柚子"], "yuzu.jpg"],
+  [["キャベツ"], "cabbage-half.jpg"],
+  [["白菜"], "hakusai.jpg"],
+  [["しいたけ"], "shiitake.jpg"],
+  [["なめこ"], "nameko.jpg"],
+  [["えのき"], "enoki.jpg"],
+  [["しめじ"], "shimeji.jpg"],
+  [["まいたけ"], "maitake.jpg"],
+  [["大根"], "daikon.jpg"],
+  [["ごぼう"], "gobo.jpg"],
+  [["長いも", "長芋"], "nagaimo.jpg"],
+  [["人参", "にんじん"], "carrot.jpg"],
+  [["玉ねぎ", "たまねぎ"], "onion.jpg"],
+  [["じゃがいも", "ジャガイモ"], "potato.jpg"],
+  [["キウイ"], "kiwi.jpg"],
+  [["みかん", "ミカン", "伊予柑", "デコポン", "八朔"], "mikan.jpg"],
+  [["いちご", "イチゴ"], "ichigo.jpg"],
+  [["バナナ"], "banana.jpg"],
+  [["りんご", "サンふじ", "サンフジ"], "apple.jpg"],
+]
 
-function getEmoji(name) {
-  for (const [key, emoji] of Object.entries(EMOJI_MAP)) {
-    if (name.includes(key)) return emoji
+function getProductImage(name) {
+  for (const [keys, file] of IMAGE_MAP) {
+    if (keys.some(k => name.includes(k))) return `/products/${file}`
   }
-  return "🥗"
+  return null
 }
 
 // カテゴリ表示スタイル
@@ -118,24 +133,27 @@ export default function ProductsPage({ tokubaiItems, onBack }) {
             const itemKey = (item.id || item.name || i).toString().replace(/[.#$/[\]]/g, "_")
             const likeCount = likes[itemKey] || 0
             const isRegular = tab === "regular"
-            const emoji = getEmoji(item.name)
+            const imgSrc = getProductImage(item.name)
             const catStyle = isRegular && item.cat ? CAT_COLORS[item.cat] : null
 
             return (
-              <div key={i} onClick={() => setSelectedItem({ ...item, _key: itemKey, _emoji: emoji, _isRegular: isRegular })}
+              <div key={i} onClick={() => setSelectedItem({ ...item, _key: itemKey, _img: imgSrc, _isRegular: isRegular })}
                 style={{
                   background: "#fff", borderRadius: 12, overflow: "hidden",
                   border: "1px solid #e5e7eb", cursor: "pointer",
                   boxShadow: "0 1px 4px rgba(0,0,0,.04)",
                   transition: "transform 0.15s",
                 }}>
-                {/* 画像エリア（絵文字） */}
+                {/* 画像エリア */}
                 <div style={{
-                  height: 120, background: "#f0f7f0", display: "flex",
-                  alignItems: "center", justifyContent: "center", fontSize: 56,
-                  position: "relative",
+                  height: 140, background: "#f8faf8", display: "flex",
+                  alignItems: "center", justifyContent: "center",
+                  position: "relative", overflow: "hidden",
                 }}>
-                  {emoji}
+                  {imgSrc
+                    ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    : <span style={{ fontSize: 48, opacity: 0.5 }}>🥗</span>
+                  }
                   {/* カテゴリバッジ */}
                   {catStyle && (
                     <span style={{
@@ -197,9 +215,12 @@ export default function ProductsPage({ tokubaiItems, onBack }) {
               <div style={{ width: 40, height: 4, background: "#d1d5db", borderRadius: 2, margin: "0 auto" }} />
             </div>
 
-            {/* 絵文字ヒーロー */}
-            <div style={{ height: 160, background: "#f0f7f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 80 }}>
-              {selectedItem._emoji}
+            {/* 商品画像 */}
+            <div style={{ height: 220, background: "#f8faf8", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+              {selectedItem._img
+                ? <img src={selectedItem._img} alt={selectedItem.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : <span style={{ fontSize: 80, opacity: 0.5 }}>🥗</span>
+              }
             </div>
 
             <div style={{ padding: "20px 24px 32px" }}>
