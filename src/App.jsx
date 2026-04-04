@@ -226,7 +226,7 @@ export default function App() {
 
           <div style={{ position: "relative", zIndex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: "bold", color: "#fff", letterSpacing: 3, marginBottom: 8, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>OTOKAWA SPECIAL</div>
-            <h2 style={{ fontSize: "clamp(34px, 9vw, 54px)", fontWeight: 700, color: "#fff", margin: "0 0 10px", fontFamily: "'YuGothic','Yu Gothic',sans-serif", lineHeight: 1.2, letterSpacing: "0.25em" }}>
+            <h2 style={{ fontSize: "clamp(34px, 9vw, 54px)", fontWeight: 700, color: "#fff", margin: "0 0 10px", fontFamily: "'YuGothic','Yu Gothic',sans-serif", lineHeight: 1.2, letterSpacing: "0.1em" }}>
               FRESH SALE
             </h2>
 
