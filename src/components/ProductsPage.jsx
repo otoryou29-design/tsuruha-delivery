@@ -4,7 +4,7 @@ import { onValue, ref, db, set, get } from "../firebase"
 // 商品名→画像ファイルマップ
 const IMAGE_MAP = [
   [["レタス"], "lettuce.jpg"],
-  [["フリルレタス", "サニーレタス"], "frill-lettuce.jpg"],
+  [["フリルレタス", "サニーレタス"], "frill-lettuce2.jpg"],
   [["水菜"], "mizuna.jpg"],
   [["小松菜"], "komatsuna.jpg"],
   [["ほうれん草"], "spinach.jpg"],
@@ -32,7 +32,7 @@ const IMAGE_MAP = [
   [["ごぼう"], "gobo.jpg"],
   [["長いも", "長芋"], "nagaimo.jpg"],
   [["人参", "にんじん"], "carrot.jpg"],
-  [["玉ねぎ", "たまねぎ"], "onion.jpg"],
+  [["玉ねぎ", "たまねぎ"], "onion2.jpg"],
   [["じゃがいも", "ジャガイモ"], "potato.jpg"],
   [["キウイ"], "kiwi.jpg"],
   [["みかん", "ミカン", "伊予柑", "デコポン", "八朔"], "mikan.jpg"],
