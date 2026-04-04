@@ -3,16 +3,21 @@ import { onValue, ref, db, set, get } from "../firebase"
 
 // 商品名→画像ファイルマップ
 const IMAGE_MAP = [
-  [["レタス"], "lettuce.jpg"],
+  // 具体的な名前を先に（部分一致の誤マッチ防止）
   [["フリルレタス", "サニーレタス"], "frill-lettuce2.jpg"],
+  [["ミニトマト", "アイコ"], "mini-tomato.jpg"],
+  [["長ねぎ", "土ネギ"], "negi.jpg"],
+  [["玉ねぎ", "たまねぎ"], "onion2.jpg"],
+  [["長いも", "長芋"], "nagaimo.jpg"],
+  // 一般的な名前は後に
+  [["レタス"], "lettuce.jpg"],
   [["水菜"], "mizuna.jpg"],
   [["小松菜"], "komatsuna.jpg"],
   [["ほうれん草"], "spinach.jpg"],
   [["青梗菜", "チンゲン"], "chingensai.jpg"],
   [["ブロッコリー"], "broccoli.jpg"],
-  [["ねぎ", "ネギ", "長ねぎ", "土ネギ"], "negi.jpg"],
+  [["ねぎ", "ネギ"], "negi.jpg"],
   [["にら"], "nira.jpg"],
-  [["ミニトマト", "アイコ"], "mini-tomato.jpg"],
   [["トマト", "房取りトマト"], "tomato.jpg"],
   [["きゅうり"], "cucumber.jpg"],
   [["ピーマン"], "piman.jpg"],
@@ -30,9 +35,7 @@ const IMAGE_MAP = [
   [["まいたけ"], "maitake.jpg"],
   [["大根"], "daikon.jpg"],
   [["ごぼう"], "gobo.jpg"],
-  [["長いも", "長芋"], "nagaimo.jpg"],
   [["人参", "にんじん"], "carrot.jpg"],
-  [["玉ねぎ", "たまねぎ"], "onion2.jpg"],
   [["じゃがいも", "ジャガイモ"], "potato.jpg"],
   [["キウイ"], "kiwi.jpg"],
   [["みかん", "ミカン", "伊予柑", "デコポン", "八朔"], "mikan.jpg"],
