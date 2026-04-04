@@ -64,24 +64,23 @@ const CAT_COLORS = {
 
 const G = "#4a7c59"
 
-// メインバナー（自動切替）
+// メインバナー（自動切替・FRESH SALE推し）
 const MAIN_BANNERS = [
-  { img: "ichigo.jpg", title: "旬のいちご", sub: "福島県産の甘い一粒", tab: "sale" },
-  { img: "spinach.jpg", title: "新鮮な葉物野菜", sub: "毎日届く産地直送", tab: "regular" },
-  { img: "tomato.jpg", title: "FRESH SALE", sub: "期間限定のお買い得商品", tab: "sale" },
-  { img: "cabbage-half.jpg", title: "定番野菜", sub: "いつもの食卓に安心品質", tab: "regular" },
+  { title: "FRESH SALE", sub: "お買い得が満載", desc: "産直野菜をお得な価格で", tab: "sale", type: "sale" },
+  { title: "旬の青果", sub: "今が一番おいしい", desc: "福島県産を中心にお届け", tab: "regular", type: "season" },
+  { title: "毎日お届け", sub: "鮮度が違います", desc: "仲卸直送だからできる品質", tab: "regular", type: "fresh" },
 ]
 
 // サイドカード（メインバナー右に2枚）
 const SIDE_CARDS = [
-  { img: "maitake.jpg", title: "きのこ類", badge: "人気", tab: "regular", cat: "きのこ" },
-  { img: "carrot.jpg", title: "根菜フェア", badge: "旬", tab: "regular", cat: "根菜" },
+  { img: "ichigo.jpg", title: "旬のいちご", badge: "SALE", tab: "sale" },
+  { img: "maitake.jpg", title: "きのこ各種", badge: "人気", tab: "regular", cat: "きのこ" },
 ]
 
 // 下段カード（3列）
 const BOTTOM_CARDS = [
   { img: "komatsuna.jpg", title: "葉物野菜", tab: "regular", cat: "葉物" },
-  { img: "nasu.jpg", title: "果菜", tab: "regular", cat: "果菜" },
+  { img: "carrot.jpg", title: "根菜", tab: "regular", cat: "根菜" },
   { img: "apple.jpg", title: "果物", tab: "regular", cat: "果物" },
 ]
 
@@ -180,23 +179,45 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
       <div style={{ padding: "10px 10px 0" }}>
         {/* 上段: メインバナー + サイドカード2枚 */}
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 8, marginBottom: 8 }}>
-          {/* メインバナー（自動切替） */}
-          <div style={{ position: "relative", borderRadius: 12, overflow: "hidden", cursor: "pointer", gridRow: "1 / 3" }}
+          {/* メインバナー（緑グラデーション・ポップデザイン） */}
+          <div style={{ position: "relative", borderRadius: 14, overflow: "hidden", cursor: "pointer", gridRow: "1 / 3" }}
             onClick={() => { const b = MAIN_BANNERS[bannerIdx]; setTab(b.tab); setFilterCat(null) }}>
-            {MAIN_BANNERS.map((b, i) => (
-              <div key={i} style={{ position: i === 0 ? "relative" : "absolute", inset: 0, opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.6s ease" }}>
-                <img src={`/products/${b.img}?${IMG_VERSION}`} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 200 }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,.05) 50%)" }} />
-                <div style={{ position: "absolute", bottom: 16, left: 14 }}>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: "#fff", textShadow: "0 2px 8px rgba(0,0,0,.4)" }}>{b.title}</div>
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{b.sub}</div>
+            {MAIN_BANNERS.map((b, i) => {
+              const bgs = {
+                sale: `linear-gradient(135deg, ${G} 0%, #2d5a35 50%, #1a3d20 100%)`,
+                season: `linear-gradient(135deg, #3a6b48 0%, ${G} 50%, #5a9c6a 100%)`,
+                fresh: `linear-gradient(135deg, #2d5a35 0%, #3a7a4a 50%, ${G} 100%)`,
+              }
+              return (
+                <div key={i} style={{
+                  position: i === 0 ? "relative" : "absolute", inset: 0,
+                  opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.6s ease",
+                  background: bgs[b.type] || bgs.sale, minHeight: 210,
+                  display: "flex", flexDirection: "column", justifyContent: "center", padding: "24px 20px",
+                }}>
+                  {/* 装飾の丸 */}
+                  <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,.08)" }} />
+                  <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,.05)" }} />
+
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", lineHeight: 1.1, letterSpacing: 1 }}>{b.title}</div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "rgba(255,255,255,.95)", marginTop: 6 }}>{b.sub}</div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,.7)", marginTop: 8 }}>{b.desc}</div>
+                    <div style={{
+                      display: "inline-block", marginTop: 14, padding: "7px 18px", borderRadius: 20,
+                      background: "rgba(255,255,255,.2)", backdropFilter: "blur(4px)",
+                      fontSize: 12, fontWeight: 700, color: "#fff", border: "1px solid rgba(255,255,255,.3)",
+                    }}>
+                      {b.type === "sale" ? "セールを見る →" : "商品を見る →"}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-            <div style={{ position: "absolute", bottom: 8, right: 10, display: "flex", gap: 5 }}>
+              )
+            })}
+            <div style={{ position: "absolute", bottom: 10, right: 12, display: "flex", gap: 5, zIndex: 2 }}>
               {MAIN_BANNERS.map((_, i) => (
                 <div key={i} onClick={e => { e.stopPropagation(); setBannerIdx(i) }}
-                  style={{ width: i === bannerIdx ? 16 : 6, height: 6, borderRadius: 3, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.45)", transition: "all 0.3s", cursor: "pointer" }} />
+                  style={{ width: i === bannerIdx ? 18 : 6, height: 6, borderRadius: 3, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.4)", transition: "all 0.3s", cursor: "pointer" }} />
               ))}
             </div>
           </div>
