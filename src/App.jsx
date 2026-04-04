@@ -39,6 +39,24 @@ export default function App() {
     return () => unsub();
   }, []);
 
+  // 共通タブバー
+  const TabBar = () => (
+    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "6px 0 env(safe-area-inset-bottom, 6px)", zIndex: 150 }}>
+      {[
+        { label: "ホーム", page: "home", svg: "M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0h4" },
+        { label: "商品", page: "products", svg: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
+        { label: "納品状況", page: "delivery", svg: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10m10 0H3m10 0a2 2 0 104 0m-4 0a2 2 0 114 0m2-8h3l3 4v4a1 1 0 01-1 1h-1" },
+        { label: "事業紹介", page: "business", svg: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5" },
+        { label: "その他", page: "more", svg: "M4 6h16M4 12h16M4 18h16" },
+      ].map(t => (
+        <button key={t.label} onClick={() => setPage(t.page)} style={{ flex: 1, background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "4px 0", fontFamily: "inherit" }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={page === t.page ? G : "#999"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={t.svg}/></svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: page === t.page ? G : "#999" }}>{t.label}</span>
+        </button>
+      ))}
+    </div>
+  )
+
   if (page === "products") {
     return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} onNavigate={(target) => { setPage("home"); setTimeout(() => { const el = document.getElementById(target); if (el) el.scrollIntoView({ behavior: "smooth" }) }, 100) }} />
   }
@@ -55,6 +73,153 @@ export default function App() {
           <img src={LOGO} alt="音川青果" style={{ height: 32, borderRadius: 4 }} />
         </header>
         <CustomerView />
+        <div style={{ height: 60 }} />
+        <TabBar />
+      </div>
+    );
+  }
+
+  // ── 事業紹介ページ
+  if (page === "business") {
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", paddingBottom: 70 }}>
+        <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
+          <img src={LOGO} alt="" style={{ height: 32, borderRadius: 6 }} />
+          <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
+        </header>
+
+        {/* コンセプト */}
+        <section style={{ padding: "60px 24px", background: "#fff" }}>
+          <div style={{ maxWidth: 700, margin: "0 auto" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>CONCEPT</p>
+            <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.4 }}>青果をもっと身近に</h2>
+            <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2 }}>
+              音川青果は「美味しいは、いい食材から」をモットーに、産地から店舗まで一貫した品質管理で新鮮な野菜・果物をお届けしています。各取引先様の青果売場を通じて、地域のお客様の食卓を豊かにすることが私たちの使命です。
+            </p>
+          </div>
+        </section>
+
+        {/* 仲卸事業 */}
+        <section style={{ padding: "60px 24px", background: BG2 }}>
+          <div style={{ maxWidth: 700, margin: "0 auto" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>BUSINESS</p>
+            <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 24 }}>事業紹介</h2>
+            <div style={{ display: "grid", gap: 16 }}>
+              <div onClick={() => setShowNakaoroshi(true)} style={{ background: "#fff", borderRadius: 14, padding: "28px 24px", border: `2px solid ${G}`, cursor: "pointer" }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: G, marginBottom: 4 }}>中卸事業</div>
+                <div style={{ fontSize: 12, color: G, opacity: .7, marginBottom: 12 }}>目利き・仕入・物流</div>
+                <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.9 }}>確かな目利きによる厳選仕入れと効率的な物流システムで、業務用のニーズにも対応します。</div>
+              </div>
+              <div onClick={() => setShowNogyo(true)} style={{ background: "#fff", borderRadius: 14, padding: "28px 24px", border: "2px solid #dc2626", cursor: "pointer" }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: "#dc2626", marginBottom: 4 }}>農業事業</div>
+                <div style={{ fontSize: 12, color: "#dc2626", opacity: .7, marginBottom: 12 }}>COCOFARM | ココファーム</div>
+                <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.9 }}>施設園芸による品質管理と安定供給を実現。産地との連携により、新鮮な食材をお届けします。</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 企業概要 */}
+        <section style={{ padding: "60px 24px", background: "#fff" }}>
+          <div style={{ maxWidth: 700, margin: "0 auto" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>COMPANY</p>
+            <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 20 }}>企業概要</h2>
+            <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2, marginBottom: 24 }}>
+              創業40年を誇る弊社は、青果業界において大きな信頼を築き上げてまいりました。長年培ってきた青果ノウハウと豊富な経験を基盤に、お客様に最高品質の商品とサービスを提供してまいりました。
+            </p>
+            <div style={{ display: "grid", gap: 0, fontSize: 14, border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
+              {[
+                ["会社名", "株式会社音川青果"],
+                ["代表取締役", "音川充輝（おとかわみつてる）"],
+                ["設立日", "平成6年5月30日"],
+                ["所在地", "福島県郡山市富久山町久保田字太郎殿前2"],
+                ["電話番号", "024-956-6606"],
+                ["メール", "info@otokawa.com"],
+                ["事業内容", "青果卸・小売業・物流加工・農作物生産・販売"],
+                ["資本金", "1,000万円"],
+                ["従業員数", "32名（正社員3名・準社員・パート27名）"],
+              ].map(([k, v], i) => (
+                <div key={k} style={{ display: "flex", borderBottom: i < 8 ? "1px solid #f1f5f9" : "none" }}>
+                  <div style={{ width: 120, flexShrink: 0, padding: "12px 16px", background: "#f8fafc", fontWeight: 700, fontSize: 13, color: "#334155" }}>{k}</div>
+                  <div style={{ flex: 1, padding: "12px 16px", color: "#475569" }}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SAFETY */}
+        <section style={{ padding: "60px 24px", background: BG2 }}>
+          <div style={{ maxWidth: 700, margin: "0 auto" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>SAFETY</p>
+            <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 20 }}>安心を「仕組み」で支える</h2>
+            <div style={{ display: "grid", gap: 14 }}>
+              {["トレーサビリティによる産地・流通の完全管理", "温度管理システムで鮮度を維持", "徹底した衛生管理と定期検査の実施", "独自の検品基準による品質保証", "迅速なクレーム対応フロー"].map(t => (
+                <div key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <span style={{ color: G, fontSize: 18, flexShrink: 0, fontWeight: 900 }}>✓</span>
+                  <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.7 }}>{t}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {showNakaoroshi && (
+          <div onClick={() => setShowNakaoroshi(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+            <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, maxWidth: 700, width: "100%", maxHeight: "90vh", overflow: "auto", position: "relative" }}>
+              <button onClick={() => setShowNakaoroshi(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
+              <img src="/nakaoroshi-1.jpg" alt="" style={{ width: "100%", display: "block", borderRadius: "16px 16px 0 0" }} />
+              <img src="/nakaoroshi-2.jpg" alt="" style={{ width: "100%", display: "block", borderRadius: "0 0 16px 16px" }} />
+            </div>
+          </div>
+        )}
+        {showNogyo && (
+          <div onClick={() => setShowNogyo(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+            <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, maxWidth: 700, width: "100%", maxHeight: "90vh", overflow: "auto", position: "relative" }}>
+              <button onClick={() => setShowNogyo(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
+              <img src="/nogyo-1.jpg" alt="" style={{ width: "100%", display: "block", borderRadius: "16px 16px 0 0" }} />
+              <img src="/nogyo-2.jpg" alt="" style={{ width: "100%", display: "block", borderRadius: "0 0 16px 16px" }} />
+            </div>
+          </div>
+        )}
+        <TabBar />
+      </div>
+    );
+  }
+
+  // ── その他ページ（お問合せ・求人）
+  if (page === "more") {
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", paddingBottom: 70 }}>
+        <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
+          <img src={LOGO} alt="" style={{ height: 32, borderRadius: 6 }} />
+          <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
+        </header>
+
+        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px" }}>
+          <h2 style={{ fontSize: 20, fontWeight: 900, marginBottom: 20 }}>メニュー</h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            {[
+              { label: "お問い合わせ", sub: "取引・一般のお問い合わせ", action: () => { setPage("home"); setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 100) } },
+              { label: "採用情報", sub: "正社員・パートの募集", action: () => { setPage("home"); setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 100); setContactType("recruit") } },
+              { label: "Instagram", sub: "@otokawa_official", action: () => window.open("https://instagram.com/otokawa_official", "_blank") },
+              { label: "よくある質問", sub: "FAQ", action: () => { setPage("home"); setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100) } },
+            ].map(item => (
+              <button key={item.label} onClick={item.action} style={{
+                width: "100%", background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12,
+                padding: "16px 20px", textAlign: "left", cursor: "pointer", fontFamily: "inherit",
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+              }}>
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a" }}>{item.label}</div>
+                  <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>{item.sub}</div>
+                </div>
+                <span style={{ color: "#cbd5e1", fontSize: 20 }}>→</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <TabBar />
       </div>
     );
   }
@@ -77,17 +242,9 @@ export default function App() {
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", overflowX: "hidden" }}>
 
       {/* ── ヘッダー */}
-      <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <img src={LOGO} alt="音川青果" style={{ height: 36, borderRadius: 6, objectFit: "cover" }} />
-          <span style={{ fontSize: 17, fontWeight: 900, color: G, letterSpacing: 1 }}>音川青果</span>
-        </div>
-        <nav style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 600 }}>
-          <a href="#business" style={{ color: "#666", textDecoration: "none" }}>事業紹介</a>
-          <a href="#" onClick={e => { e.preventDefault(); setPage("products") }} style={{ color: "#666", textDecoration: "none", cursor: "pointer" }}>商品</a>
-          <a href="#tokubai" style={{ color: "#666", textDecoration: "none" }}>お買い得</a>
-          <a href="#contact" style={{ color: "#666", textDecoration: "none" }}>お問い合わせ</a>
-        </nav>
+      <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
+        <img src={LOGO} alt="音川青果" style={{ height: 32, borderRadius: 6, objectFit: "cover" }} />
+        <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
       </header>
 
       {/* ── ニュースバナー */}
@@ -162,66 +319,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── その他の事業 */}
-      <section id="business" style={{ padding: "80px 24px", background: "#fff" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12, textAlign: "center" }}>BUSINESS</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, textAlign: "center", marginBottom: 12, color: "#1a1a1a" }}>その他の事業</h2>
-          <p style={{ textAlign: "center", fontSize: 14, color: "#64748b", marginBottom: 40 }}>音川青果は、農業から中卸まで、幅広い事業で食材の流通を支えています。</p>
-          <style>{`@keyframes blink-green { 0%,100%{box-shadow:0 0 0 0 rgba(74,124,89,.4)} 50%{box-shadow:0 0 16px 4px rgba(74,124,89,.3)} } @keyframes blink-red { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)} 50%{box-shadow:0 0 16px 4px rgba(220,38,38,.3)} }`}</style>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-            {/* 農業事業 */}
-            <div onClick={() => setShowNogyo(true)} style={{ background: "#fff", borderRadius: 14, padding: "32px 24px", border: "2px solid #dc2626", cursor: "pointer", animation: "blink-red 2s infinite" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: "#dc2626" }}>農業事業</div>
-              <div style={{ fontSize: 12, color: "#dc2626", fontWeight: 600, marginBottom: 12, opacity: .7 }}>COCOFARM | ココファーム</div>
-              <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.9 }}>施設園芸による品質管理と安定供給を実現。産地との連携により、新鮮な食材をお届けします。</div>
-              <div style={{ marginTop: 14, fontSize: 13, color: "#dc2626", fontWeight: 800 }}>農業事業を見る →</div>
-            </div>
-            {/* 中卸事業 */}
-            <div onClick={() => setShowNakaoroshi(true)} style={{ background: "#fff", borderRadius: 14, padding: "32px 24px", border: `2px solid ${G}`, cursor: "pointer", animation: "blink-green 2s infinite" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, color: G }}>中卸事業</div>
-              <div style={{ fontSize: 12, color: G, fontWeight: 600, marginBottom: 12, opacity: .7 }}>目利き・仕入・物流</div>
-              <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.9 }}>確かな目利きによる厳選仕入れと効率的な物流システムで、業務用のニーズにも対応します。</div>
-              <div style={{ marginTop: 14, fontSize: 13, color: G, fontWeight: 800 }}>中卸事業を見る →</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 安心を「仕組み」で支える */}
-      <section id="safety" style={{ padding: "72px 24px", background: BG2 }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, alignItems: "start" }}>
-          <div>
-            <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>SAFETY</p>
-            <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 20, lineHeight: 1.4 }}>安心を「仕組み」で<br />支える</h2>
-            <div style={{ display: "grid", gap: 14 }}>
-              {[
-                "トレーサビリティによる産地・流通の完全管理",
-                "温度管理システムで鮮度を維持",
-                "徹底した衛生管理と定期検査の実施",
-                "独自の検品基準による品質保証",
-                "迅速なクレーム対応フロー",
-              ].map(t => (
-                <div key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <span style={{ color: G, fontSize: 18, flexShrink: 0, fontWeight: 900 }}>✓</span>
-                  <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.7 }}>{t}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 20 }}>品質管理フロー</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, textAlign: "center" }}>
-              {["仕入", "検品", "保管", "配送"].map((s, i) => (
-                <div key={s}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: G, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 8px", fontSize: 14, fontWeight: 800 }}>{i + 1}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>{s}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* business/safetyは事業紹介ページに移動済み */}
 
       {/* ── お買い得情報（スーパーチラシ風） */}
       {/* ── お買い得情報（Amazonセール風） */}
@@ -525,6 +623,8 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <TabBar />
 
       {/* ── フッター */}
       <footer style={{ background: "#1a1a1a", padding: "48px 24px 32px" }}>
