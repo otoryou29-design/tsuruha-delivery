@@ -71,7 +71,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
   const [products, setProducts] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
   const [likes, setLikes] = useState({})
-  const [likedItems, setLikedItems] = useState({}) // ローカル: 既にいいね済み
+  const [likedItems, setLikedItems] = useState({})
+  const [wants, setWants] = useState({}) // FRESH SALEの欲しい
+  const [wantedItems, setWantedItems] = useState({})
+  const [reviews, setReviews] = useState({}) // 口コミ
+  const [reviewText, setReviewText] = useState("")
+  const [reviewName, setReviewName] = useState("")
 
   // レギュラー商品をFirebaseから読み込み
   useEffect(() => {
@@ -92,12 +97,44 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
     return () => unsub()
   }, [])
 
-  // おいしいボタン
+  // 欲しいボタン（FRESH SALE）
+  useEffect(() => {
+    const unsub = onValue(ref(db, "productWants"), (snap) => setWants(snap.val() || {}))
+    return () => unsub()
+  }, [])
+
+  // 口コミ読み込み
+  useEffect(() => {
+    const unsub = onValue(ref(db, "productReviews"), (snap) => setReviews(snap.val() || {}))
+    return () => unsub()
+  }, [])
+
   const handleLike = async (itemKey) => {
     if (likedItems[itemKey]) return
     const current = likes[itemKey] || 0
     await set(ref(db, `productLikes/${itemKey}`), current + 1)
     setLikedItems(prev => ({ ...prev, [itemKey]: true }))
+  }
+
+  const handleWant = async (itemKey) => {
+    if (wantedItems[itemKey]) return
+    const current = wants[itemKey] || 0
+    await set(ref(db, `productWants/${itemKey}`), current + 1)
+    setWantedItems(prev => ({ ...prev, [itemKey]: true }))
+  }
+
+  const handleReview = async (itemKey) => {
+    if (!reviewText.trim()) return
+    const ts = Date.now()
+    const existing = reviews[itemKey] || []
+    const arr = Array.isArray(existing) ? existing : Object.values(existing)
+    await set(ref(db, `productReviews/${itemKey}/${arr.length}`), {
+      name: reviewName.trim() || "匿名",
+      text: reviewText.trim(),
+      at: ts,
+    })
+    setReviewText("")
+    setReviewName("")
   }
 
   const items = tab === "regular" ? products : tokubaiItems
@@ -265,30 +302,61 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                 </span>
               </div>
 
-              {/* おいしいボタン */}
+              {/* おいしいボタン（定番） / 欲しいボタン（セール） */}
               {(() => {
                 const key = selectedItem._key
-                const count = likes[key] || 0
-                const liked = likedItems[key]
-                return (
-                  <button onClick={() => handleLike(key)} disabled={liked}
-                    style={{
-                      width: "100%", padding: "16px", borderRadius: 14, border: "none",
-                      fontSize: 18, fontWeight: 900, cursor: liked ? "default" : "pointer",
-                      fontFamily: "inherit",
-                      background: liked ? "#f0fdf4" : "linear-gradient(135deg, #ff9800, #ff5722)",
-                      color: liked ? "#16a34a" : "#fff",
-                      boxShadow: liked ? "none" : "0 4px 16px rgba(255,87,34,.25)",
-                      transition: "all 0.3s",
-                    }}>
-                    {liked ? `😋 おいしい！を送りました（${count}件）` : `😋 おいしい！${count > 0 ? `（${count}）` : ""}`}
-                  </button>
-                )
+                if (selectedItem._isRegular) {
+                  const count = likes[key] || 0
+                  const liked = likedItems[key]
+                  return (
+                    <button onClick={() => handleLike(key)} disabled={liked}
+                      style={{ width: "100%", padding: "16px", borderRadius: 14, border: "none", fontSize: 18, fontWeight: 900, cursor: liked ? "default" : "pointer", fontFamily: "inherit", background: liked ? "#f0fdf4" : "linear-gradient(135deg, #ff9800, #ff5722)", color: liked ? "#16a34a" : "#fff", boxShadow: liked ? "none" : "0 4px 16px rgba(255,87,34,.25)", marginBottom: 12 }}>
+                      {liked ? `😋 おいしい！（${count}件）` : `😋 おいしい！${count > 0 ? `（${count}）` : ""}`}
+                    </button>
+                  )
+                } else {
+                  const wc = wants[key] || 0
+                  const wanted = wantedItems[key]
+                  return (
+                    <button onClick={() => handleWant(key)} disabled={wanted}
+                      style={{ width: "100%", padding: "16px", borderRadius: 14, border: "none", fontSize: 18, fontWeight: 900, cursor: wanted ? "default" : "pointer", fontFamily: "inherit", background: wanted ? "#eff6ff" : "linear-gradient(135deg, #2563eb, #7c3aed)", color: wanted ? "#2563eb" : "#fff", boxShadow: wanted ? "none" : "0 4px 16px rgba(37,99,235,.25)", marginBottom: 12 }}>
+                      {wanted ? `🙋 欲しい！（${wc}人）` : `🙋 欲しい！${wc > 0 ? `（${wc}人）` : ""}`}
+                    </button>
+                  )
+                }
               })()}
 
-              {/* 補足情報（レギュラー商品） */}
+              {/* 口コミ */}
+              <div style={{ marginTop: 8, borderTop: "1px solid #f1f5f9", paddingTop: 16 }}>
+                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>口コミ</div>
+                {(() => {
+                  const key = selectedItem._key
+                  const itemReviews = reviews[key] ? (Array.isArray(reviews[key]) ? reviews[key] : Object.values(reviews[key])) : []
+                  return (
+                    <>
+                      {itemReviews.length > 0 ? itemReviews.map((r, i) => (
+                        <div key={i} style={{ background: "#f8fafc", borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: G, marginBottom: 4 }}>{r.name}</div>
+                          <div style={{ fontSize: 14, color: "#334155", lineHeight: 1.6 }}>{r.text}</div>
+                        </div>
+                      )) : (
+                        <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 12 }}>まだ口コミはありません</div>
+                      )}
+                      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                        <input value={reviewName} onChange={e => setReviewName(e.target.value)} placeholder="名前（任意）"
+                          style={{ width: 80, padding: "8px 10px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13, fontFamily: "inherit" }} />
+                        <input value={reviewText} onChange={e => setReviewText(e.target.value)} placeholder="口コミを書く..."
+                          style={{ flex: 1, padding: "8px 10px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13, fontFamily: "inherit" }} />
+                        <button onClick={() => handleReview(selectedItem._key)}
+                          style={{ padding: "8px 14px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }}>送信</button>
+                      </div>
+                    </>
+                  )
+                })()}
+              </div>
+
               {selectedItem._isRegular && (
-                <div style={{ marginTop: 20, fontSize: 13, color: "#94a3b8", textAlign: "center" }}>
+                <div style={{ marginTop: 16, fontSize: 13, color: "#94a3b8", textAlign: "center" }}>
                   ツルハドラッグ各店舗でお買い求めいただけます
                 </div>
               )}
