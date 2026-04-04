@@ -222,12 +222,12 @@ export default function App() {
       {/* ── お買い得情報（Amazonセール風） */}
       <section id="tokubai" style={{ padding: 0, background: "#fff", position: "relative", overflow: "hidden" }}>
         {/* ヒーローバナー */}
-        <div style={{ background: "#ff6600", padding: "32px 24px 28px", textAlign: "center", position: "relative" }}>
+        <div style={{ background: "#4a8c00", padding: "32px 24px 28px", textAlign: "center", position: "relative" }}>
 
           <div style={{ position: "relative", zIndex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: "bold", color: "#fff", letterSpacing: 3, marginBottom: 8, fontFamily: "'YuGothic','Yu Gothic',sans-serif" }}>OTOKAWA SPECIAL</div>
             <h2 style={{ fontSize: "clamp(34px, 9vw, 54px)", fontWeight: "bold", color: "#fff", margin: "0 0 10px", fontFamily: "'YuGothic','Yu Gothic',sans-serif", lineHeight: 1.2, WebkitTextStroke: "1px #fff" }}>
-              超絶怒涛の<br />お買い得セール！
+              FRESH SALE
             </h2>
 
             {/* カウントダウンタイマー */}
