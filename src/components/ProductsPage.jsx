@@ -20,7 +20,7 @@ const IMAGE_MAP = [
   [["生姜", "しょうが"], "ginger.jpg"],
   [["春菊"], "shungiku.jpg"],
   [["ニンニク", "にんにく"], "garlic.jpg"],
-  [["ゆず", "柚子"], "yuzu.jpg"],
+  [["ゆず", "柚子", "レモン"], "yuzu.jpg"],
   [["キャベツ"], "cabbage-half.jpg"],
   [["白菜"], "hakusai.jpg"],
   [["しいたけ"], "shiitake.jpg"],
@@ -41,7 +41,7 @@ const IMAGE_MAP = [
   [["りんご", "サンふじ", "サンフジ"], "apple.jpg"],
 ]
 
-const IMG_VERSION = "v4"
+const IMG_VERSION = "v5"
 function getProductImage(name) {
   for (const [keys, file] of IMAGE_MAP) {
     if (keys.some(k => name.includes(k))) return `/products/${file}?${IMG_VERSION}`
