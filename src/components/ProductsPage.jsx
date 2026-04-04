@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react"
-import { onValue, ref, db, set, get } from "../firebase"
+import { useState, useEffect, useRef } from "react"
+import { onValue, ref, db, set } from "../firebase"
 
 // 商品名→画像ファイルマップ
 const IMAGE_MAP = [
-  // 具体的な名前を先に（部分一致の誤マッチ防止）
   [["フリルレタス", "サニーレタス"], "frill-lettuce2.jpg"],
   [["ミニトマト", "アイコ"], "mini-tomato.jpg"],
   [["長ねぎ", "土ネギ"], "negi.jpg"],
   [["玉ねぎ", "たまねぎ"], "onion2.jpg"],
   [["長いも", "長芋"], "nagaimo.jpg"],
-  // 一般的な名前は後に
   [["レタス"], "lettuce.jpg"],
   [["水菜"], "mizuna.jpg"],
   [["小松菜"], "komatsuna.jpg"],
@@ -37,8 +35,9 @@ const IMAGE_MAP = [
   [["ごぼう"], "gobo.jpg"],
   [["人参", "にんじん"], "carrot.jpg"],
   [["じゃがいも", "ジャガイモ"], "potato.jpg"],
+  [["さつまいも", "サツマイモ"], "potato.jpg"],
   [["キウイ"], "kiwi.jpg"],
-  [["みかん", "ミカン", "伊予柑", "デコポン", "八朔"], "mikan.jpg"],
+  [["みかん", "ミカン", "伊予柑", "デコポン", "八朔", "しらぬい"], "mikan.jpg"],
   [["いちご", "イチゴ"], "ichigo.jpg"],
   [["バナナ"], "banana.jpg"],
   [["りんご", "サンふじ", "サンフジ"], "apple.jpg"],
@@ -52,33 +51,54 @@ function getProductImage(name) {
   return null
 }
 
-// カテゴリ表示スタイル
 const CAT_COLORS = {
-  葉物: { bg: "#dcfce7", tx: "#166534" },
-  果菜: { bg: "#fee2e2", tx: "#991b1b" },
-  薬味: { bg: "#fef9c3", tx: "#854d0e" },
-  カット: { bg: "#dbeafe", tx: "#1e40af" },
-  きのこ: { bg: "#ede9fe", tx: "#5b21b6" },
-  根菜: { bg: "#ffedd5", tx: "#9a3412" },
-  土もの: { bg: "#f5f0e8", tx: "#78350f" },
-  果物: { bg: "#fce7f3", tx: "#9d174d" },
+  葉物: { bg: "#dcfce7", tx: "#166534", icon: "🥬" },
+  果菜: { bg: "#fee2e2", tx: "#991b1b", icon: "🍅" },
+  薬味: { bg: "#fef9c3", tx: "#854d0e", icon: "🧄" },
+  カット: { bg: "#dbeafe", tx: "#1e40af", icon: "🔪" },
+  きのこ: { bg: "#ede9fe", tx: "#5b21b6", icon: "🍄" },
+  根菜: { bg: "#ffedd5", tx: "#9a3412", icon: "🥕" },
+  土もの: { bg: "#f5f0e8", tx: "#78350f", icon: "🥔" },
+  果物: { bg: "#fce7f3", tx: "#9d174d", icon: "🍎" },
 }
 
 const G = "#4a7c59"
 
+// メインバナー（自動切替）
+const MAIN_BANNERS = [
+  { img: "ichigo.jpg", title: "旬のいちご", sub: "福島県産の甘い一粒", tab: "sale" },
+  { img: "spinach.jpg", title: "新鮮な葉物野菜", sub: "毎日届く産地直送", tab: "regular" },
+  { img: "tomato.jpg", title: "FRESH SALE", sub: "期間限定のお買い得商品", tab: "sale" },
+  { img: "cabbage-half.jpg", title: "定番野菜", sub: "いつもの食卓に安心品質", tab: "regular" },
+]
+
+// サイドカード（メインバナー右に2枚）
+const SIDE_CARDS = [
+  { img: "maitake.jpg", title: "きのこ類", badge: "人気", tab: "regular", cat: "きのこ" },
+  { img: "carrot.jpg", title: "根菜フェア", badge: "旬", tab: "regular", cat: "根菜" },
+]
+
+// 下段カード（3列）
+const BOTTOM_CARDS = [
+  { img: "komatsuna.jpg", title: "葉物野菜", tab: "regular", cat: "葉物" },
+  { img: "nasu.jpg", title: "果菜", tab: "regular", cat: "果菜" },
+  { img: "apple.jpg", title: "果物", tab: "regular", cat: "果物" },
+]
+
 export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
-  const [tab, setTab] = useState("regular") // "regular" | "sale"
+  const [tab, setTab] = useState("regular")
   const [products, setProducts] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
   const [likes, setLikes] = useState({})
   const [likedItems, setLikedItems] = useState({})
-  const [wants, setWants] = useState({}) // FRESH SALEの欲しい
+  const [wants, setWants] = useState({})
   const [wantedItems, setWantedItems] = useState({})
-  const [reviews, setReviews] = useState({}) // 口コミ
+  const [reviews, setReviews] = useState({})
   const [reviewText, setReviewText] = useState("")
   const [reviewName, setReviewName] = useState("")
+  const [bannerIdx, setBannerIdx] = useState(0)
+  const [filterCat, setFilterCat] = useState(null)
 
-  // レギュラー商品をFirebaseから読み込み
   useEffect(() => {
     const unsub = onValue(ref(db, "products"), (snap) => {
       const val = snap.val()
@@ -89,24 +109,25 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
     return () => unsub()
   }, [])
 
-  // おいしい評価を読み込み
   useEffect(() => {
-    const unsub = onValue(ref(db, "productLikes"), (snap) => {
-      setLikes(snap.val() || {})
-    })
+    const unsub = onValue(ref(db, "productLikes"), (snap) => setLikes(snap.val() || {}))
     return () => unsub()
   }, [])
 
-  // 欲しいボタン（FRESH SALE）
   useEffect(() => {
     const unsub = onValue(ref(db, "productWants"), (snap) => setWants(snap.val() || {}))
     return () => unsub()
   }, [])
 
-  // 口コミ読み込み
   useEffect(() => {
     const unsub = onValue(ref(db, "productReviews"), (snap) => setReviews(snap.val() || {}))
     return () => unsub()
+  }, [])
+
+  // バナー自動切替
+  useEffect(() => {
+    const timer = setInterval(() => setBannerIdx(i => (i + 1) % MAIN_BANNERS.length), 4000)
+    return () => clearInterval(timer)
   }, [])
 
   const handleLike = async (itemKey) => {
@@ -125,47 +146,134 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
 
   const handleReview = async (itemKey) => {
     if (!reviewText.trim()) return
-    const ts = Date.now()
     const existing = reviews[itemKey] || []
     const arr = Array.isArray(existing) ? existing : Object.values(existing)
     await set(ref(db, `productReviews/${itemKey}/${arr.length}`), {
       name: reviewName.trim() || "匿名",
       text: reviewText.trim(),
-      at: ts,
+      at: Date.now(),
     })
     setReviewText("")
     setReviewName("")
   }
 
-  const items = tab === "regular" ? products : tokubaiItems
+  const isRegular = tab === "regular"
+  let items = isRegular ? products : tokubaiItems
+  if (isRegular && filterCat) items = items.filter(p => p.cat === filterCat)
+
+  const categories = [...new Set(products.map(p => p.cat).filter(Boolean))]
 
   return (
     <div style={{ minHeight: "100vh", background: "#f7f7f5", fontFamily: "'Noto Sans JP', sans-serif" }}>
+      <style>{`
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes bannerFade { from { opacity: 0; } to { opacity: 1; } }
+      `}</style>
+
       {/* ヘッダー */}
       <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
         <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>
         <span style={{ fontSize: 18, fontWeight: 900, color: G }}>商品</span>
       </header>
 
-      {/* タブ */}
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #eee" }}>
-        <button onClick={() => setTab("regular")} style={{
-          flex: 1, padding: "14px", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer",
-          background: "#fff", color: tab === "regular" ? G : "#999",
-          borderBottom: tab === "regular" ? `3px solid ${G}` : "3px solid transparent",
-        }}>定番野菜</button>
-        <button onClick={() => setTab("sale")} style={{
-          flex: 1, padding: "14px", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer",
-          background: "#fff", color: tab === "sale" ? "#dc2626" : "#999",
-          borderBottom: tab === "sale" ? "3px solid #dc2626" : "3px solid transparent",
-        }}>FRESH SALE</button>
+      {/* Amazon風バナーエリア */}
+      <div style={{ padding: "10px 10px 0" }}>
+        {/* 上段: メインバナー + サイドカード2枚 */}
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 8, marginBottom: 8 }}>
+          {/* メインバナー（自動切替） */}
+          <div style={{ position: "relative", borderRadius: 12, overflow: "hidden", cursor: "pointer", gridRow: "1 / 3" }}
+            onClick={() => { const b = MAIN_BANNERS[bannerIdx]; setTab(b.tab); setFilterCat(null) }}>
+            {MAIN_BANNERS.map((b, i) => (
+              <div key={i} style={{ position: i === 0 ? "relative" : "absolute", inset: 0, opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.6s ease" }}>
+                <img src={`/products/${b.img}?${IMG_VERSION}`} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 200 }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,.05) 50%)" }} />
+                <div style={{ position: "absolute", bottom: 16, left: 14 }}>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: "#fff", textShadow: "0 2px 8px rgba(0,0,0,.4)" }}>{b.title}</div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,.85)", marginTop: 2 }}>{b.sub}</div>
+                </div>
+              </div>
+            ))}
+            <div style={{ position: "absolute", bottom: 8, right: 10, display: "flex", gap: 5 }}>
+              {MAIN_BANNERS.map((_, i) => (
+                <div key={i} onClick={e => { e.stopPropagation(); setBannerIdx(i) }}
+                  style={{ width: i === bannerIdx ? 16 : 6, height: 6, borderRadius: 3, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.45)", transition: "all 0.3s", cursor: "pointer" }} />
+              ))}
+            </div>
+          </div>
+
+          {/* サイドカード2枚 */}
+          {SIDE_CARDS.map((c, i) => (
+            <div key={i} onClick={() => { setTab(c.tab); setFilterCat(c.cat || null) }}
+              style={{ position: "relative", borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#f8faf8" }}>
+              <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 60%)" }} />
+              {c.badge && (
+                <span style={{ position: "absolute", top: 6, right: 6, fontSize: 10, fontWeight: 800, background: "#dc2626", color: "#fff", padding: "2px 8px", borderRadius: 4 }}>{c.badge}</span>
+              )}
+              <div style={{ position: "absolute", bottom: 8, left: 8, fontSize: 13, fontWeight: 800, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,.4)" }}>{c.title}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* 下段: 小カード3列 */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 6 }}>
+          {BOTTOM_CARDS.map((c, i) => (
+            <div key={i} onClick={() => { setTab(c.tab); setFilterCat(c.cat || null) }}
+              style={{ borderRadius: 10, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb" }}>
+              <div style={{ height: 80, overflow: "hidden" }}>
+                <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <div style={{ padding: "6px 8px", fontSize: 12, fontWeight: 700, color: "#333", textAlign: "center" }}>{c.title}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* カテゴリタブ */}
+      <div style={{ background: "#fff", borderBottom: "2px solid #eee" }}>
+        <div style={{ display: "flex" }}>
+          <button onClick={() => { setTab("regular"); setFilterCat(null) }} style={{
+            flex: 1, padding: "14px", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer",
+            background: "#fff", color: tab === "regular" ? G : "#999",
+            borderBottom: tab === "regular" ? `3px solid ${G}` : "3px solid transparent",
+          }}>定番野菜</button>
+          <button onClick={() => { setTab("sale"); setFilterCat(null) }} style={{
+            flex: 1, padding: "14px", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer",
+            background: "#fff", color: tab === "sale" ? "#dc2626" : "#999",
+            borderBottom: tab === "sale" ? "3px solid #dc2626" : "3px solid transparent",
+          }}>FRESH SALE</button>
+        </div>
+
+        {/* カテゴリフィルター（定番野菜のみ） */}
+        {isRegular && (
+          <div style={{ display: "flex", gap: 6, padding: "10px 12px", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <button onClick={() => setFilterCat(null)}
+              style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 20, border: "1px solid #e5e7eb", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: !filterCat ? G : "#fff", color: !filterCat ? "#fff" : "#666" }}>
+              すべて
+            </button>
+            {categories.map(cat => {
+              const c = CAT_COLORS[cat] || {}
+              return (
+                <button key={cat} onClick={() => setFilterCat(filterCat === cat ? null : cat)}
+                  style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 20, border: `1px solid ${filterCat === cat ? c.tx || G : "#e5e7eb"}`, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: filterCat === cat ? (c.bg || "#f1f5f9") : "#fff", color: filterCat === cat ? (c.tx || G) : "#666" }}>
+                  {c.icon || ""} {cat}
+                </button>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       {/* 商品グリッド */}
-      <div style={{ padding: "16px 12px 80px", maxWidth: 640, margin: "0 auto" }}>
-        {tab === "regular" && (
+      <div style={{ padding: "16px 12px 40px", maxWidth: 640, margin: "0 auto" }}>
+        {isRegular && (
           <div style={{ fontSize: 13, color: "#64748b", marginBottom: 12, fontWeight: 600 }}>
-            {products.length}品目の定番商品
+            {filterCat ? `${filterCat} ${items.length}品目` : `${products.length}品目の定番商品`}
+          </div>
+        )}
+        {!isRegular && (
+          <div style={{ fontSize: 13, color: "#dc2626", marginBottom: 12, fontWeight: 600 }}>
+            お買い得商品 {items.length}品目
           </div>
         )}
 
@@ -173,7 +281,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
           {items.map((item, i) => {
             const itemKey = (item.id || item.name || i).toString().replace(/[.#$/[\]]/g, "_")
             const likeCount = likes[itemKey] || 0
-            const isRegular = tab === "regular"
+            const wantCount = wants[itemKey] || 0
             const imgSrc = getProductImage(item.name)
             const catStyle = isRegular && item.cat ? CAT_COLORS[item.cat] : null
 
@@ -183,43 +291,48 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                   background: "#fff", borderRadius: 12, overflow: "hidden",
                   border: "1px solid #e5e7eb", cursor: "pointer",
                   boxShadow: "0 1px 4px rgba(0,0,0,.04)",
-                  transition: "transform 0.15s",
                 }}>
-                {/* 画像エリア（定番野菜のみ） */}
-                {isRegular && (
-                  <div style={{
-                    height: 140, background: "#f8faf8", display: "flex",
-                    alignItems: "center", justifyContent: "center",
-                    position: "relative", overflow: "hidden",
-                  }}>
-                    {imgSrc
-                      ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontSize: 48, opacity: 0.5 }}>🥗</span>
-                    }
-                    {catStyle && (
-                      <span style={{
-                        position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
-                        background: catStyle.bg, color: catStyle.tx, padding: "2px 8px", borderRadius: 4,
-                      }}>{item.cat}</span>
-                    )}
-                    {likeCount > 0 && (
-                      <span style={{
-                        position: "absolute", top: 8, right: 8, fontSize: 11, fontWeight: 800,
-                        background: "#fff3e0", color: "#e65100", padding: "2px 8px", borderRadius: 10,
-                      }}>😋 {likeCount}</span>
-                    )}
-                  </div>
-                )}
-                {/* セールタグ（FRESH SALEのみ） */}
-                {!isRegular && item.tag && (
-                  <div style={{ padding: "8px 12px 0" }}>
-                    <span style={{ fontSize: 10, fontWeight: 800,
+                {/* 画像エリア（両方表示） */}
+                <div style={{
+                  height: 140, background: "#f8faf8", display: "flex",
+                  alignItems: "center", justifyContent: "center",
+                  position: "relative", overflow: "hidden",
+                }}>
+                  {imgSrc
+                    ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    : <span style={{ fontSize: 48, opacity: 0.5 }}>{isRegular ? "🥗" : "🏷️"}</span>
+                  }
+                  {/* カテゴリバッジ（定番） */}
+                  {catStyle && (
+                    <span style={{
+                      position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
+                      background: catStyle.bg, color: catStyle.tx, padding: "2px 8px", borderRadius: 4,
+                    }}>{item.cat}</span>
+                  )}
+                  {/* セールタグ（FRESH SALE） */}
+                  {!isRegular && item.tag && (
+                    <span style={{
+                      position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
                       background: item.tag === "特価" ? "#fef2f2" : item.tag === "旬" ? "#fffbeb" : "#f0fdf4",
                       color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : G,
                       padding: "2px 8px", borderRadius: 4,
                     }}>{item.tag}</span>
-                  </div>
-                )}
+                  )}
+                  {/* おいしいカウント */}
+                  {isRegular && likeCount > 0 && (
+                    <span style={{
+                      position: "absolute", top: 8, right: 8, fontSize: 11, fontWeight: 800,
+                      background: "#fff3e0", color: "#e65100", padding: "2px 8px", borderRadius: 10,
+                    }}>😋 {likeCount}</span>
+                  )}
+                  {/* 欲しいカウント */}
+                  {!isRegular && wantCount > 0 && (
+                    <span style={{
+                      position: "absolute", top: 8, right: 8, fontSize: 11, fontWeight: 800,
+                      background: "#eff6ff", color: "#2563eb", padding: "2px 8px", borderRadius: 10,
+                    }}>🙋 {wantCount}</span>
+                  )}
+                </div>
 
                 {/* 情報 */}
                 <div style={{ padding: "10px 12px" }}>
@@ -250,14 +363,11 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
           style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.5)", zIndex: 200, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
           <div onClick={e => e.stopPropagation()}
             style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 640, maxHeight: "85vh", overflow: "auto", animation: "slideUp 0.25s ease" }}>
-            <style>{`@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }`}</style>
 
-            {/* 閉じるバー */}
             <div style={{ textAlign: "center", padding: "10px 0 0" }}>
               <div style={{ width: 40, height: 4, background: "#d1d5db", borderRadius: 2, margin: "0 auto" }} />
             </div>
 
-            {/* 商品画像 */}
             <div style={{ height: 220, background: "#f8faf8", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
               {selectedItem._img
                 ? <img src={selectedItem._img} alt={selectedItem.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -266,7 +376,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
             </div>
 
             <div style={{ padding: "20px 24px 32px" }}>
-              {/* カテゴリ */}
               {selectedItem._isRegular && selectedItem.cat && (
                 <span style={{
                   fontSize: 11, fontWeight: 800, display: "inline-block", marginBottom: 8,
@@ -275,11 +384,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                   padding: "3px 10px", borderRadius: 4,
                 }}>{selectedItem.cat}</span>
               )}
+              {!selectedItem._isRegular && selectedItem.tag && (
+                <span style={{
+                  fontSize: 11, fontWeight: 800, display: "inline-block", marginBottom: 8,
+                  background: selectedItem.tag === "特価" ? "#fef2f2" : "#fffbeb",
+                  color: selectedItem.tag === "特価" ? "#dc2626" : "#d97706",
+                  padding: "3px 10px", borderRadius: 4,
+                }}>{selectedItem.tag}</span>
+              )}
 
-              {/* 商品名 */}
               <h2 style={{ fontSize: 24, fontWeight: 900, margin: "0 0 8px", color: "#1a1a1a" }}>{selectedItem.name}</h2>
 
-              {/* 産地 */}
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16 }}>
                 {selectedItem._isRegular
                   ? (selectedItem.origin ? `産地: ${selectedItem.origin}` : "")
@@ -287,7 +402,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                 {!selectedItem._isRegular && selectedItem.unit && ` / ${selectedItem.unit}`}
               </div>
 
-              {/* 価格 */}
               <div style={{
                 background: "#fef2f2", borderRadius: 12, padding: "16px 20px", marginBottom: 20,
                 display: "flex", alignItems: "baseline", gap: 4,
@@ -302,7 +416,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                 </span>
               </div>
 
-              {/* おいしいボタン（定番） / 欲しいボタン（セール） */}
+              {/* おいしい / 欲しいボタン */}
               {(() => {
                 const key = selectedItem._key
                 if (selectedItem._isRegular) {
@@ -364,40 +478,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
           </div>
         </div>
       )}
-
-      {/* 下部タブバー */}
-      <div style={{
-        position: "fixed", bottom: 0, left: 0, right: 0,
-        background: "#fff", borderTop: "1px solid #e5e7eb",
-        display: "flex", justifyContent: "space-around", alignItems: "center",
-        padding: "8px 0 env(safe-area-inset-bottom, 8px)",
-        zIndex: 150,
-      }}>
-        <button onClick={onBack} style={tabBarBtn}>
-          <span style={tabBarIcon}>🏠</span>
-          <span style={tabBarLabel}>トップ</span>
-        </button>
-        <button onClick={() => setTab("regular")} style={tabBarBtn}>
-          <span style={{ ...tabBarIcon, color: tab === "regular" ? G : "#999" }}>🥬</span>
-          <span style={{ ...tabBarLabel, color: tab === "regular" ? G : "#999" }}>定番野菜</span>
-        </button>
-        <button onClick={() => setTab("sale")} style={tabBarBtn}>
-          <span style={{ ...tabBarIcon, color: tab === "sale" ? "#dc2626" : "#999" }}>🏷️</span>
-          <span style={{ ...tabBarLabel, color: tab === "sale" ? "#dc2626" : "#999" }}>セール</span>
-        </button>
-        <button onClick={() => { if (onNavigate) onNavigate("contact") }} style={tabBarBtn}>
-          <span style={tabBarIcon}>✉️</span>
-          <span style={tabBarLabel}>お問合せ</span>
-        </button>
-      </div>
     </div>
   )
 }
-
-const tabBarBtn = {
-  flex: 1, background: "none", border: "none", cursor: "pointer",
-  display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
-  padding: "4px 0", fontFamily: "inherit",
-}
-const tabBarIcon = { fontSize: 20, color: "#999" }
-const tabBarLabel = { fontSize: 10, fontWeight: 700, color: "#999" }
