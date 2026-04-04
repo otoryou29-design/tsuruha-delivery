@@ -41,7 +41,7 @@ export default function App() {
 
   // 共通タブバー
   const TabBar = () => (
-    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "6px 0 env(safe-area-inset-bottom, 6px)", zIndex: 150 }}>
+    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-around", alignItems: "center", paddingTop: 8, paddingBottom: "max(12px, env(safe-area-inset-bottom, 12px))", zIndex: 150 }}>
       {[
         { label: "ホーム", page: "home", svg: "M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0h4" },
         { label: "商品", page: "products", svg: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
