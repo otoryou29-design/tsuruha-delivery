@@ -40,7 +40,7 @@ export default function App() {
   }, []);
 
   if (page === "products") {
-    return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} />
+    return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} onNavigate={(target) => { setPage("home"); setTimeout(() => { const el = document.getElementById(target); if (el) el.scrollIntoView({ behavior: "smooth" }) }, 100) }} />
   }
 
   if (page === "delivery") {

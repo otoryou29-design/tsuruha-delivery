@@ -66,7 +66,7 @@ const CAT_COLORS = {
 
 const G = "#4a7c59"
 
-export default function ProductsPage({ tokubaiItems, onBack }) {
+export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
   const [tab, setTab] = useState("regular") // "regular" | "sale"
   const [products, setProducts] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
@@ -125,7 +125,7 @@ export default function ProductsPage({ tokubaiItems, onBack }) {
       </div>
 
       {/* 商品グリッド */}
-      <div style={{ padding: "16px 12px", maxWidth: 640, margin: "0 auto" }}>
+      <div style={{ padding: "16px 12px 80px", maxWidth: 640, margin: "0 auto" }}>
         {tab === "regular" && (
           <div style={{ fontSize: 13, color: "#64748b", marginBottom: 12, fontWeight: 600 }}>
             {products.length}品目の定番商品
@@ -148,40 +148,41 @@ export default function ProductsPage({ tokubaiItems, onBack }) {
                   boxShadow: "0 1px 4px rgba(0,0,0,.04)",
                   transition: "transform 0.15s",
                 }}>
-                {/* 画像エリア */}
-                <div style={{
-                  height: 140, background: "#f8faf8", display: "flex",
-                  alignItems: "center", justifyContent: "center",
-                  position: "relative", overflow: "hidden",
-                }}>
-                  {imgSrc
-                    ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <span style={{ fontSize: 48, opacity: 0.5 }}>🥗</span>
-                  }
-                  {/* カテゴリバッジ */}
-                  {catStyle && (
-                    <span style={{
-                      position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
-                      background: catStyle.bg, color: catStyle.tx, padding: "2px 8px", borderRadius: 4,
-                    }}>{item.cat}</span>
-                  )}
-                  {/* セールタグ */}
-                  {!isRegular && item.tag && (
-                    <span style={{
-                      position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
+                {/* 画像エリア（定番野菜のみ） */}
+                {isRegular && (
+                  <div style={{
+                    height: 140, background: "#f8faf8", display: "flex",
+                    alignItems: "center", justifyContent: "center",
+                    position: "relative", overflow: "hidden",
+                  }}>
+                    {imgSrc
+                      ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      : <span style={{ fontSize: 48, opacity: 0.5 }}>🥗</span>
+                    }
+                    {catStyle && (
+                      <span style={{
+                        position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
+                        background: catStyle.bg, color: catStyle.tx, padding: "2px 8px", borderRadius: 4,
+                      }}>{item.cat}</span>
+                    )}
+                    {likeCount > 0 && (
+                      <span style={{
+                        position: "absolute", top: 8, right: 8, fontSize: 11, fontWeight: 800,
+                        background: "#fff3e0", color: "#e65100", padding: "2px 8px", borderRadius: 10,
+                      }}>😋 {likeCount}</span>
+                    )}
+                  </div>
+                )}
+                {/* セールタグ（FRESH SALEのみ） */}
+                {!isRegular && item.tag && (
+                  <div style={{ padding: "8px 12px 0" }}>
+                    <span style={{ fontSize: 10, fontWeight: 800,
                       background: item.tag === "特価" ? "#fef2f2" : item.tag === "旬" ? "#fffbeb" : "#f0fdf4",
                       color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : G,
                       padding: "2px 8px", borderRadius: 4,
                     }}>{item.tag}</span>
-                  )}
-                  {/* おいしいカウント */}
-                  {likeCount > 0 && (
-                    <span style={{
-                      position: "absolute", top: 8, right: 8, fontSize: 11, fontWeight: 800,
-                      background: "#fff3e0", color: "#e65100", padding: "2px 8px", borderRadius: 10,
-                    }}>😋 {likeCount}</span>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* 情報 */}
                 <div style={{ padding: "10px 12px" }}>
@@ -295,6 +296,40 @@ export default function ProductsPage({ tokubaiItems, onBack }) {
           </div>
         </div>
       )}
+
+      {/* 下部タブバー */}
+      <div style={{
+        position: "fixed", bottom: 0, left: 0, right: 0,
+        background: "#fff", borderTop: "1px solid #e5e7eb",
+        display: "flex", justifyContent: "space-around", alignItems: "center",
+        padding: "8px 0 env(safe-area-inset-bottom, 8px)",
+        zIndex: 150,
+      }}>
+        <button onClick={onBack} style={tabBarBtn}>
+          <span style={tabBarIcon}>🏠</span>
+          <span style={tabBarLabel}>トップ</span>
+        </button>
+        <button onClick={() => setTab("regular")} style={tabBarBtn}>
+          <span style={{ ...tabBarIcon, color: tab === "regular" ? G : "#999" }}>🥬</span>
+          <span style={{ ...tabBarLabel, color: tab === "regular" ? G : "#999" }}>定番野菜</span>
+        </button>
+        <button onClick={() => setTab("sale")} style={tabBarBtn}>
+          <span style={{ ...tabBarIcon, color: tab === "sale" ? "#dc2626" : "#999" }}>🏷️</span>
+          <span style={{ ...tabBarLabel, color: tab === "sale" ? "#dc2626" : "#999" }}>セール</span>
+        </button>
+        <button onClick={() => { if (onNavigate) onNavigate("contact") }} style={tabBarBtn}>
+          <span style={tabBarIcon}>✉️</span>
+          <span style={tabBarLabel}>お問合せ</span>
+        </button>
+      </div>
     </div>
   )
 }
+
+const tabBarBtn = {
+  flex: 1, background: "none", border: "none", cursor: "pointer",
+  display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+  padding: "4px 0", fontFamily: "inherit",
+}
+const tabBarIcon = { fontSize: 20, color: "#999" }
+const tabBarLabel = { fontSize: 10, fontWeight: 700, color: "#999" }
