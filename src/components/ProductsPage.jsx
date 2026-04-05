@@ -114,13 +114,6 @@ const GREEN_SLIDES = [
     cta: "セールを見る →",
     tab: "sale",
   },
-  {
-    title: "これ、\n売れてます。",
-    sub: "お客様に支持された人気商品",
-    products: ["ichigo.jpg", "shimeji.jpg", "enoki.jpg", "daikon.jpg"],
-    cta: "ランキングを見る →",
-    tab: "ranking",
-  },
 ]
 
 // 下段カード（3列）
@@ -145,7 +138,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
   const [bannerIdx, setBannerIdx] = useState(0)
   const [filterCat, setFilterCat] = useState(null)
   const [rankingData, setRankingData] = useState([])
-  const [showRanking, setShowRanking] = useState(false)
 
   useEffect(() => {
     const unsub = onValue(ref(db, "products"), (snap) => {
@@ -269,7 +261,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
       {/* ヒーローバナー（全画面幅） */}
       <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
-        onClick={() => { const s = allSlides[bannerIdx]; if (s.tab === "ranking") { setShowRanking(true) } else { setTab(s.tab); setFilterCat(null) } }}>
+        onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null) }}>
         {allSlides.map((slide, i) => {
           if (slide.type === "shun") {
             // 旬を食べようバナー（白背景・全員表示）
@@ -444,6 +436,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
             const wantCount = wants[itemKey] || 0
             const imgSrc = getProductImage(item.name)
             const catStyle = isRegular && item.cat ? CAT_COLORS[item.cat] : null
+            const isBestseller = rankingData.slice(0, 5).some(r => item.name.includes(r.name) || r.name.includes(item.name))
 
             return (
               <div key={i} onClick={() => setSelectedItem({ ...item, _key: itemKey, _img: imgSrc, _isRegular: isRegular })}
@@ -477,6 +470,13 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                       color: item.tag === "特価" ? "#dc2626" : item.tag === "旬" ? "#d97706" : G,
                       padding: "2px 8px", borderRadius: 4,
                     }}>{item.tag}</span>
+                  )}
+                  {/* 売れてますバッジ */}
+                  {isBestseller && (
+                    <span style={{
+                      position: "absolute", bottom: 8, left: 8, fontSize: 10, fontWeight: 800,
+                      background: "#dc2626", color: "#fff", padding: "3px 8px", borderRadius: 4,
+                    }}>🔥 売れてます</span>
                   )}
                   {/* おいしいカウント */}
                   {isRegular && likeCount > 0 && (
@@ -639,70 +639,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
         </div>
       )}
 
-      {/* 売れてますランキングページ */}
-      {showRanking && (
-        <div style={{ position: "fixed", inset: 0, background: "#f7f7f5", zIndex: 300, overflow: "auto" }}>
-          <header style={{ background: BG, padding: "14px 16px", position: "sticky", top: 0, zIndex: 301, display: "flex", alignItems: "center", gap: 12 }}>
-            <button onClick={() => setShowRanking(false)} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#fff", padding: "4px 8px" }}>←</button>
-            <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>これ、売れてます。</span>
-          </header>
-
-          <div style={{ padding: "16px 12px 40px", maxWidth: 640, margin: "0 auto" }}>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.7)", marginBottom: 16, fontWeight: 600, textAlign: "center" }}>
-              お客様に支持された人気商品ランキング
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              {rankingData.map((item, i) => {
-                const imgSrc = getProductImage(item.name)
-                const isTop3 = i < 3
-                const matched = products.find(p => item.name.includes(p.name) || p.name.includes(item.name))
-                const price = matched?.price || 0
-                const medals = ["🥇", "🥈", "🥉"]
-                return (
-                  <div key={i} style={{
-                    background: "#fff", borderRadius: 12, overflow: "hidden",
-                    border: isTop3 ? `2px solid ${i === 0 ? "#fbbf24" : i === 1 ? "#d1d5db" : "#d97706"}` : "1px solid #e5e7eb",
-                    boxShadow: "0 1px 4px rgba(0,0,0,.04)",
-                  }}>
-                    <div style={{
-                      height: 140, background: "#f8faf8", display: "flex",
-                      alignItems: "center", justifyContent: "center",
-                      position: "relative", overflow: "hidden",
-                    }}>
-                      {imgSrc
-                        ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        : <span style={{ fontSize: 48, opacity: 0.5 }}>🥗</span>
-                      }
-                      <span style={{
-                        position: "absolute", top: 8, left: 8, fontSize: isTop3 ? 24 : 13, fontWeight: 900,
-                        background: isTop3 ? "rgba(255,255,255,.9)" : "rgba(255,255,255,.85)",
-                        color: "#333", padding: isTop3 ? "2px 8px" : "2px 10px", borderRadius: 8,
-                        minWidth: 28, textAlign: "center",
-                      }}>{isTop3 ? medals[i] : item.rank}</span>
-                    </div>
-                    <div style={{ padding: "10px 12px" }}>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 4, lineHeight: 1.3 }}>
-                        {item.name}
-                      </div>
-                      {price > 0 && (
-                        <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
-                          <span style={{ fontSize: 11, color: "#64748b", fontWeight: 700 }}>¥</span>
-                          <span style={{ fontSize: 20, fontWeight: 900, color: "#dc2626", lineHeight: 1 }}>{price.toLocaleString()}</span>
-                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 2 }}>税別</span>
-                        </div>
-                      )}
-                      {isTop3 && (
-                        <span style={{ fontSize: 10, fontWeight: 700, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 4 }}>人気</span>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
