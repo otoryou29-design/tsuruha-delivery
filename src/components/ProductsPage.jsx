@@ -258,8 +258,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
         <span style={{ fontSize: 18, fontWeight: 900, color: G }}>商品</span>
       </header>
 
-      {/* ヒーローバナー（全画面幅） */}
-      <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
+      {/* ヒーローバナー */}
+      <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16 }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
         onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) }}>
         {allSlides.map((slide, i) => {
