@@ -85,7 +85,6 @@ export default function App() {
                       <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a" }}>{s.name}</div>
                       <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>納品: {s.deliveryDays}</div>
                     </div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#4d8c00", background: "#f0fdf4", padding: "3px 10px", borderRadius: 6 }}>{s.rank || "-"}</div>
                   </div>
                 ))}
               </div>
