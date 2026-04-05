@@ -4,7 +4,6 @@ import ProductsPage from "./components/ProductsPage";
 import IchigoFeature from "./components/IchigoFeature";
 import ShunFeature from "./components/ShunFeature";
 import { onTokubaiChange, onStaffArticlesChange, onTimelineRecentChange } from "./firebase";
-import StaffTimeline from "./components/StaffTimeline";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
 const HERO = "/hero-team.png";
@@ -23,10 +22,8 @@ const TOKUBAI_FALLBACK = [
 ];
 
 
-const isStaffMode = new URLSearchParams(window.location.search).has("staff");
-
 export default function App() {
-  const [page, setPage] = useState(isStaffMode ? "staff-timeline" : "home");
+  const [page, setPage] = useState("home");
   const [now, setNow] = useState(new Date());
   useEffect(() => { const t = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(t); }, []);
   const [contactType, setContactType] = useState("business"); // "business" | "recruit"
@@ -91,11 +88,6 @@ export default function App() {
       ))}
     </div>
   )
-
-  // スタッフ用タイムライン
-  if (page === "staff-timeline") {
-    return <StaffTimeline />
-  }
 
   // 記事一覧ページ
   if (page === "articles") {
