@@ -127,6 +127,109 @@ const NAV_CARDS = [
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
 ]
 
+// 県内スーパー平均相場（リサーチベース）
+const MARKET_AVG = {
+  "レタス": 248, "フリルレタス": 168, "水菜": 198, "小松菜": 198, "ほうれん草": 248,
+  "青梗菜": 178, "ブロッコリー": 258, "長ねぎ": 258, "にら": 228, "ミニトマト": 328,
+  "トマト": 298, "きゅうり": 198, "ピーマン": 198, "なす": 228, "春菊": 248,
+  "キャベツ": 178, "白菜": 278, "しいたけ": 228, "なめこ": 128, "えのき": 128,
+  "しめじ": 168, "まいたけ": 258, "大根": 178, "ごぼう": 228, "人参": 198,
+  "じゃがいも": 228, "玉ねぎ": 228, "いちご": 498, "りんご": 298, "みかん": 398, "バナナ": 178,
+}
+
+function AiSavingsDiag({ products }) {
+  const [showDetail, setShowDetail] = useState(false)
+
+  const comparisons = products.map(p => {
+    const marketKey = Object.keys(MARKET_AVG).find(k => p.name.includes(k))
+    if (!marketKey) return null
+    const market = MARKET_AVG[marketKey]
+    const diff = market - p.price
+    const pct = Math.round((diff / market) * 100)
+    return { name: p.name, ourPrice: p.price, marketPrice: market, saving: diff, pct }
+  }).filter(c => c && c.saving > 0).sort((a, b) => b.pct - a.pct)
+
+  const totalSaving = comparisons.reduce((s, c) => s + c.saving, 0)
+  const avgPct = comparisons.length > 0 ? Math.round(comparisons.reduce((s, c) => s + c.pct, 0) / comparisons.length) : 0
+
+  if (comparisons.length === 0) return null
+
+  return (
+    <div style={{ margin: "0 10px 20px", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
+      {/* ヘッダー */}
+      <div style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "24px 20px 20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+          </div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
+        </div>
+        <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.7 }}>
+          福島県内スーパーの平均価格と比較して、音川青果の商品がどれだけおトクかをAIが分析しました。
+        </div>
+      </div>
+
+      {/* 結果サマリー */}
+      <div style={{ padding: "20px", display: "flex", gap: 12 }}>
+        <div style={{ flex: 1, background: "#f0fdf4", borderRadius: 12, padding: "16px", textAlign: "center" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>平均おトク率</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: BG, lineHeight: 1 }}>{avgPct}%</div>
+          <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>県内平均より</div>
+        </div>
+        <div style={{ flex: 1, background: "#fef2f2", borderRadius: 12, padding: "16px", textAlign: "center" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>全品合計おトク額</div>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 2 }}>
+            <span style={{ fontSize: 14, fontWeight: 900, color: "#dc2626" }}>¥</span>
+            <span style={{ fontSize: 28, fontWeight: 900, color: "#dc2626", lineHeight: 1 }}>{totalSaving.toLocaleString()}</span>
+          </div>
+          <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>おトク</div>
+        </div>
+      </div>
+
+      {/* TOP5 */}
+      <div style={{ padding: "0 20px 16px" }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 10 }}>おトク率 TOP5</div>
+        {comparisons.slice(0, 5).map((c, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < 4 ? "1px solid #f1f5f9" : "none" }}>
+            <div style={{ width: 22, height: 22, borderRadius: 6, background: i < 3 ? BG : "#e5e7eb", color: i < 3 ? "#fff" : "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
+            <div style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{c.name}</div>
+            <div style={{ textAlign: "right" }}>
+              <span style={{ fontSize: 12, color: "#94a3b8", textDecoration: "line-through", marginRight: 6 }}>¥{c.marketPrice}</span>
+              <span style={{ fontSize: 14, fontWeight: 800, color: "#dc2626" }}>¥{c.ourPrice}</span>
+            </div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
+          </div>
+        ))}
+      </div>
+
+      {/* 詳細トグル */}
+      <button onClick={() => setShowDetail(!showDetail)} style={{ width: "100%", padding: "12px", background: "#f8fafc", border: "none", borderTop: "1px solid #e5e7eb", fontSize: 12, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "inherit" }}>
+        {showDetail ? "閉じる" : `全${comparisons.length}品目の比較を見る`}
+      </button>
+      {showDetail && (
+        <div style={{ padding: "0 20px 16px" }}>
+          {comparisons.slice(5).map((c, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #f1f5f9" }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: "#e5e7eb", color: "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 6}</div>
+              <div style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{c.name}</div>
+              <div style={{ textAlign: "right" }}>
+                <span style={{ fontSize: 12, color: "#94a3b8", textDecoration: "line-through", marginRight: 6 }}>¥{c.marketPrice}</span>
+                <span style={{ fontSize: 14, fontWeight: 800, color: "#dc2626" }}>¥{c.ourPrice}</span>
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* フッター注記 */}
+      <div style={{ padding: "8px 20px 14px", fontSize: 10, color: "#cbd5e1", lineHeight: 1.6 }}>
+        ※ 県内主要スーパー（ヨークベニマル・リオンドール・イオン等）の平均価格との比較です。価格は時期により変動します。
+      </div>
+    </div>
+  )
+}
+
 export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner, initialTab, onCardTap }) {
   const [tab, setTab] = useState(initialTab || null) // null=トップ | "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
@@ -390,6 +493,9 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
             <span style={{ fontSize: 20, color: "#fff" }}>→</span>
           </div>
         </div>
+
+        {/* AI おトク診断 */}
+        <AiSavingsDiag products={products} />
       )}
 
       {/* 商品リストページ（ホーム以外） */}

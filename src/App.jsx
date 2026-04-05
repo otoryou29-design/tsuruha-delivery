@@ -280,8 +280,8 @@ export default function App() {
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
       {/* ニュースバナー */}
       <div style={{ background: G, color: "#fff", overflow: "hidden", padding: "10px 24px", fontSize: 13, fontWeight: 700, letterSpacing: 1, whiteSpace: "nowrap" }}>
-        <style>{`@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }`}</style>
-        <div style={{ display: "inline-block", animation: "marquee 20s linear infinite" }}>
+        <style>{`@keyframes marquee { 0% { transform: translateX(20%); } 100% { transform: translateX(-100%); } }`}</style>
+        <div style={{ display: "inline-block", animation: "marquee 14s linear infinite" }}>
           <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
           納品状況がリアルタイムで確認できるようになりました！
           <span style={{ margin: "0 32px", opacity: 0.5 }}>|</span>
