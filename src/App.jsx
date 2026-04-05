@@ -279,7 +279,7 @@ export default function App() {
           ドン・キホーテ米沢店で青果納品 4月20日からスタート！
         </div>
       </div>
-      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={() => {}} isHome
+      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery") }} isHome
         onCardTap={(tab) => { setProductTab(tab); setPage("products") }} />
       <TabBar />
     </div>

@@ -381,6 +381,14 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               </div>
             </div>
           ))}
+          {/* 納品状況ボタン */}
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ gridColumn: "1 / -1", background: "#4d8c00", borderRadius: 12, padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>納品状況</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 2 }}>本日の納品をリアルタイムで確認</div>
+            </div>
+            <span style={{ fontSize: 20, color: "#fff" }}>→</span>
+          </div>
         </div>
       )}
 
