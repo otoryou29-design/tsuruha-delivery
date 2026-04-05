@@ -116,15 +116,15 @@ const GREEN_SLIDES = [
   },
 ]
 
-// 下段カード（3列）
-const PROMO_CARDS = [
-  { img: "komatsuna.jpg", title: "葉物野菜", sub: "新鮮シャキシャキ", tab: "regular", cat: "葉物" },
-  { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品をチェック", tab: "event", special: true },
-  { img: "apple.jpg", title: "果物", sub: "旬のフルーツ", tab: "regular", cat: "果物" },
+// 下段カード（3列）→ メインナビゲーション
+const NAV_CARDS = [
+  { img: "komatsuna.jpg", title: "定番野菜", sub: "レギュラー商品", tab: "regular" },
+  { img: "tomato.jpg", title: "FRESH SALE", sub: "お買い得商品", tab: "sale" },
+  { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
 ]
 
 export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
-  const [tab, setTab] = useState("regular") // "regular" | "sale" | "event"
+  const [tab, setTab] = useState(null) // null=トップ | "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
   const [eventProducts, setEventProducts] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
@@ -261,7 +261,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
       {/* ヒーローバナー（全画面幅） */}
       <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
-        onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null) }}>
+        onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) }}>
         {allSlides.map((slide, i) => {
           if (slide.type === "shun") {
             // 旬を食べようバナー（白背景・全員表示）
@@ -355,61 +355,53 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
         </div>
       </div>
 
-      {/* プロモカード3列 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 4px" }}>
-        {PROMO_CARDS.map((c, i) => (
-          <div key={i} onClick={() => { setTab(c.tab); setFilterCat(c.cat || null) }}
-            style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
-            <div style={{ height: 85, overflow: "hidden" }}>
-              <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      {/* ナビカード3列 */}
+      {!tab && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 40px" }}>
+          {NAV_CARDS.map((c, i) => (
+            <div key={i} onClick={() => { setTab(c.tab); setFilterCat(null); window.scrollTo(0, 0) }}
+              style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
+              <div style={{ height: 85, overflow: "hidden" }}>
+                <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{c.title}</div>
+                <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>
+              </div>
             </div>
-            <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{c.title}</div>
-              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* カテゴリタブ */}
-      <div style={{ background: "#fff", borderBottom: "2px solid #eee" }}>
-        <div style={{ display: "flex" }}>
-          <button onClick={() => { setTab("regular"); setFilterCat(null) }} style={{
-            flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
-            background: "#fff", color: tab === "regular" ? G : "#999",
-            borderBottom: tab === "regular" ? `3px solid ${G}` : "3px solid transparent",
-          }}>定番野菜</button>
-          <button onClick={() => { setTab("sale"); setFilterCat(null) }} style={{
-            flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
-            background: "#fff", color: tab === "sale" ? "#dc2626" : "#999",
-            borderBottom: tab === "sale" ? "3px solid #dc2626" : "3px solid transparent",
-          }}>FRESH SALE</button>
-          <button onClick={() => { setTab("event"); setFilterCat(null) }} style={{
-            flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
-            background: "#fff", color: tab === "event" ? "#d97706" : "#999",
-            borderBottom: tab === "event" ? "3px solid #d97706" : "3px solid transparent",
-          }}>近日販売予定</button>
+          ))}
         </div>
+      )}
 
-        {/* カテゴリフィルター（定番野菜のみ） */}
-        {isRegular && (
-          <div style={{ display: "flex", gap: 6, padding: "10px 12px", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-            <button onClick={() => setFilterCat(null)}
-              style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 20, border: "1px solid #e5e7eb", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: !filterCat ? G : "#fff", color: !filterCat ? "#fff" : "#666" }}>
-              すべて
-            </button>
-            {categories.map(cat => {
-              const c = CAT_COLORS[cat] || {}
-              return (
-                <button key={cat} onClick={() => setFilterCat(filterCat === cat ? null : cat)}
-                  style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 20, border: `1px solid ${filterCat === cat ? c.tx || G : "#e5e7eb"}`, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: filterCat === cat ? (c.bg || "#f1f5f9") : "#fff", color: filterCat === cat ? (c.tx || G) : "#666" }}>
-                  {c.icon || ""} {cat}
-                </button>
-              )
-            })}
-          </div>
-        )}
+      {/* 商品リストページ（tabが選択された時のみ表示） */}
+      {tab && <>
+
+      {/* ページヘッダー */}
+      <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 16px", display: "flex", alignItems: "center", gap: 12 }}>
+        <button onClick={() => { setTab(null); setFilterCat(null) }} style={{ background: "none", border: "none", fontSize: 18, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>
+        <span style={{ fontSize: 16, fontWeight: 800, color: tab === "sale" ? "#dc2626" : tab === "event" ? "#d97706" : G }}>
+          {tab === "regular" ? "定番野菜" : tab === "sale" ? "FRESH SALE" : "近日販売予定"}
+        </span>
       </div>
+
+      {/* カテゴリフィルター（定番野菜のみ） */}
+      {isRegular && (
+        <div style={{ background: "#fff", borderBottom: "2px solid #eee", display: "flex", gap: 6, padding: "10px 12px", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <button onClick={() => setFilterCat(null)}
+            style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 20, border: "1px solid #e5e7eb", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: !filterCat ? G : "#fff", color: !filterCat ? "#fff" : "#666" }}>
+            すべて
+          </button>
+          {categories.map(cat => {
+            const c = CAT_COLORS[cat] || {}
+            return (
+              <button key={cat} onClick={() => setFilterCat(filterCat === cat ? null : cat)}
+                style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 20, border: `1px solid ${filterCat === cat ? c.tx || G : "#e5e7eb"}`, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: filterCat === cat ? (c.bg || "#f1f5f9") : "#fff", color: filterCat === cat ? (c.tx || G) : "#666" }}>
+                {c.icon || ""} {cat}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {/* 商品グリッド */}
       <div style={{ padding: "16px 12px 40px", maxWidth: 640, margin: "0 auto" }}>
@@ -516,6 +508,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
           })}
         </div>
       </div>
+
+      </>}
 
       {/* 商品詳細モーダル */}
       {selectedItem && (
