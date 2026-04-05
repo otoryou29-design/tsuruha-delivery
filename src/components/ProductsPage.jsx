@@ -148,6 +148,8 @@ const MARKET_AVG = {
   "じゃがいも": 228, "玉ねぎ": 228, "いちご": 498, "りんご": 298, "みかん": 398, "バナナ": 178,
 }
 
+const AI_ORANGE = "#f06000"
+
 function AiSavingsDiag({ products, inline }) {
   const [open, setOpen] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
@@ -170,12 +172,12 @@ function AiSavingsDiag({ products, inline }) {
   if (!open && !inline) {
     return (
       <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "14px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10, height: "100%", boxSizing: "border-box" }}>
-        <div style={{ width: 28, height: 28, borderRadius: 7, background: BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <div style={{ width: 28, height: 28, borderRadius: 7, background: AI_ORANGE, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
         </div>
         <div>
           <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.2 }}>AI おトク診断</div>
-          <div style={{ fontSize: 16, fontWeight: 900, color: BG, marginTop: 2 }}>-{avgPct}%<span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", marginLeft: 4 }}>県内平均</span></div>
+          <div style={{ fontSize: 16, fontWeight: 900, color: AI_ORANGE, marginTop: 2 }}>-{avgPct}%<span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", marginLeft: 4 }}>県内平均</span></div>
         </div>
       </div>
     )
@@ -187,7 +189,7 @@ function AiSavingsDiag({ products, inline }) {
       <div onClick={() => setOpen(true)} style={{ margin: "0 10px", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden", cursor: "pointer" }}>
         <div style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "16px 20px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: AI_ORANGE, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
             </div>
             <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
@@ -195,9 +197,9 @@ function AiSavingsDiag({ products, inline }) {
           <span style={{ fontSize: 12, color: "#94a3b8" }}>詳細を見る ›</span>
         </div>
         <div style={{ padding: "16px 20px", display: "flex", gap: 12 }}>
-          <div style={{ flex: 1, background: "#f0fdf4", borderRadius: 12, padding: "14px", textAlign: "center" }}>
+          <div style={{ flex: 1, background: "#fff7ed", borderRadius: 12, padding: "14px", textAlign: "center" }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>平均おトク率</div>
-            <div style={{ fontSize: 28, fontWeight: 900, color: BG, lineHeight: 1 }}>{avgPct}%</div>
+            <div style={{ fontSize: 28, fontWeight: 900, color: AI_ORANGE, lineHeight: 1 }}>{avgPct}%</div>
             <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>県内平均より</div>
           </div>
           <div style={{ flex: 1, background: "#fef2f2", borderRadius: 12, padding: "14px", textAlign: "center" }}>
@@ -221,7 +223,7 @@ function AiSavingsDiag({ products, inline }) {
       {/* ヘッダー */}
       <div onClick={inline ? undefined : () => setOpen(false)} style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "16px 20px 12px", cursor: inline ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: AI_ORANGE, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
           </div>
           <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
@@ -231,9 +233,9 @@ function AiSavingsDiag({ products, inline }) {
 
       {/* 結果サマリー */}
       <div style={{ padding: "16px 20px", display: "flex", gap: 12 }}>
-        <div style={{ flex: 1, background: "#f0fdf4", borderRadius: 12, padding: "14px", textAlign: "center" }}>
+        <div style={{ flex: 1, background: "#fff7ed", borderRadius: 12, padding: "14px", textAlign: "center" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>平均おトク率</div>
-          <div style={{ fontSize: 28, fontWeight: 900, color: BG, lineHeight: 1 }}>{avgPct}%</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: AI_ORANGE, lineHeight: 1 }}>{avgPct}%</div>
           <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>県内平均より</div>
         </div>
         <div style={{ flex: 1, background: "#fef2f2", borderRadius: 12, padding: "14px", textAlign: "center" }}>
@@ -251,13 +253,13 @@ function AiSavingsDiag({ products, inline }) {
         <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 8 }}>おトク率 TOP5</div>
         {comparisons.slice(0, 5).map((c, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: i < 4 ? "1px solid #f1f5f9" : "none" }}>
-            <div style={{ width: 22, height: 22, borderRadius: 6, background: i < 3 ? BG : "#e5e7eb", color: i < 3 ? "#fff" : "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
+            <div style={{ width: 22, height: 22, borderRadius: 6, background: i < 3 ? AI_ORANGE : "#e5e7eb", color: i < 3 ? "#fff" : "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
             <div style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{c.name}</div>
             <div style={{ textAlign: "right" }}>
               <span style={{ fontSize: 12, color: "#94a3b8", textDecoration: "line-through", marginRight: 6 }}>¥{c.marketPrice}</span>
               <span style={{ fontSize: 14, fontWeight: 800, color: "#dc2626" }}>¥{c.ourPrice}</span>
             </div>
-            <div style={{ fontSize: 11, fontWeight: 800, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: AI_ORANGE, background: "#fff7ed", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
           </div>
         ))}
       </div>
@@ -278,7 +280,7 @@ function AiSavingsDiag({ products, inline }) {
                     <span style={{ fontSize: 12, color: "#94a3b8", textDecoration: "line-through", marginRight: 6 }}>¥{c.marketPrice}</span>
                     <span style={{ fontSize: 14, fontWeight: 800, color: "#dc2626" }}>¥{c.ourPrice}</span>
                   </div>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: AI_ORANGE, background: "#fff7ed", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
                 </div>
               ))}
             </div>
