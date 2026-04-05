@@ -126,14 +126,14 @@ const NAV_CARDS = [
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
 ]
 
-// 旬の果物
-const SEASONAL_FRUITS = [
-  { name: "いちご", img: "ichigo.jpg", badge: "大人気" },
+// 人気の果物
+const POPULAR_FRUITS = [
+  { name: "いちご", img: "ichigo.jpg", rank: 1 },
+  { name: "不知火", img: "shiranui.jpg", rank: 2 },
+  { name: "甘夏", img: "amanatsu.jpg", rank: 3 },
   { name: "デコポン", img: "dekopon.jpg" },
-  { name: "不知火", img: "shiranui.jpg" },
   { name: "伊予柑", img: "iyokan.jpg" },
   { name: "八朔", img: "hassaku.jpg" },
-  { name: "甘夏", img: "amanatsu.jpg" },
   { name: "日向夏", img: "hyuganatsu.jpg" },
   { name: "キウイ", img: "kiwi.jpg" },
 ]
@@ -618,13 +618,13 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* 旬の果物（横スクロール） */}
         <div style={{ padding: "0 10px 16px" }}>
-          <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>旬の果物</div>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>人気の果物</div>
           <div style={{ display: "flex", gap: 10, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 4 }}>
-            {SEASONAL_FRUITS.map((f, i) => (
+            {POPULAR_FRUITS.map((f, i) => (
               <div key={i} style={{ flexShrink: 0, width: 100, cursor: "pointer" }}>
                 <div style={{ width: 100, height: 100, borderRadius: 14, overflow: "hidden", background: "#fff", border: "1px solid #e5e7eb", position: "relative" }}>
                   <img src={`/products/${f.img}?${IMG_VERSION}`} alt={f.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  {f.badge && <div style={{ position: "absolute", top: 4, left: 4, background: "#dc2626", color: "#fff", fontSize: 9, fontWeight: 800, padding: "2px 6px", borderRadius: 6 }}>{f.badge}</div>}
+                  {f.rank && <div style={{ position: "absolute", top: 4, left: 4, background: f.rank === 1 ? "#dc2626" : "#4d8c00", color: "#fff", fontSize: 9, fontWeight: 800, padding: "2px 6px", borderRadius: 6 }}>{f.rank}位</div>}
                 </div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a1a", textAlign: "center", marginTop: 5 }}>{f.name}</div>
               </div>
