@@ -64,24 +64,42 @@ const CAT_COLORS = {
 
 const G = "#4a7c59"
 
-// メインバナー（自動切替・FRESH SALE推し）
-const MAIN_BANNERS = [
-  { title: "FRESH SALE", sub: "お買い得が満載", desc: "産直野菜をお得な価格で", tab: "sale", type: "sale" },
-  { title: "旬の青果", sub: "今が一番おいしい", desc: "福島県産を中心にお届け", tab: "regular", type: "season" },
-  { title: "毎日お届け", sub: "鮮度が違います", desc: "仲卸直送だからできる品質", tab: "regular", type: "fresh" },
-]
+// ブランドカラー（鮮やかな緑）
+const BG = "#4d8c00"
 
-// サイドカード（メインバナー右に2枚）
-const SIDE_CARDS = [
-  { img: "ichigo.jpg", title: "旬のいちご", badge: "SALE", tab: "sale" },
-  { img: "maitake.jpg", title: "きのこ各種", badge: "人気", tab: "regular", cat: "きのこ" },
+// ヒーローバナー（自動切替）
+const HERO_SLIDES = [
+  {
+    type: "sale",
+    title: "FRESH\nSALE",
+    sub: "お買い得が満載",
+    products: ["ichigo.jpg", "cucumber.jpg", "cabbage-half.jpg"],
+    cta: "セールを見る →",
+    tab: "sale",
+  },
+  {
+    type: "ranking",
+    title: "おいしい！\nランキング",
+    sub: "お客様が選んだ人気商品",
+    products: ["tomato.jpg", "spinach.jpg", "maitake.jpg"],
+    cta: "ランキングを見る →",
+    tab: "regular",
+  },
+  {
+    type: "season",
+    title: "旬の\nいちご",
+    sub: "福島県産 甘くてジューシー",
+    products: ["ichigo.jpg"],
+    cta: "今すぐチェック →",
+    tab: "sale",
+  },
 ]
 
 // 下段カード（3列）
-const BOTTOM_CARDS = [
-  { img: "komatsuna.jpg", title: "葉物野菜", tab: "regular", cat: "葉物" },
-  { img: "carrot.jpg", title: "根菜", tab: "regular", cat: "根菜" },
-  { img: "apple.jpg", title: "果物", tab: "regular", cat: "果物" },
+const PROMO_CARDS = [
+  { img: "komatsuna.jpg", title: "葉物野菜", sub: "新鮮シャキシャキ", tab: "regular", cat: "葉物" },
+  { img: "maitake.jpg", title: "きのこ各種", sub: "香り豊かな国産", tab: "regular", cat: "きのこ" },
+  { img: "apple.jpg", title: "果物", sub: "旬のフルーツ", tab: "regular", cat: "果物" },
 ]
 
 export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
@@ -125,7 +143,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
 
   // バナー自動切替
   useEffect(() => {
-    const timer = setInterval(() => setBannerIdx(i => (i + 1) % MAIN_BANNERS.length), 4000)
+    const timer = setInterval(() => setBannerIdx(i => (i + 1) % HERO_SLIDES.length), 5000)
     return () => clearInterval(timer)
   }, [])
 
@@ -175,79 +193,70 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
         <span style={{ fontSize: 18, fontWeight: 900, color: G }}>商品</span>
       </header>
 
-      {/* Amazon風バナーエリア */}
-      <div style={{ padding: "10px 10px 0" }}>
-        {/* 上段: メインバナー + サイドカード2枚 */}
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 8, marginBottom: 8 }}>
-          {/* メインバナー（緑グラデーション・ポップデザイン） */}
-          <div style={{ position: "relative", borderRadius: 14, overflow: "hidden", cursor: "pointer", gridRow: "1 / 3" }}
-            onClick={() => { const b = MAIN_BANNERS[bannerIdx]; setTab(b.tab); setFilterCat(null) }}>
-            {MAIN_BANNERS.map((b, i) => {
-              const bgs = {
-                sale: `linear-gradient(135deg, ${G} 0%, #2d5a35 50%, #1a3d20 100%)`,
-                season: `linear-gradient(135deg, #3a6b48 0%, ${G} 50%, #5a9c6a 100%)`,
-                fresh: `linear-gradient(135deg, #2d5a35 0%, #3a7a4a 50%, ${G} 100%)`,
-              }
-              return (
-                <div key={i} style={{
-                  position: i === 0 ? "relative" : "absolute", inset: 0,
-                  opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.6s ease",
-                  background: bgs[b.type] || bgs.sale, minHeight: 210,
-                  display: "flex", flexDirection: "column", justifyContent: "center", padding: "24px 20px",
-                }}>
-                  {/* 装飾の丸 */}
-                  <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,.08)" }} />
-                  <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,.05)" }} />
+      {/* ヒーローバナー（全画面幅） */}
+      <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
+        onClick={() => { const s = HERO_SLIDES[bannerIdx]; setTab(s.tab); setFilterCat(null) }}>
+        {HERO_SLIDES.map((slide, i) => (
+          <div key={i} style={{
+            position: i === 0 ? "relative" : "absolute", inset: 0,
+            opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
+            background: BG, minHeight: 340,
+          }}>
+            {/* テキスト側 */}
+            <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "55%", padding: "28px 0 28px 20px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
+              <div style={{ fontSize: 36, fontWeight: 900, color: "#fff", lineHeight: 1.1, whiteSpace: "pre-line" }}>{slide.title}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 10 }}>{slide.sub}</div>
+              <div style={{
+                display: "inline-block", marginTop: 18, padding: "8px 20px", borderRadius: 22,
+                background: "#fff", color: BG, fontSize: 13, fontWeight: 800, alignSelf: "flex-start",
+              }}>{slide.cta}</div>
+            </div>
 
-                  <div style={{ position: "relative", zIndex: 1 }}>
-                    <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", lineHeight: 1.1, letterSpacing: 1 }}>{b.title}</div>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: "rgba(255,255,255,.95)", marginTop: 6 }}>{b.sub}</div>
-                    <div style={{ fontSize: 12, color: "rgba(255,255,255,.7)", marginTop: 8 }}>{b.desc}</div>
-                    <div style={{
-                      display: "inline-block", marginTop: 14, padding: "7px 18px", borderRadius: 20,
-                      background: "rgba(255,255,255,.2)", backdropFilter: "blur(4px)",
-                      fontSize: 12, fontWeight: 700, color: "#fff", border: "1px solid rgba(255,255,255,.3)",
+            {/* 商品画像（右側に重なるように配置） */}
+            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "55%", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1 }}>
+              {slide.products.length === 1 ? (
+                <img src={`/products/${slide.products[0]}?${IMG_VERSION}`} alt=""
+                  style={{ width: "85%", height: "85%", objectFit: "contain", filter: "drop-shadow(0 8px 24px rgba(0,0,0,.3))" }} />
+              ) : (
+                <div style={{ display: "flex", gap: 6, alignItems: "flex-end", padding: "20px 10px" }}>
+                  {slide.products.map((img, j) => (
+                    <div key={j} style={{
+                      width: j === 0 ? 100 : 80, height: j === 0 ? 130 : 100,
+                      borderRadius: 12, overflow: "hidden", border: "3px solid rgba(255,255,255,.3)",
+                      boxShadow: "0 6px 20px rgba(0,0,0,.25)", transform: j === 0 ? "scale(1.05)" : "none",
                     }}>
-                      {b.type === "sale" ? "セールを見る →" : "商品を見る →"}
+                      <img src={`/products/${img}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </div>
-                  </div>
+                  ))}
                 </div>
-              )
-            })}
-            <div style={{ position: "absolute", bottom: 10, right: 12, display: "flex", gap: 5, zIndex: 2 }}>
-              {MAIN_BANNERS.map((_, i) => (
-                <div key={i} onClick={e => { e.stopPropagation(); setBannerIdx(i) }}
-                  style={{ width: i === bannerIdx ? 18 : 6, height: 6, borderRadius: 3, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.4)", transition: "all 0.3s", cursor: "pointer" }} />
-              ))}
+              )}
             </div>
           </div>
+        ))}
 
-          {/* サイドカード2枚 */}
-          {SIDE_CARDS.map((c, i) => (
-            <div key={i} onClick={() => { setTab(c.tab); setFilterCat(c.cat || null) }}
-              style={{ position: "relative", borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#f8faf8" }}>
-              <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 60%)" }} />
-              {c.badge && (
-                <span style={{ position: "absolute", top: 6, right: 6, fontSize: 10, fontWeight: 800, background: "#dc2626", color: "#fff", padding: "2px 8px", borderRadius: 4 }}>{c.badge}</span>
-              )}
-              <div style={{ position: "absolute", bottom: 8, left: 8, fontSize: 13, fontWeight: 800, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,.4)" }}>{c.title}</div>
-            </div>
+        {/* ドットインジケーター */}
+        <div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 3 }}>
+          {HERO_SLIDES.map((_, i) => (
+            <div key={i} onClick={e => { e.stopPropagation(); setBannerIdx(i) }}
+              style={{ width: i === bannerIdx ? 22 : 8, height: 8, borderRadius: 4, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.4)", transition: "all 0.3s", cursor: "pointer" }} />
           ))}
         </div>
+      </div>
 
-        {/* 下段: 小カード3列 */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 6 }}>
-          {BOTTOM_CARDS.map((c, i) => (
-            <div key={i} onClick={() => { setTab(c.tab); setFilterCat(c.cat || null) }}
-              style={{ borderRadius: 10, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb" }}>
-              <div style={{ height: 80, overflow: "hidden" }}>
-                <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
-              <div style={{ padding: "6px 8px", fontSize: 12, fontWeight: 700, color: "#333", textAlign: "center" }}>{c.title}</div>
+      {/* プロモカード3列 */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 4px" }}>
+        {PROMO_CARDS.map((c, i) => (
+          <div key={i} onClick={() => { setTab(c.tab); setFilterCat(c.cat || null) }}
+            style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
+            <div style={{ height: 85, overflow: "hidden" }}>
+              <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
-          ))}
-        </div>
+            <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{c.title}</div>
+              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* カテゴリタブ */}
