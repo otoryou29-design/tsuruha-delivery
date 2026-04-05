@@ -55,6 +55,15 @@ export default function App() {
   const G = "#4a7c59";
   const BG2 = "#f7f7f5";
 
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    fetch("https://formspree.io/f/xpwzgkvl", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ company: contactForm.company, category: contactForm.category, message: contactForm.message, name: contactForm.name, email: contactForm.email, age: contactForm.age, gender: contactForm.gender, interviewDate: contactForm.interviewDate, type: contactType, _replyto: "info@otokawa.com" }),
+    }).then(() => setContactSent(true));
+  };
+
   // 共通タブバー
   const TabBar = () => (
     <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-around", alignItems: "center", paddingTop: 8, paddingBottom: "max(12px, env(safe-area-inset-bottom, 12px))", zIndex: 150 }}>
@@ -379,7 +388,7 @@ export default function App() {
     );
   }
 
-  // ── お問い合わせページ
+  // ── お問い合わせページ（フォーム付き）
   if (page === "contact") {
     return (
       <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
@@ -387,36 +396,97 @@ export default function App() {
           <button onClick={() => setPage("more")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
           <span style={{ fontSize: 16, fontWeight: 900 }}>お問い合わせ</span>
         </header>
-        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px 80px" }}>
-          <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "24px 20px" }}>
-            <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 16 }}>お気軽にお問い合わせください</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", padding: "24px 16px 80px" }}>
+          {/* 電話・メール */}
+          <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px", marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>お電話</div>
-                <a href="tel:024-956-6606" style={{ fontSize: 20, fontWeight: 900, color: G, textDecoration: "none" }}>024-956-6606</a>
-                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>受付時間: 平日 8:00〜17:00</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>お電話</div>
+                <a href="tel:024-956-6606" style={{ fontSize: 18, fontWeight: 900, color: G, textDecoration: "none" }}>024-956-6606</a>
               </div>
-              <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>メール</div>
-                <a href="mailto:info@otokawa.com" style={{ fontSize: 15, fontWeight: 700, color: G, textDecoration: "none" }}>info@otokawa.com</a>
-              </div>
-              <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>所在地</div>
-                <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>〒963-8071<br />福島県郡山市富久山町久保田字太郎殿前2</div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>メール</div>
+                <a href="mailto:info@otokawa.com" style={{ fontSize: 13, fontWeight: 700, color: G, textDecoration: "none" }}>info@otokawa.com</a>
               </div>
             </div>
+            <div style={{ fontSize: 11, color: "#94a3b8" }}>受付: 平日 8:00〜17:00 | 福島県郡山市富久山町久保田字太郎殿前2</div>
           </div>
-          <div style={{ marginTop: 16, background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px" }}>
-            <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>取引をご検討の方へ</div>
-            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8 }}>青果の仕入れ・納品についてのご相談は、お電話またはメールにてお気軽にお問い合わせください。担当者より折り返しご連絡いたします。</div>
+
+          {/* タブ切替 */}
+          <div style={{ display: "flex", gap: 0, marginBottom: 16, borderRadius: 8, overflow: "hidden", border: "1.5px solid #d1d5db" }}>
+            <button onClick={() => { setContactType("business"); setContactSent(false) }} style={{ flex: 1, padding: "12px", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: contactType === "business" ? G : "#fff", color: contactType === "business" ? "#fff" : "#64748b" }}>取引・一般</button>
+            <button onClick={() => { setContactType("recruit"); setContactSent(false) }} style={{ flex: 1, padding: "12px", border: "none", borderLeft: "1px solid #d1d5db", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: contactType === "recruit" ? G : "#fff", color: contactType === "recruit" ? "#fff" : "#64748b" }}>面接・採用応募</button>
           </div>
+
+          {contactSent ? (
+            <div style={{ textAlign: "center", padding: "40px 24px", background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb" }}>
+              <div style={{ fontSize: 36, marginBottom: 12, color: G }}>✓</div>
+              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>送信完了</div>
+              <div style={{ fontSize: 14, color: "#64748b" }}>{contactType === "recruit" ? "ご応募ありがとうございます。面接日程について折り返しご連絡いたします。" : "お問い合わせありがとうございます。担当者より折り返しご連絡いたします。"}</div>
+            </div>
+          ) : contactType === "business" ? (
+            <form onSubmit={handleContactSubmit} style={{ background: "#fff", borderRadius: 12, padding: "24px 20px", border: "1px solid #e5e7eb" }}>
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>会社名・屋号</label>
+                <input type="text" required value={contactForm.company} onChange={e => setContactForm({ ...contactForm, company: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+              </div>
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>区分</label>
+                <select value={contactForm.category} onChange={e => setContactForm({ ...contactForm, category: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, background: "#fff", boxSizing: "border-box" }}>
+                  {["生産者", "市場", "小売店", "飲食店", "その他業者"].map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>用件</label>
+                <textarea required rows={5} value={contactForm.message} onChange={e => setContactForm({ ...contactForm, message: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, resize: "vertical", boxSizing: "border-box" }} />
+              </div>
+              <button type="submit" style={{ width: "100%", padding: "14px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "inherit" }}>送信する</button>
+            </form>
+          ) : (
+            <form onSubmit={handleContactSubmit} style={{ background: "#fff", borderRadius: 12, padding: "24px 20px", border: "1px solid #e5e7eb" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>お名前</label>
+                  <input type="text" required value={contactForm.name} onChange={e => setContactForm({ ...contactForm, name: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>メールアドレス</label>
+                  <input type="email" required value={contactForm.email} onChange={e => setContactForm({ ...contactForm, email: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>年齢</label>
+                  <input type="number" required min="15" max="80" value={contactForm.age} onChange={e => setContactForm({ ...contactForm, age: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>性別</label>
+                  <select value={contactForm.gender} onChange={e => setContactForm({ ...contactForm, gender: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, background: "#fff", boxSizing: "border-box" }}>
+                    {["女性", "男性", "その他"].map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>面接希望日（午前中）</label>
+                <select required value={contactForm.interviewDate} onChange={e => setContactForm({ ...contactForm, interviewDate: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, background: "#fff", boxSizing: "border-box" }}>
+                  <option value="">日程を選択してください</option>
+                  {(() => { const dates = []; const now = new Date(); for (let i = 1; i <= 14; i++) { const d = new Date(now); d.setDate(d.getDate() + i); const dow = d.getDay(); if (dow === 0 || dow === 3) continue; dates.push(<option key={i} value={d.toISOString().slice(0, 10)}>{d.toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" })} 午前中</option>); } return dates; })()}
+                </select>
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>備考（任意）</label>
+                <textarea rows={3} value={contactForm.message} onChange={e => setContactForm({ ...contactForm, message: e.target.value })} placeholder="希望職種やご質問など" style={{ width: "100%", padding: "10px 14px", borderRadius: 6, border: "1.5px solid #d1d5db", fontSize: 14, resize: "vertical", boxSizing: "border-box" }} />
+              </div>
+              <button type="submit" style={{ width: "100%", padding: "14px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "inherit" }}>応募する</button>
+            </form>
+          )}
         </div>
         <TabBar />
       </div>
     );
   }
 
-  // ── 採用情報ページ
+  // ── 採用情報ページ（詳細復元版）
   if (page === "recruit") {
     return (
       <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
@@ -425,26 +495,41 @@ export default function App() {
           <span style={{ fontSize: 16, fontWeight: 900 }}>採用情報</span>
         </header>
         <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px 80px" }}>
-          <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "24px 20px", marginBottom: 14 }}>
-            <div style={{ fontSize: 18, fontWeight: 900, color: G, marginBottom: 12 }}>一緒に働く仲間を募集中!</div>
-            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8, marginBottom: 16 }}>音川青果では、青果の仕分け・配送・営業スタッフを募集しています。未経験の方も歓迎です。</div>
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 8 }}>RECRUIT</div>
+            <div style={{ fontSize: 22, fontWeight: 900 }}>一緒に働きませんか?</div>
           </div>
-          {[
-            { title: "配送スタッフ", type: "正社員 / パート", desc: "青果の店舗配送業務。普通免許(AT可)をお持ちの方。" },
-            { title: "仕分け・加工スタッフ", type: "パート", desc: "倉庫内での青果の仕分け・袋詰め作業。早朝勤務あり。" },
-            { title: "営業スタッフ", type: "正社員", desc: "取引先への提案営業・新規開拓。青果業界の経験者優遇。" },
-          ].map((job, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px", marginBottom: 10 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>{job.title}</div>
-                <span style={{ fontSize: 10, fontWeight: 700, color: G, background: "#f0fdf4", padding: "2px 8px", borderRadius: 4 }}>{job.type}</span>
-              </div>
-              <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>{job.desc}</div>
+
+          {/* 正社員 */}
+          <div style={{ background: "#fff", borderRadius: 12, padding: "24px 20px", border: `2px solid ${G}`, marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#fff", background: G, display: "inline-block", padding: "3px 12px", borderRadius: 4, marginBottom: 12 }}>正社員</div>
+            <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 4 }}>青果売場スタッフ</div>
+            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 14 }}>仕入れ・在庫管理・価格設定・SV業務</div>
+            <div style={{ display: "grid", gap: 8, fontSize: 13 }}>
+              {[["月給", "20万円〜"], ["時間", "6:00 - 15:00"], ["休日", "週休2日（水・日）"], ["待遇", "社保完備・通勤手当・残業なし"]].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>{k}</span><span style={{ fontWeight: 800 }}>{v}</span></div>
+              ))}
             </div>
-          ))}
-          <div style={{ marginTop: 16, background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px" }}>
-            <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>応募方法</div>
-            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8 }}>お電話(<a href="tel:024-956-6606" style={{ color: G, fontWeight: 700 }}>024-956-6606</a>)またはメール(<a href="mailto:info@otokawa.com" style={{ color: G, fontWeight: 700 }}>info@otokawa.com</a>)にてご連絡ください。</div>
+          </div>
+
+          {/* パート */}
+          <div style={{ background: "#fff", borderRadius: 12, padding: "24px 20px", border: "1.5px solid #e5e7eb", marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: G, background: "#f0fdf4", display: "inline-block", padding: "3px 12px", borderRadius: 4, marginBottom: 12 }}>パート</div>
+            <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 4 }}>巡回スタッフ</div>
+            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 14 }}>品出し・陳列・補充・品質チェック・POP作成</div>
+            <div style={{ display: "grid", gap: 8, fontSize: 13 }}>
+              {[["時給", "1,055円〜"], ["時間", "9:00-13:00 / 10:00-15:00 等"], ["日数", "週2〜3日OK・扶養内OK"], ["備考", "軽バン・ハイエース運転あり"]].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>{k}</span><span style={{ fontWeight: 800 }}>{v}</span></div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ background: "#fff", borderRadius: 12, padding: "16px 20px", border: "1px solid #e5e7eb", fontSize: 13, color: "#64748b", lineHeight: 1.8, marginBottom: 20 }}>
+            エリア：いわき・郡山・会津若松・福島｜女性活躍中・小さなお子さんいる方も歓迎
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <button onClick={() => { setContactType("recruit"); setContactSent(false); setPage("contact") }} style={{ padding: "14px 32px", borderRadius: 8, background: G, color: "#fff", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "inherit" }}>応募・お問い合わせ →</button>
           </div>
         </div>
         <TabBar />
@@ -455,12 +540,13 @@ export default function App() {
   // ── よくある質問ページ
   if (page === "faq") {
     const faqs = [
-      { q: "どこで商品を買えますか？", a: "ツルハドラッグの導入店舗にて、青果コーナーでお買い求めいただけます。店舗一覧はタブバーの「店舗」からご確認ください。" },
-      { q: "配送エリアはどこですか？", a: "福島県内のツルハドラッグ各店舗に配送しています。詳しくは導入店舗一覧をご覧ください。" },
-      { q: "取引を始めたいのですが", a: "お電話(024-956-6606)またはメール(info@otokawa.com)にてお気軽にお問い合わせください。" },
+      { q: "ツルハドラッグはどの店舗に納品していますか？", a: "タブバーの「店舗」から導入店舗一覧をご確認いただけます。" },
+      { q: "どこで商品を買えますか？", a: "ツルハドラッグの導入店舗にて、青果コーナーでお買い求めいただけます。" },
+      { q: "商品についての問い合わせは？", a: "各店舗の店頭にお問い合わせください。直接のご連絡は受け付けておりません。" },
+      { q: "取引を始めたいのですが", a: "「その他」→「お問い合わせ」フォームよりお送りいただくか、お電話(024-956-6606)にてご連絡ください。" },
       { q: "商品の価格はどのくらいですか？", a: "市場価格に連動しますが、独自の仕入れネットワークにより県内平均より20〜30%お手頃な価格で提供しています。" },
       { q: "鮮度管理はどうしていますか？", a: "温度管理システムによる鮮度維持、トレーサビリティによる産地管理、独自の検品基準による品質保証を行っています。" },
-      { q: "求人はしていますか？", a: "配送スタッフ・仕分けスタッフ・営業スタッフを募集しています。詳しくは採用情報ページをご覧ください。" },
+      { q: "求人はしていますか？", a: "正社員・パートを募集中です。「その他」→「採用情報」から詳細をご確認ください。" },
     ];
     return (
       <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
