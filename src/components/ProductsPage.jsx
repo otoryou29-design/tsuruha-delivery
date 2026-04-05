@@ -242,8 +242,9 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     setReviewName("")
   }
 
-  const isRegular = tab === "regular"
-  const isEvent = tab === "event"
+  const activeTab = tab || initialTab || "regular"
+  const isRegular = activeTab === "regular"
+  const isEvent = activeTab === "event"
   let items = isRegular ? products : isEvent ? eventProducts : tokubaiItems
   if (isRegular && filterCat) items = items.filter(p => p.cat === filterCat)
 
