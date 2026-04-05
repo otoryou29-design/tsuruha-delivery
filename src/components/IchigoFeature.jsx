@@ -3,21 +3,27 @@ const IMG_V = "v6"
 
 const VARIETIES = [
   {
-    name: "とちおとめ",
-    img: "ichigo-pack.jpg",
-    desc: "栃木県生まれの人気品種。粒が大きく、甘みと酸味のバランスが抜群。果汁たっぷりでジューシーな食感が特徴です。",
-    features: ["甘みと酸味の絶妙バランス", "大粒でジューシー", "そのまま食べて最高"],
+    name: "大粒いちご",
+    img: "ichigo.jpg",
+    desc: "一粒一粒が大きく、甘みと酸味のバランスが抜群。果汁たっぷりでジューシーな食感。そのまま食べて最高の贅沢です。",
+    price: "398〜498",
   },
   {
-    name: "パック売り（小粒）",
+    name: "小粒いちご",
     img: "ichigo-pack.jpg",
     desc: "手軽に楽しめるパック入り。小粒でも甘さはしっかり。ご家庭のおやつやデザートにぴったりです。",
-    price: "298",
+    price: "278〜333",
   },
   {
-    name: "箱売り（4パック入り）",
+    name: "大粒いちご 箱売り",
     img: "ichigo-box-l.jpg",
-    desc: "ご家族やお友達とシェアにぴったりの箱売り。4パック入りでお得。まとめ買いにおすすめです。",
+    desc: "大粒いちごの箱売り。贈り物にも最適。たっぷり入ってお得です。",
+    price: "1,580",
+  },
+  {
+    name: "小粒いちご 箱売り",
+    img: "ichigo-box-s.jpg",
+    desc: "ご家族やお友達とシェアにぴったり。まとめ買いでお得に楽しめます。",
     price: "980",
   },
 ]
@@ -53,20 +59,6 @@ export default function IchigoFeature({ onBack }) {
           音川青果では、信頼できる生産者から直接仕入れた新鮮ないちごを、鮮度を保ったままツルハドラッグ各店舗にお届けしています。
         </p>
 
-        {/* 特徴カード */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 28 }}>
-          {[
-            { icon: "🍓", title: "甘い", desc: "高い糖度" },
-            { icon: "💧", title: "新鮮", desc: "産地直送" },
-            { icon: "🎁", title: "お得", desc: "箱売りも" },
-          ].map(f => (
-            <div key={f.title} style={{ background: "#fef2f2", borderRadius: 14, padding: "20px 12px", textAlign: "center" }}>
-              <div style={{ fontSize: 28, marginBottom: 6 }}>{f.icon}</div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: "#dc2626" }}>{f.title}</div>
-              <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{f.desc}</div>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* いちごギャラリー */}
@@ -96,13 +88,6 @@ export default function IchigoFeature({ onBack }) {
               <div style={{ padding: "20px 20px 24px" }}>
                 <h3 style={{ fontSize: 20, fontWeight: 900, color: "#1a1a1a", marginBottom: 8 }}>{v.name}</h3>
                 <p style={{ fontSize: 14, color: "#64748b", lineHeight: 1.9, marginBottom: 12 }}>{v.desc}</p>
-                {v.features && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
-                    {v.features.map(f => (
-                      <span key={f} style={{ fontSize: 11, fontWeight: 700, background: "#fef2f2", color: "#dc2626", padding: "4px 12px", borderRadius: 20 }}>{f}</span>
-                    ))}
-                  </div>
-                )}
                 {v.price && (
                   <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
                     <span style={{ fontSize: 13, color: "#64748b", fontWeight: 700 }}>税別</span>
