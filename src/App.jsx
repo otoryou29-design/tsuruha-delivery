@@ -318,20 +318,9 @@ export default function App() {
     );
   }
 
-  // ── ホーム = ニュースバナー + 商品トップ（バナー + 3ナビカード）
+  // ── ホーム = 商品トップ（バナー + ナビカード）
   return (
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
-      {/* ニュースバナー */}
-      <div style={{ background: G, color: "#fff", overflow: "hidden", padding: "10px 24px", fontSize: 13, fontWeight: 700, letterSpacing: 1, whiteSpace: "nowrap" }}>
-        <style>{`@keyframes marquee { 0% { transform: translateX(20%); } 100% { transform: translateX(-100%); } }`}</style>
-        <div style={{ display: "inline-block", animation: "marquee 14s linear infinite" }}>
-          <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
-          納品状況がリアルタイムで確認できるようになりました！
-          <span style={{ margin: "0 32px", opacity: 0.5 }}>|</span>
-          <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
-          ドン・キホーテ米沢店で青果納品 4月20日からスタート！
-        </div>
-      </div>
       <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo"); if (target === "stores") setPage("stores"); if (target === "shun") setPage("shun") }} isHome
         onCardTap={(tab) => { setProductTab(tab); setPage("products") }} />
       <TabBar />

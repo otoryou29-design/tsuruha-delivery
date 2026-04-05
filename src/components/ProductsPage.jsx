@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { onValue, ref, db, set } from "../firebase"
+import { onValue, ref, db, set, onDeliveryStatusChange } from "../firebase"
 
 // 商品名→画像ファイルマップ
 // ★ 部分一致バグ防止: 長い名前を必ず先に配置
@@ -370,6 +370,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     setReviewName("")
   }
 
+  // 納品状況リアルタイム監視
+  const [isDelivering, setIsDelivering] = useState(false)
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10)
+    const unsub = onDeliveryStatusChange(today, (statuses) => {
+      const active = Object.values(statuses || {}).some(s => s.status === "enroute" || s.status === "pending" || s.status === "arrived")
+      setIsDelivering(active)
+    })
+    return () => unsub()
+  }, [])
+
   const activeTab = tab || initialTab || "regular"
   const isRegular = activeTab === "regular"
   const isEvent = activeTab === "event"
@@ -386,12 +397,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       `}</style>
 
       {/* ヘッダー */}
-      <header style={{ background: isHome ? "#fff" : "#4d8c00", borderBottom: isHome ? "1px solid #eee" : "none", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
+      <header style={{ background: isHome ? "#fff" : "#4d8c00", borderBottom: isHome ? "1px solid #eee" : "none", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", justifyContent: isHome ? "center" : "flex-start", gap: 12 }}>
         {!isHome && <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#fff", padding: "4px 8px" }}>←</button>}
         {isHome ? (
           <>
             <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg" alt="OTOKAWA" style={{ height: 32, borderRadius: 6 }} />
-            <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
+            <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA</span>
           </>
         ) : (
           <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>
@@ -512,9 +523,30 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         </div>
       </div>}
 
-      {/* ホーム: ナビカード3列 */}
+      {/* ホーム */}
       {isHome && (<>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "10px 10px 20px" }}>
+        <style>{`@keyframes deliveryBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
+
+        {/* 納品状況（バナー下・商品タブ上） */}
+        <div onClick={() => onNavigate && onNavigate("delivery")} style={{ margin: "10px 10px 0", background: "#fff", borderRadius: 14, border: "2px solid #4d8c00", padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", animation: "deliveryBlink 2s ease-in-out infinite" }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "#4d8c00" }}>
+              {isDelivering ? "現在納品中" : "納品状況"}
+            </div>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+              {isDelivering ? "スタッフが納品を行っています" : "本日の納品をリアルタイムで確認"}
+            </div>
+          </div>
+          <span style={{ fontSize: 20, color: "#4d8c00" }}>→</span>
+        </div>
+
+        {/* AI おトク診断 */}
+        <div style={{ marginTop: 10 }}>
+          <AiSavingsDiag products={products} />
+        </div>
+
+        {/* ナビカード */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "0 10px 20px" }}>
           {NAV_CARDS.map((c, i) => (
             <div key={i} onClick={() => c.tab === "stores" ? (onNavigate && onNavigate("stores")) : (onCardTap && onCardTap(c.tab))}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
@@ -533,18 +565,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               </div>
             </div>
           ))}
-          {/* 納品状況ボタン */}
-          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ gridColumn: "1 / -1", background: "#4d8c00", borderRadius: 12, padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>納品状況</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 2 }}>本日の納品をリアルタイムで確認</div>
-            </div>
-            <span style={{ fontSize: 20, color: "#fff" }}>→</span>
-          </div>
         </div>
-
-        {/* AI おトク診断 */}
-        <AiSavingsDiag products={products} />
 
         <div style={{ height: 60 }} />
       </>)}
