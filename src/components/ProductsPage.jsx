@@ -298,8 +298,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
               }}>
                 {/* テキスト（左側） */}
                 <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", padding: "36px 0 36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
-                  <div style={{ fontSize: 38, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>旬の{"\n"}いちご{"\n"}特集</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>福島県産{"\n"}甘くてジューシー</div>
+                  <div style={{ fontSize: 38, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>旬の<br />いちご特集</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>福島県産 甘くてジューシー</div>
                   <div style={{ display: "inline-block", marginTop: 22, padding: "9px 22px", borderRadius: 22, background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800, alignSelf: "flex-start" }}>商品を見る →</div>
                 </div>
                 {/* いちご写真4枚（右側 2x2グリッド） */}
