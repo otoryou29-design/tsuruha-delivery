@@ -2,48 +2,83 @@ import { useState, useEffect, useRef } from "react"
 import { onValue, ref, db, set } from "../firebase"
 
 // 商品名→画像ファイルマップ
+// ★ 部分一致バグ防止: 長い名前を必ず先に配置
+// 例: 「フリルレタス」→「レタス」の順、「たまねぎ」→「ねぎ」の順
 const IMAGE_MAP = [
-  [["フリルレタス", "サニーレタス"], "frill-lettuce2.jpg"],
+  // --- 複合名（先に判定が必要） ---
+  [["フリルレタス"], "frill-lettuce2.jpg"],
+  [["サニーレタス"], "sunny-lettuce.jpg"],
+  [["グリーンリーフ"], "green-leaf.jpg"],
   [["ミニトマト", "アイコ"], "mini-tomato.jpg"],
-  [["長ねぎ", "土ネギ"], "negi.jpg"],
+  [["房取りトマト"], "fusadori-tomato.jpg"],
+  [["新玉ねぎ", "新たまねぎ"], "shin-tamanegi.jpg"],
   [["玉ねぎ", "たまねぎ"], "onion2.jpg"],
-  [["長いも", "長芋"], "nagaimo.jpg"],
+  [["長ねぎ", "土ネギ", "長ネギ"], "negi.jpg"],
+  [["長ナス", "長なす"], "naga-nasu.jpg"],
+  [["長いも", "長芋", "土長芋"], "nagaimo.jpg"],
+  [["さつまいも", "サツマイモ", "べにはるか"], "satsumaimo.jpg"],
+  [["じゃがいも", "ジャガイモ"], "potato.jpg"],
+  [["とうもろこし", "コーン"], "corn.jpg"],
+  [["レッドキャベツ", "紫キャベツ"], "red-cabbage.jpg"],
+  [["つるむらさき"], "tsurumura.jpg"],
+  [["モロヘイヤ"], "moroheiya.jpg"],
+  // --- 一般名（後に判定） ---
   [["レタス"], "lettuce.jpg"],
+  [["キャベツ"], "cabbage.jpg"],
+  [["トマト"], "tomato.jpg"],
+  [["ねぎ", "ネギ"], "negi.jpg"],
+  [["なす", "ナス"], "nasu.jpg"],
+  [["いも"], "potato.jpg"],
+  // --- 葉物 ---
   [["水菜"], "mizuna.jpg"],
   [["小松菜"], "komatsuna.jpg"],
   [["ほうれん草"], "spinach.jpg"],
   [["青梗菜", "チンゲン"], "chingensai.jpg"],
   [["ブロッコリー"], "broccoli.jpg"],
-  [["ねぎ", "ネギ"], "negi.jpg"],
   [["にら"], "nira.jpg"],
-  [["トマト", "房取りトマト"], "tomato.jpg"],
+  [["春菊"], "shungiku.jpg"],
+  [["大葉", "しそ"], "ooba.jpg"],
+  [["セロリ"], "celery.jpg"],
+  [["せり"], "seri.jpg"],
+  [["枝豆", "えだまめ"], "edamame.jpg"],
+  [["アスパラガス", "アスパラ"], "asparagus.jpg"],
+  // --- 果菜 ---
   [["きゅうり"], "cucumber.jpg"],
   [["ピーマン"], "piman.jpg"],
-  [["なす", "ナス"], "nasu.jpg"],
-  [["生姜", "しょうが"], "ginger.jpg"],
-  [["春菊"], "shungiku.jpg"],
+  // --- 薬味 ---
+  [["生姜", "しょうが", "ショウガ"], "ginger.jpg"],
   [["ニンニク", "にんにく"], "garlic.jpg"],
-  [["ゆず", "柚子", "レモン"], "yuzu.jpg"],
-  [["キャベツ"], "cabbage-half.jpg"],
-  [["白菜"], "hakusai.jpg"],
+  [["ゆず", "柚子"], "yuzu.jpg"],
+  [["レモン"], "yuzu.jpg"],
+  // --- きのこ ---
   [["しいたけ"], "shiitake.jpg"],
   [["なめこ"], "nameko.jpg"],
   [["えのき"], "enoki.jpg"],
   [["しめじ"], "shimeji.jpg"],
   [["まいたけ"], "maitake.jpg"],
+  // --- 根菜 ---
   [["大根"], "daikon.jpg"],
   [["ごぼう"], "gobo.jpg"],
   [["人参", "にんじん"], "carrot.jpg"],
-  [["じゃがいも", "ジャガイモ"], "potato.jpg"],
-  [["さつまいも", "サツマイモ"], "potato.jpg"],
+  // --- 土もの ---
+  [["白菜"], "hakusai.jpg"],
+  // --- 果物 ---
   [["キウイ"], "kiwi.jpg"],
-  [["みかん", "ミカン", "伊予柑", "デコポン", "八朔", "しらぬい"], "mikan.jpg"],
+  [["パイナップル", "パイン"], "pineapple.jpg"],
+  [["デコポン"], "dekopon.jpg"],
+  [["不知火", "しらぬい"], "shiranui.jpg"],
+  [["伊予柑", "いよかん"], "iyokan.jpg"],
+  [["八朔", "はっさく"], "hassaku.jpg"],
+  [["甘夏", "あまなつ"], "amanatsu.jpg"],
+  [["日向夏", "こなつ", "小夏"], "hyuganatsu.jpg"],
+  [["サンフルーツ"], "sun-fruits.jpg"],
+  [["みかん", "ミカン"], "mikan.jpg"],
   [["いちご", "イチゴ"], "ichigo.jpg"],
   [["バナナ"], "banana.jpg"],
-  [["りんご", "サンふじ", "サンフジ"], "apple.jpg"],
+  [["りんご", "サンふじ", "サンフジ", "ふじ"], "apple.jpg"],
 ]
 
-const IMG_VERSION = "1775300602"
+const IMG_VERSION = "v6"
 function getProductImage(name) {
   for (const [keys, file] of IMAGE_MAP) {
     if (keys.some(k => name.includes(k))) return `/products/${file}?${IMG_VERSION}`
