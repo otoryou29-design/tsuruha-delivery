@@ -564,6 +564,9 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {/* 商品リストページ（ホーム以外） */}
       {!isHome && <>
 
+      {/* AI おトク診断（定番野菜ページ上部） */}
+      {isRegular && <div style={{ padding: "10px 0 0" }}><AiSavingsDiag products={products} /></div>}
+
       {/* カテゴリフィルター（定番野菜のみ） */}
       {isRegular && (
         <div style={{ background: "#fff", borderBottom: "2px solid #eee", display: "flex", gap: 6, padding: "10px 12px", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
