@@ -138,7 +138,7 @@ const MARKET_AVG = {
   "じゃがいも": 228, "玉ねぎ": 228, "いちご": 498, "りんご": 298, "みかん": 398, "バナナ": 178,
 }
 
-function AiSavingsDiag({ products }) {
+function AiSavingsDiag({ products, inline }) {
   const [open, setOpen] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
 
@@ -156,8 +156,8 @@ function AiSavingsDiag({ products }) {
 
   if (comparisons.length === 0) return null
 
-  // 閉じた状態: コンパクトなカード（横並び用）
-  if (!open) {
+  // 閉じた状態: コンパクトなカード（横並び用）— inlineの場合はスキップ
+  if (!open && !inline) {
     return (
       <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", height: "100%", boxSizing: "border-box" }}>
         <div style={{ width: 30, height: 30, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
@@ -170,18 +170,17 @@ function AiSavingsDiag({ products }) {
     )
   }
 
-  return (
-    <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,.4)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={() => setOpen(false)}>
-    <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 400, maxHeight: "80vh", overflowY: "auto", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
+  const content = (
+    <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: inline ? "none" : 400, maxHeight: inline ? "none" : "80vh", overflowY: inline ? "visible" : "auto", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
       {/* ヘッダー */}
-      <div onClick={() => setOpen(false)} style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "20px 20px 16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div onClick={inline ? undefined : () => setOpen(false)} style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "16px 20px 12px", cursor: inline ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
           </div>
           <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
         </div>
-        <span style={{ fontSize: 14, color: "#94a3b8" }}>閉じる</span>
+        {!inline && <span style={{ fontSize: 14, color: "#94a3b8" }}>閉じる</span>}
       </div>
 
       {/* 結果サマリー */}
@@ -246,6 +245,13 @@ function AiSavingsDiag({ products }) {
         ※ 福島県内の大手スーパー5社の平均価格との比較です。価格は時期により変動します。
       </div>
     </div>
+  )
+
+  if (inline) return <div style={{ margin: "0 10px" }}>{content}</div>
+
+  return (
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,.4)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={() => setOpen(false)}>
+      {content}
     </div>
   )
 }
@@ -564,8 +570,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {/* 商品リストページ（ホーム以外） */}
       {!isHome && <>
 
-      {/* AI おトク診断（定番野菜ページ上部） */}
-      {isRegular && <div style={{ padding: "10px 0 0" }}><AiSavingsDiag products={products} /></div>}
+      {/* AI おトク診断（定番野菜ページ上部・インライン展開） */}
+      {isRegular && <div style={{ padding: "10px 0 0" }}><AiSavingsDiag products={products} inline /></div>}
 
       {/* カテゴリフィルター（定番野菜のみ） */}
       {isRegular && (
