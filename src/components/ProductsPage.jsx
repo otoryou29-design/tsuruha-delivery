@@ -124,7 +124,7 @@ const GREEN_SLIDES = [
 // 下段カード（3列）
 const PROMO_CARDS = [
   { img: "komatsuna.jpg", title: "葉物野菜", sub: "新鮮シャキシャキ", tab: "regular", cat: "葉物" },
-  { img: "ichigo.jpg", title: "オトク", sub: "お買い得商品をチェック", tab: "event", special: true },
+  { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品をチェック", tab: "event", special: true },
   { img: "apple.jpg", title: "果物", sub: "旬のフルーツ", tab: "regular", cat: "果物" },
 ]
 
@@ -371,7 +371,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
             flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
             background: "#fff", color: tab === "event" ? "#d97706" : "#999",
             borderBottom: tab === "event" ? "3px solid #d97706" : "3px solid transparent",
-          }}>オトク</button>
+          }}>近日販売予定</button>
         </div>
 
         {/* カテゴリフィルター（定番野菜のみ） */}
@@ -408,7 +408,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
         )}
         {isEvent && (
           <div style={{ fontSize: 13, color: "#d97706", marginBottom: 12, fontWeight: 600 }}>
-            オトクな商品 {items.length}品目
+            近日販売予定のオトクな商品 {items.length}品目
           </div>
         )}
 
