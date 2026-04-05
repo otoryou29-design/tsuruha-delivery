@@ -123,7 +123,6 @@ const GREEN_SLIDES = [
 // 下段カード → メインナビゲーション
 const NAV_CARDS = [
   { img: "komatsuna.jpg", title: "定番野菜", sub: "レギュラー商品", tab: "regular" },
-  { img: "tomato.jpg", title: "本日のオトク", sub: "お買い得商品", tab: "sale" },
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
   { img: null, title: "導入店舗一覧", sub: "ツルハドラッグ", tab: "stores", icon: true },
 ]
@@ -305,7 +304,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
   const [bannerIdx, setBannerIdx] = useState(0)
   const [filterCat, setFilterCat] = useState(null)
   const [rankingData, setRankingData] = useState([])
-  const [navCardImgs, setNavCardImgs] = useState({})
 
   useEffect(() => {
     const unsub = onValue(ref(db, "products"), (snap) => {
@@ -313,7 +311,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       if (!val) return
       const arr = Array.isArray(val) ? val : Object.values(val)
       setProducts(arr.filter(p => p && p.name))
-      setFbLoaded(prev => ({ ...prev, products: true }))
     })
     return () => unsub()
   }, [])
@@ -334,7 +331,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       if (!val) return
       const arr = Array.isArray(val) ? val : Object.values(val)
       setEventProducts(arr.filter(p => p && p.name))
-      setFbLoaded(prev => ({ ...prev, event: true }))
     })
     return () => unsub()
   }, [])
@@ -407,26 +403,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     setReviewName("")
   }
 
-  // ナビカード用ランダム画像（10秒ごとに切り替え、Firebaseデータのみ使用）
-  const [navImgTick, setNavImgTick] = useState(0)
-  const [fbLoaded, setFbLoaded] = useState({ products: false, tokubai: false, event: false })
-  useEffect(() => {
-    const timer = setInterval(() => setNavImgTick(t => t + 1), 10000)
-    return () => clearInterval(timer)
-  }, [])
-  useEffect(() => {
-    const pick = (arr) => {
-      const withImg = arr.filter(p => p && p.name && getProductImage(p.name))
-      return withImg.length > 0 ? getProductImage(withImg[Math.floor(Math.random() * withImg.length)].name) : null
-    }
-    // tokubaiはフォールバック(originフィールドあり)でなく実データのみ使用
-    const tokubaiReal = tokubaiItems.length > 0 && !tokubaiItems[0].origin
-    setNavCardImgs({
-      regular: fbLoaded.products ? pick(products) : null,
-      sale: tokubaiReal ? pick(tokubaiItems) : null,
-      event: fbLoaded.event ? pick(eventProducts) : null,
-    })
-  }, [navImgTick, products, tokubaiItems, eventProducts, fbLoaded])
 
   // 納品状況リアルタイム監視
   const [isDelivering, setIsDelivering] = useState(false)
@@ -576,8 +552,6 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
       {/* ホーム */}
       {isHome && (<>
-        <style>{`@keyframes deliveryBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
-
         {/* 本日のオトク（緑バー+商品画像） */}
         <div onClick={() => onCardTap && onCardTap("sale")} style={{ margin: "8px 10px 0", background: "#4d8c00", borderRadius: 12, padding: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
@@ -598,7 +572,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* 納品状況 + AI おトク診断（横並び） */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "6px 10px 6px" }}>
-          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#dc2626", borderRadius: 12, padding: "14px 12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", animation: "deliveryBlink 2s ease-in-out infinite" }}>
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#dc2626", borderRadius: 12, padding: "14px 12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
               <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
                 {isDelivering ? "現在納品中" : "納品状況"}
@@ -614,14 +588,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* ナビカード */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "0 10px 20px" }}>
-          {NAV_CARDS.map((c, i) => {
-            const cardImg = navCardImgs[c.tab] || null
-            return (
+          {NAV_CARDS.map((c, i) => (
             <div key={i} onClick={() => c.tab === "stores" ? (onNavigate && onNavigate("stores")) : (onCardTap && onCardTap(c.tab))}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
-              {c.tab !== "stores" ? (
+              {c.img ? (
                 <div style={{ height: 100, overflow: "hidden" }}>
-                  {cardImg ? <img src={cardImg} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "#94a3b8" }}>{c.title}</div>}
+                  <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               ) : (
                 <div style={{ height: 100, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -633,8 +605,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                 <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>
               </div>
             </div>
-            )
-          })}
+          ))}
         </div>
 
         <div style={{ height: 60 }} />
