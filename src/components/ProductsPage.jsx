@@ -294,12 +294,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                background: "#dc2626", minHeight: 360, overflow: "hidden",
+                background: "#fff", minHeight: 360, overflow: "hidden",
               }}>
                 {/* テキスト（上部・左寄せ） */}
                 <div style={{ position: "relative", zIndex: 2, padding: "32px 24px 0" }}>
-                  <div style={{ fontSize: 40, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>旬の<br />いちご特集</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "rgba(255,255,255,.85)", marginTop: 10 }}>福島県産 甘くてジューシー</div>
+                  <div style={{ fontSize: 40, fontWeight: 900, color: "#dc2626", lineHeight: 1.1 }}>旬の<br />いちご特集</div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: "#666", marginTop: 10 }}>福島県産 甘くてジューシー</div>
                 </div>
                 {/* いちご写真（下部にドーン） */}
                 <div style={{ position: "absolute", bottom: -20, right: -20, width: "75%", zIndex: 1 }}>
