@@ -112,10 +112,10 @@ const LOGO_URL = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_06
 // 緑バナースライド（FRESH SALE / おいしいランキング）
 const GREEN_SLIDES = [
   {
-    title: "FRESH\nSALE",
+    title: "本日の\nオトク",
     sub: "お買い得が満載",
     products: ["ichigo-pack.jpg", "cucumber.jpg", "cabbage-half.jpg", "piman.jpg"],
-    cta: "セールを見る →",
+    cta: "オトクを見る →",
     tab: "sale",
   },
 ]
@@ -123,7 +123,7 @@ const GREEN_SLIDES = [
 // 下段カード → メインナビゲーション
 const NAV_CARDS = [
   { img: "komatsuna.jpg", title: "定番野菜", sub: "レギュラー商品", tab: "regular" },
-  { img: "tomato.jpg", title: "FRESH SALE", sub: "お買い得商品", tab: "sale" },
+  { img: "tomato.jpg", title: "本日のオトク", sub: "お買い得商品", tab: "sale" },
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
   { img: null, title: "導入店舗一覧", sub: "ツルハドラッグ", tab: "stores", icon: true },
 ]
@@ -159,7 +159,7 @@ function AiSavingsDiag({ products, inline }) {
   // 閉じた状態: コンパクトなカード（ホーム横並び用）
   if (!open && !inline) {
     return (
-      <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", height: "100%", boxSizing: "border-box" }}>
+      <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "10px 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", height: "100%", boxSizing: "border-box" }}>
         <div style={{ width: 30, height: 30, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
         </div>
@@ -440,7 +440,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
           </>
         ) : (
           <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>
-            {initialTab === "sale" ? "FRESH SALE" : initialTab === "event" ? "近日販売予定" : "定番野菜"}
+            {initialTab === "sale" ? "本日のオトク" : initialTab === "event" ? "近日販売予定" : "定番野菜"}
           </span>
         )}
       </header>
@@ -562,8 +562,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         <style>{`@keyframes deliveryBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
 
         {/* 納品状況 + AI おトク診断（横並び） */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "10px 10px 8px" }}>
-          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#4d8c00", borderRadius: 12, padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", animation: "deliveryBlink 2s ease-in-out infinite" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "8px 10px 6px" }}>
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#4d8c00", borderRadius: 12, padding: "10px 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", animation: "deliveryBlink 2s ease-in-out infinite" }}>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
             <div style={{ fontSize: 12, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
               {isDelivering ? "現在納品中" : "納品状況"}
@@ -634,7 +634,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         )}
         {tab === "sale" && (
           <div style={{ fontSize: 13, color: "#dc2626", marginBottom: 12, fontWeight: 600 }}>
-            お買い得商品 {items.length}品目
+            本日のオトク {items.length}品目
           </div>
         )}
         {isEvent && (
