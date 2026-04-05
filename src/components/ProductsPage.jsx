@@ -127,7 +127,7 @@ const NAV_CARDS = [
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
 ]
 
-export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
+export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner }) {
   const [tab, setTab] = useState(null) // null=トップ | "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
   const [eventProducts, setEventProducts] = useState([])
@@ -258,8 +258,15 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
 
       {/* ヘッダー */}
       <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
-        <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>
-        <span style={{ fontSize: 18, fontWeight: 900, color: G }}>商品</span>
+        {!isHome && <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>}
+        {isHome ? (
+          <>
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg" alt="OTOKAWA" style={{ height: 32, borderRadius: 6 }} />
+            <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
+          </>
+        ) : (
+          <span style={{ fontSize: 18, fontWeight: 900, color: G }}>商品</span>
+        )}
       </header>
 
       {/* ヒーローバナー */}
@@ -358,7 +365,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
 
       {/* ナビカード3列 */}
       {!tab && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 40px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: isHome ? "10px 10px 80px" : "10px 10px 40px" }}>
           {NAV_CARDS.map((c, i) => (
             <div key={i} onClick={() => { setTab(c.tab); setFilterCat(null); window.scrollTo(0, 0) }}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>

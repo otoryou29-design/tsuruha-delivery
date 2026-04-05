@@ -62,7 +62,7 @@ export default function App() {
   )
 
   if (page === "products") {
-    return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} onNavigate={(target) => { setPage("home"); setTimeout(() => { const el = document.getElementById(target); if (el) el.scrollIntoView({ behavior: "smooth" }) }, 100) }} />
+    return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} onNavigate={(target) => { setPage("home"); setTimeout(() => { const el = document.getElementById(target); if (el) el.scrollIntoView({ behavior: "smooth" }) }, 100) }} showNewsBanner />
   }
 
   if (page === "delivery") {
@@ -91,6 +91,36 @@ export default function App() {
           <img src={LOGO} alt="" style={{ height: 32, borderRadius: 6 }} />
           <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
         </header>
+
+        {/* ヒーロー */}
+        <section style={{ position: "relative", height: 400, overflow: "hidden" }}>
+          <img src={HERO} alt="音川青果チーム" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 4, marginBottom: 12 }}>OTOKAWA SEIKA</p>
+            <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, margin: 0 }}>
+              私たちは、挑戦する。<br />お客様に感動と豊かさを<br />届けるために。
+            </h1>
+          </div>
+        </section>
+
+        {/* Instagram + ブランド */}
+        <section style={{ padding: "48px 24px", background: BG2 }}>
+          <div style={{ maxWidth: 600, margin: "0 auto" }}>
+            <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)", marginBottom: 24 }}>
+              <img src={INSTAGRAM} alt="Instagram" style={{ width: "100%", display: "block" }} />
+            </div>
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <a href="https://instagram.com/otokawa_official" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "14px 28px", borderRadius: 8, background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)", color: "#fff", fontSize: 14, fontWeight: 700, textDecoration: "none" }}>
+                フォローして最新情報をチェック
+              </a>
+            </div>
+            <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>OTOKAWA BRAND</p>
+            <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.4 }}>毎日がお買い得の<br />ヒミツ</h2>
+            <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2 }}>
+              独自の仕入れネットワークと効率的な物流システムにより、高品質な青果をお手頃価格で提供。市場価格の変動にも柔軟に対応し、安定した価格と品質を実現しています。
+            </p>
+          </div>
+        </section>
 
         {/* コンセプト */}
         <section style={{ padding: "60px 24px", background: "#fff" }}>
@@ -229,150 +259,11 @@ export default function App() {
     );
   }
 
-  const pulseKeyframes = `@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,255,255,.7); } 50% { opacity: .85; box-shadow: 0 0 16px 4px rgba(255,255,255,.5); } }`;
-
-  const handleContactSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    fetch("https://formspree.io/f/xpwzgkvl", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ company: contactForm.company, category: contactForm.category, message: contactForm.message, _replyto: "info@otokawa.com" }),
-    }).then(() => setContactSent(true));
-  };
-
+  // ── ホーム = 商品トップ（バナー + 3ナビカード）
   return (
-    <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", overflowX: "hidden" }}>
-
-      {/* ── ヘッダー */}
-      <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
-        <img src={LOGO} alt="音川青果" style={{ height: 32, borderRadius: 6, objectFit: "cover" }} />
-        <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
-      </header>
-
-      {/* ── ニュースバナー */}
-      <div style={{ background: G, color: "#fff", overflow: "hidden", padding: "10px 24px", fontSize: 13, fontWeight: 700, letterSpacing: 1, whiteSpace: "nowrap" }}>
-        <style>{`@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } } @keyframes tokubaiSlide { 0%,20% { transform: translateX(0); } 80%,100% { transform: translateX(-50%); } }`}</style>
-        <div style={{ display: "inline-block", animation: "marquee 20s linear infinite" }}>
-          <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
-          納品状況がリアルタイムで確認できるようになりました！
-          <span style={{ margin: "0 32px", opacity: 0.5 }}>|</span>
-          <span style={{ marginRight: 8, background: "#fff", color: G, padding: "2px 8px", borderRadius: 4, fontSize: 11 }}>NEW</span>
-          ドン・キホーテ米沢店で青果納品 4月20日からスタート！
-        </div>
-      </div>
-
-      {/* ── ヒーロー */}
-      <section style={{ position: "relative", height: "100vh", maxHeight: 700, overflow: "hidden" }}>
-        <img src={HERO} alt="音川青果チーム" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
-        <style>{`@media(max-width:768px){.hero-text-overlay{padding-bottom:25%!important;}}`}</style>
-        <div className="hero-text-overlay" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "rgba(0,0,0,.35)", paddingBottom: "10%" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 4, marginBottom: 16 }}>OTOKAWA SEIKA</p>
-          <h1 style={{ fontSize: "clamp(28px, 6vw, 52px)", fontWeight: 900, color: "#fff", lineHeight: 1.5, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", margin: 0 }}>
-            私たちは、挑戦する。<br />お客様に感動と豊かさを<br />届けるために。
-          </h1>
-        </div>
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent 0%, rgba(0,0,0,.5) 100%)", padding: "60px 24px 36px", textAlign: "center" }}>
-          <p style={{ fontSize: 16, color: "#fff", marginBottom: 24, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, marginTop: 32 }}>
-            福島県内ツルハドラッグ様への販売を行っております。
-          </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="#tokubai" style={{ padding: "12px 28px", borderRadius: 8, background: "#fff", color: G, fontSize: 14, fontFamily: "'Yu Gothic', 'YuGothic', sans-serif", fontWeight: 700, textDecoration: "none", transition: "background 0.2s" }}>
-              お買い得情報を確認する
-            </a>
-            <style>{pulseKeyframes}</style>
-            <button onClick={() => setPage("delivery")} style={{ padding: "12px 28px", borderRadius: 8, background: "transparent", color: "#fff", border: "2px solid rgba(255,255,255,.8)", fontSize: 14, fontWeight: 700, cursor: "pointer", animation: "pulse 2s ease-in-out infinite" }}>
-              本日の納品状況
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── OTOKAWAブランド + Instagram */}
-      <section style={{ padding: "72px 24px", background: BG2 }}>
-        <div style={{ maxWidth: 600, margin: "0 auto" }}>
-          {/* ① 画像 */}
-          <div style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)", marginBottom: 24 }}>
-            <img src={INSTAGRAM} alt="Instagram" style={{ width: "100%", display: "block" }} />
-          </div>
-          {/* ② Instagramボタン */}
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <a href="https://instagram.com/otokawa_official" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "14px 28px", borderRadius: 8, background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)", color: "#fff", fontSize: 14, fontWeight: 700, textDecoration: "none" }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              フォローして最新のお買い得情報をチェック
-            </a>
-          </div>
-          {/* ③ テキスト */}
-          <p style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 2, marginBottom: 12 }}>OTOKAWA BRAND</p>
-          <h2 style={{ fontSize: "clamp(22px, 3.5vw, 36px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.4 }}>毎日がお買い得の<br />ヒミツ</h2>
-          <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2 }}>
-            独自の仕入れネットワークと効率的な物流システムにより、高品質な青果をお手頃価格で提供。市場価格の変動にも柔軟に対応し、安定した価格と品質を実現しています。
-          </p>
-        </div>
-      </section>
-
-      <div style={{ height: 60 }} />
-
-      {/* ── 中卸事業モーダル */}
-      {showNakaoroshi && (
-        <div onClick={() => setShowNakaoroshi(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, maxWidth: 700, width: "100%", maxHeight: "90vh", overflow: "auto", position: "relative" }}>
-            <button onClick={() => setShowNakaoroshi(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
-            <img src="/nakaoroshi-1.jpg" alt="株式会社音川青果の紹介" style={{ width: "100%", display: "block", borderRadius: "16px 16px 0 0" }} />
-            <img src="/nakaoroshi-2.jpg" alt="強力な加工能力・鮮度コントロール・安定した物流輸送" style={{ width: "100%", display: "block", borderRadius: "0 0 16px 16px" }} />
-          </div>
-        </div>
-      )}
-
-      {/* ── 農業事業モーダル */}
-      {showNogyo && (
-        <div onClick={() => setShowNogyo(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, maxWidth: 700, width: "100%", maxHeight: "90vh", overflow: "auto", position: "relative" }}>
-            <button onClick={() => setShowNogyo(false)} style={{ position: "sticky", top: 12, float: "right", marginRight: 12, background: "rgba(0,0,0,.5)", color: "#fff", border: "none", width: 36, height: 36, borderRadius: "50%", fontSize: 18, cursor: "pointer", zIndex: 10 }}>✕</button>
-            <img src="/nogyo-1.jpg" alt="自社栽培の濃厚トマト＆ミニトマト" style={{ width: "100%", display: "block", borderRadius: "16px 16px 0 0" }} />
-            <img src="/nogyo-2.jpg" alt="農場長・代表取締役の紹介" style={{ width: "100%", display: "block", borderRadius: "0 0 16px 16px" }} />
-          </div>
-        </div>
-      )}
-
+    <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
+      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={() => {}} isHome />
       <TabBar />
-
-      {/* ── フッター */}
-      <footer style={{ background: "#1a1a1a", padding: "48px 24px 32px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32, marginBottom: 32 }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <img src={LOGO} alt="音川青果" style={{ height: 28, borderRadius: 4 }} />
-              <span style={{ fontSize: 14, fontWeight: 900, color: "#fff" }}>音川青果</span>
-            </div>
-            <p style={{ fontSize: 12, color: "rgba(255,255,255,.5)", lineHeight: 1.8 }}>美味しいは、いい食材から。産地・鮮度・流通・安全管理にこだわり、信頼される食材をお届けします。</p>
-          </div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: "#fff" }}>事業紹介</div>
-            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
-              <a href="#business" style={{ color: "inherit", textDecoration: "none" }}>農業事業</a>
-              <a href="#business" style={{ color: "inherit", textDecoration: "none" }}>中卸事業</a>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: "#fff" }}>情報</div>
-            <div style={{ display: "grid", gap: 6, fontSize: 12, color: "rgba(255,255,255,.5)" }}>
-              <a href="#safety" style={{ color: "inherit", textDecoration: "none" }}>安全・安心</a>
-              <a href="#tokubai" style={{ color: "inherit", textDecoration: "none" }}>お買い得情報</a>
-              <a href="#contact" style={{ color: "inherit", textDecoration: "none" }}>お問い合わせ</a>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: "#fff" }}>SNS</div>
-            <div style={{ display: "grid", gap: 6, fontSize: 12 }}>
-              <a href="https://instagram.com/otokawa_official" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none" }}>Instagram</a>
-            </div>
-          </div>
-        </div>
-        <div style={{ borderTop: "1px solid rgba(255,255,255,.1)", paddingTop: 20, textAlign: "center", fontSize: 12, color: "rgba(255,255,255,.3)" }}>
-          &copy; {new Date().getFullYear()} 株式会社音川青果. All rights reserved.
-        </div>
-      </footer>
     </div>
   );
 }
