@@ -61,4 +61,15 @@ export function setTokubaiItems(items) {
   return set(ref(db, "tokubai"), items);
 }
 
-export { db, ref, set, onValue, update, get };
+// --- Staff Picks (スタッフのおすすめ) ---
+export function onStaffPicksChange(callback) {
+  return onValue(ref(db, "staffPicks"), (snap) => {
+    callback(snap.val() || []);
+  });
+}
+
+export function addStaffPick(pick) {
+  return push(ref(db, "staffPicks"), pick);
+}
+
+export { db, ref, set, onValue, update, get, push };

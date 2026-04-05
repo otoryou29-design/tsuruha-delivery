@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { onValue, ref, db, set, onDeliveryStatusChange } from "../firebase"
+import { onValue, ref, db, set, onDeliveryStatusChange, onStaffPicksChange } from "../firebase"
 
 // 商品名→画像ファイルマップ
 // ★ 部分一致バグ防止: 長い名前を必ず先に配置
@@ -348,6 +348,16 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     return () => unsub()
   }, [])
 
+  // スタッフのおすすめ
+  const [staffPicks, setStaffPicks] = useState([])
+  useEffect(() => {
+    const unsub = onStaffPicksChange((data) => {
+      const arr = Array.isArray(data) ? data : Object.values(data || {})
+      setStaffPicks(arr.filter(p => p && p.product).sort((a, b) => (b.at || 0) - (a.at || 0)))
+    })
+    return () => unsub()
+  }, [])
+
   useEffect(() => {
     const unsub = onValue(ref(db, "productLikes"), (snap) => setLikes(snap.val() || {}))
     return () => unsub()
@@ -633,6 +643,34 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
             ))}
           </div>
         </div>
+
+        {/* スタッフのおすすめ */}
+        {staffPicks.length > 0 && (
+          <div style={{ padding: "0 10px 16px" }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>スタッフのおすすめ</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {staffPicks.slice(0, 5).map((pick, i) => {
+                const img = getProductImage(pick.product)
+                return (
+                  <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px", display: "flex", gap: 12, alignItems: "center" }}>
+                    {img && (
+                      <div style={{ width: 56, height: 56, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}>
+                        <img src={img} alt={pick.product} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      </div>
+                    )}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                        <span style={{ fontSize: 11, fontWeight: 800, color: "#4d8c00", background: "#f0fdf4", padding: "1px 6px", borderRadius: 4 }}>{pick.staff || "スタッフ"}</span>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a" }}>{pick.product}</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{pick.comment}</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         <div style={{ height: 60 }} />
       </>)}
