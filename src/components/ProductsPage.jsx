@@ -456,7 +456,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                background: "#fff5f5", minHeight: 360, overflow: "hidden",
+                background: "#ffe8ec", minHeight: 360, overflow: "hidden",
               }}>
                 <style>{`
                   @keyframes sakuraFall {
