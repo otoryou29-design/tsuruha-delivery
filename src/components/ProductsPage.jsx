@@ -89,13 +89,14 @@ const GREEN_SLIDES = [
 // 下段カード（3列）
 const PROMO_CARDS = [
   { img: "komatsuna.jpg", title: "葉物野菜", sub: "新鮮シャキシャキ", tab: "regular", cat: "葉物" },
-  { img: "maitake.jpg", title: "きのこ各種", sub: "香り豊かな国産", tab: "regular", cat: "きのこ" },
+  { img: "ichigo.jpg", title: "近日販売予定", sub: "催事商品をチェック", tab: "event", special: true },
   { img: "apple.jpg", title: "果物", sub: "旬のフルーツ", tab: "regular", cat: "果物" },
 ]
 
 export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
-  const [tab, setTab] = useState("regular")
+  const [tab, setTab] = useState("regular") // "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
+  const [eventProducts, setEventProducts] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
   const [likes, setLikes] = useState({})
   const [likedItems, setLikedItems] = useState({})
@@ -113,6 +114,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
       if (!val) return
       const arr = Array.isArray(val) ? val : Object.values(val)
       setProducts(arr.filter(p => p && p.name))
+    })
+    return () => unsub()
+  }, [])
+
+  // 催事データ読み込み
+  useEffect(() => {
+    const unsub = onValue(ref(db, "eventProducts"), (snap) => {
+      const val = snap.val()
+      if (!val) return
+      const arr = Array.isArray(val) ? val : Object.values(val)
+      setEventProducts(arr.filter(p => p && p.name))
     })
     return () => unsub()
   }, [])
@@ -176,7 +188,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
   }
 
   const isRegular = tab === "regular"
-  let items = isRegular ? products : tokubaiItems
+  const isEvent = tab === "event"
+  let items = isRegular ? products : isEvent ? eventProducts : tokubaiItems
   if (isRegular && filterCat) items = items.filter(p => p.cat === filterCat)
 
   const categories = [...new Set(products.map(p => p.cat).filter(Boolean))]
@@ -310,15 +323,20 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
       <div style={{ background: "#fff", borderBottom: "2px solid #eee" }}>
         <div style={{ display: "flex" }}>
           <button onClick={() => { setTab("regular"); setFilterCat(null) }} style={{
-            flex: 1, padding: "14px", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer",
+            flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
             background: "#fff", color: tab === "regular" ? G : "#999",
             borderBottom: tab === "regular" ? `3px solid ${G}` : "3px solid transparent",
           }}>定番野菜</button>
           <button onClick={() => { setTab("sale"); setFilterCat(null) }} style={{
-            flex: 1, padding: "14px", border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer",
+            flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
             background: "#fff", color: tab === "sale" ? "#dc2626" : "#999",
             borderBottom: tab === "sale" ? "3px solid #dc2626" : "3px solid transparent",
           }}>FRESH SALE</button>
+          <button onClick={() => { setTab("event"); setFilterCat(null) }} style={{
+            flex: 1, padding: "14px", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer",
+            background: "#fff", color: tab === "event" ? "#d97706" : "#999",
+            borderBottom: tab === "event" ? "3px solid #d97706" : "3px solid transparent",
+          }}>近日販売予定</button>
         </div>
 
         {/* カテゴリフィルター（定番野菜のみ） */}
@@ -348,9 +366,14 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
             {filterCat ? `${filterCat} ${items.length}品目` : `${products.length}品目の定番商品`}
           </div>
         )}
-        {!isRegular && (
+        {tab === "sale" && (
           <div style={{ fontSize: 13, color: "#dc2626", marginBottom: 12, fontWeight: 600 }}>
             お買い得商品 {items.length}品目
+          </div>
+        )}
+        {isEvent && (
+          <div style={{ fontSize: 13, color: "#d97706", marginBottom: 12, fontWeight: 600 }}>
+            近日販売予定の催事商品 {items.length}品目
           </div>
         )}
 
@@ -386,7 +409,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                       background: catStyle.bg, color: catStyle.tx, padding: "2px 8px", borderRadius: 4,
                     }}>{item.cat}</span>
                   )}
-                  {/* セールタグ（FRESH SALE） */}
+                  {/* セール/催事タグ */}
                   {!isRegular && item.tag && (
                     <span style={{
                       position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
