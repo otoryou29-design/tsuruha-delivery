@@ -81,9 +81,9 @@ export default function ShunFeature({ onBack }) {
         <div style={{ position: "relative", zIndex: 2 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: G, letterSpacing: 3, marginBottom: 10 }}>SPRING 2026</div>
           <h1 style={{ fontSize: 38, fontWeight: 900, color: "#1a1a1a", lineHeight: 1.2, margin: "0 0 16px" }}>旬を食べよう。</h1>
-          <div style={{ width: 40, height: 3, background: G, margin: "0 auto 20px", borderRadius: 2 }} />
+          <div style={{ width: 40, height: 3, background: G, margin: "0 auto 16px", borderRadius: 2 }} />
+          <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 16 }}>2026.04.05</div>
           <p style={{ fontSize: 14, color: "#64748b", lineHeight: 2, maxWidth: 420, margin: "0 auto" }}>
-            こんにちは、音川青果です。<br />
             春の訪れとともに、みずみずしい旬の野菜たちが<br />
             産地から届き始めました。
           </p>
@@ -94,7 +94,7 @@ export default function ShunFeature({ onBack }) {
       <section style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto" }}>
         <div style={{ background: "#fafafa", borderRadius: 16, padding: "28px 24px" }}>
           <p style={{ fontSize: 15, color: "#334155", lineHeight: 2.2, margin: 0 }}>
-            いつも音川青果の青果をご利用いただき、ありがとうございます。
+            いつもOTOKAWAをご利用いただきまして、ありがとうございます。
           </p>
           <p style={{ fontSize: 15, color: "#334155", lineHeight: 2.2, margin: "12px 0 0" }}>
             春は野菜がもっともおいしくなる季節。
