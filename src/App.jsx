@@ -3,7 +3,8 @@ import CustomerView from "./components/CustomerView";
 import ProductsPage from "./components/ProductsPage";
 import IchigoFeature from "./components/IchigoFeature";
 import ShunFeature from "./components/ShunFeature";
-import { onTokubaiChange, onStaffArticlesChange } from "./firebase";
+import { onTokubaiChange, onStaffArticlesChange, onTimelineRecentChange } from "./firebase";
+import StaffTimeline from "./components/StaffTimeline";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
 const HERO = "/hero-team.png";
@@ -22,8 +23,10 @@ const TOKUBAI_FALLBACK = [
 ];
 
 
+const isStaffMode = new URLSearchParams(window.location.search).has("staff");
+
 export default function App() {
-  const [page, setPage] = useState("home");
+  const [page, setPage] = useState(isStaffMode ? "staff-timeline" : "home");
   const [now, setNow] = useState(new Date());
   useEffect(() => { const t = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(t); }, []);
   const [contactType, setContactType] = useState("business"); // "business" | "recruit"
@@ -35,6 +38,7 @@ export default function App() {
   const [productTab, setProductTab] = useState("regular");
   const [allArticles, setAllArticles] = useState([]);
   const [viewArticle, setViewArticle] = useState(null);
+  const [timelineEntries, setTimelineEntries] = useState([]);
 
   useEffect(() => {
     const unsub = onTokubaiChange((items) => {
@@ -54,6 +58,12 @@ export default function App() {
 
   const G = "#4a7c59";
   const BG2 = "#f7f7f5";
+
+  // タイムライン（直近7日分）
+  useEffect(() => {
+    const unsub = onTimelineRecentChange(7, setTimelineEntries);
+    return () => unsub();
+  }, []);
 
   const handleContactSubmit = (e) => {
     e.preventDefault();
@@ -81,6 +91,11 @@ export default function App() {
       ))}
     </div>
   )
+
+  // スタッフ用タイムライン
+  if (page === "staff-timeline") {
+    return <StaffTimeline />
+  }
 
   // 記事一覧ページ
   if (page === "articles") {
@@ -608,7 +623,7 @@ export default function App() {
   // ── ホーム = 商品トップ（バナー + ナビカード）
   return (
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
-      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo"); if (target === "stores") setPage("stores"); if (target === "shun") setPage("shun"); if (target === "articles") setPage("articles") }} isHome
+      <ProductsPage tokubaiItems={tokubaiItems} timelineEntries={timelineEntries} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo"); if (target === "stores") setPage("stores"); if (target === "shun") setPage("shun"); if (target === "articles") setPage("articles") }} isHome
         onCardTap={(tab) => { setProductTab(tab); setPage("products") }} />
       <TabBar />
     </div>

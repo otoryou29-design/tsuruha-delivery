@@ -302,7 +302,7 @@ function AiSavingsDiag({ products, inline }) {
   )
 }
 
-export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner, initialTab, onCardTap }) {
+export default function ProductsPage({ tokubaiItems, timelineEntries = [], onBack, onNavigate, isHome, showNewsBanner, initialTab, onCardTap }) {
   const [tab, setTab] = useState(initialTab || null) // null=トップ | "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
   const [eventProducts, setEventProducts] = useState([])
@@ -654,6 +654,28 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
             ))}
           </div>
         </div>
+
+        {/* タイムライン */}
+        {timelineEntries.length > 0 && (
+          <div style={{ padding: "0 10px 16px" }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>店舗だより</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {timelineEntries.slice(0, 3).map((entry, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px 14px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{entry.subject}</div>
+                    <div style={{ fontSize: 10, color: "#94a3b8" }}>{entry.date === new Date().toISOString().slice(0, 10) ? "今日" : entry.date?.slice(5).replace("-", "/")}</div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#4d8c00", background: "#f0fdf4", padding: "1px 5px", borderRadius: 3 }}>{entry.author}</span>
+                    {entry.stores && entry.stores.length > 0 && <span style={{ fontSize: 10, color: "#94a3b8" }}>{entry.stores.slice(0, 2).join(" / ")}{entry.stores.length > 2 ? ` 他${entry.stores.length - 2}店` : ""}</span>}
+                  </div>
+                  <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{entry.content}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* スタッフのおすすめ */}
         {staffPicks.length > 0 && (

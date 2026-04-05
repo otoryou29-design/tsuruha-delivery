@@ -72,6 +72,47 @@ export function addStaffPick(pick) {
   return push(ref(db, "staffPicks"), pick);
 }
 
+// --- Timeline (タイムライン) ---
+export function addTimelineEntry(date, entry) {
+  return push(ref(db, `timeline/${date}`), entry);
+}
+
+export function onTimelineChange(date, callback) {
+  return onValue(ref(db, `timeline/${date}`), (snap) => {
+    callback(snap.val() || {});
+  });
+}
+
+// 過去N日分のタイムライン取得
+export function onTimelineRecentChange(days, callback) {
+  const dates = [];
+  for (let i = 0; i < days; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  const unsubs = dates.map(date =>
+    onValue(ref(db, `timeline/${date}`), () => {
+      // 全日付を再取得
+      Promise.all(dates.map(dt =>
+        new Promise(resolve => {
+          onValue(ref(db, `timeline/${dt}`), (snap) => resolve({ date: dt, entries: snap.val() || {} }), { onlyOnce: true });
+        })
+      )).then(results => {
+        const all = [];
+        results.forEach(({ date, entries }) => {
+          Object.entries(entries).forEach(([id, entry]) => {
+            all.push({ id, date, ...entry });
+          });
+        });
+        all.sort((a, b) => (b.at || 0) - (a.at || 0));
+        callback(all);
+      });
+    })
+  );
+  return () => unsubs.forEach(u => u());
+}
+
 // --- Staff Articles (スタッフ記事) ---
 export function onStaffArticlesChange(callback) {
   return onValue(ref(db, "staffArticles"), (snap) => {
