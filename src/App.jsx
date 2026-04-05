@@ -50,7 +50,7 @@ export default function App() {
     <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-around", alignItems: "center", paddingTop: 8, paddingBottom: "max(12px, env(safe-area-inset-bottom, 12px))", zIndex: 150 }}>
       {[
         { label: "ホーム", page: "home", svg: "M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0h4" },
-        { label: "商品", page: "products", svg: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
+        { label: "店舗", page: "stores", svg: "M3 21h18M3 7v1a3 3 0 006 0V7m0 0V7a3 3 0 006 0V7m0 0V7a3 3 0 006 0V7M5 21V10.7M19 21V10.7" },
         { label: "納品状況", page: "delivery", svg: "M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4m-5 0v4m0-4h4m-4 0H5" },
         { label: "事業紹介", page: "business", svg: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5" },
         { label: "その他", page: "more", svg: "M4 6h16M4 12h16M4 18h16" },
@@ -126,11 +126,11 @@ export default function App() {
   if (page === "delivery") {
     return (
       <div style={{ minHeight: "100vh", background: "#f7f7f5", fontFamily: "'Yu Gothic', 'YuGothic', 'Noto Sans JP', sans-serif" }}>
-        <header style={{ background: "#4a7c59", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,.15)" }}>
-          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 700, letterSpacing: 1 }}>← トップへ</button>
+        <header style={{ background: "#fff", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #e5e7eb" }}>
+          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", color: "#4d8c00", fontSize: 13, cursor: "pointer", fontWeight: 700, letterSpacing: 1 }}>← トップへ</button>
           <div style={{ textAlign: "center" }}>
-            <span style={{ fontWeight: 900, fontSize: 16, color: "#fff", letterSpacing: 2 }}>本日の納品状況</span>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 2 }}>{new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" })}</div>
+            <span style={{ fontWeight: 900, fontSize: 16, color: "#4d8c00", letterSpacing: 2 }}>本日の納品状況</span>
+            <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" })}</div>
           </div>
           <img src={LOGO} alt="音川青果" style={{ height: 32, borderRadius: 4 }} />
         </header>
