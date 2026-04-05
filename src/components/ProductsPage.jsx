@@ -305,6 +305,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
   const [bannerIdx, setBannerIdx] = useState(0)
   const [filterCat, setFilterCat] = useState(null)
   const [rankingData, setRankingData] = useState([])
+  const [navCardImgs, setNavCardImgs] = useState({})
 
   useEffect(() => {
     const unsub = onValue(ref(db, "products"), (snap) => {
@@ -404,6 +405,15 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     setReviewText("")
     setReviewName("")
   }
+
+  // ナビカード用ランダム画像（データ変更時に1回だけ決定）
+  useEffect(() => {
+    const pick = (arr) => {
+      const withImg = arr.filter(p => getProductImage(p.name))
+      return withImg.length > 0 ? getProductImage(withImg[Math.floor(Math.random() * withImg.length)].name) : null
+    }
+    setNavCardImgs({ regular: pick(products), sale: pick(tokubaiItems), event: pick(eventProducts) })
+  }, [products.length, tokubaiItems.length, eventProducts.length])
 
   // 納品状況リアルタイム監視
   const [isDelivering, setIsDelivering] = useState(false)
@@ -580,12 +590,14 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* ナビカード */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "0 10px 20px" }}>
-          {NAV_CARDS.map((c, i) => (
+          {NAV_CARDS.map((c, i) => {
+            const cardImg = navCardImgs[c.tab] || null
+            return (
             <div key={i} onClick={() => c.tab === "stores" ? (onNavigate && onNavigate("stores")) : (onCardTap && onCardTap(c.tab))}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
-              {c.img ? (
+              {c.tab !== "stores" ? (
                 <div style={{ height: 100, overflow: "hidden" }}>
-                  <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src={cardImg || `/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               ) : (
                 <div style={{ height: 100, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -593,11 +605,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                 </div>
               )}
               <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{c.title}</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", letterSpacing: 1 }}>{c.title}</div>
                 <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         <div style={{ height: 60 }} />
