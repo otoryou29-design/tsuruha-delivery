@@ -258,7 +258,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       `}</style>
 
       {/* ヘッダー */}
-      <header style={{ background: isHome ? "#fff" : G, borderBottom: isHome ? "1px solid #eee" : "none", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
+      <header style={{ background: isHome ? "#fff" : "#4d8c00", borderBottom: isHome ? "1px solid #eee" : "none", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
         {!isHome && <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#fff", padding: "4px 8px" }}>←</button>}
         {isHome ? (
           <>
