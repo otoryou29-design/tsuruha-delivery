@@ -48,21 +48,28 @@ export default function App() {
       <style>{`@keyframes tabBlink { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
       {[
         { label: "ホーム", page: "home", svg: "M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0h4" },
-        { label: "商品", page: "products", svg: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
+        { label: "定番野菜", page: "products", svg: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
+        { label: "SALE", page: "products-sale", svg: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1", color: "#dc2626" },
+        { label: "販売予定", page: "products-event", svg: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", color: "#d97706" },
         { label: "納品状況", page: "delivery", svg: "M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4m-5 0v4m0-4h4m-4 0H5", blink: true },
-        { label: "事業紹介", page: "business", svg: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5" },
         { label: "その他", page: "more", svg: "M4 6h16M4 12h16M4 18h16" },
       ].map(t => (
         <button key={t.label} onClick={() => setPage(t.page)} style={{ flex: 1, background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "4px 0", fontFamily: "inherit", animation: t.blink && page !== t.page ? "tabBlink 2s ease-in-out infinite" : "none" }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={t.blink ? G : (page === t.page ? G : "#999")} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={t.svg}/></svg>
-          <span style={{ fontSize: 9, fontWeight: 700, color: t.blink ? G : (page === t.page ? G : "#999") }}>{t.label}</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={t.blink ? G : (page === t.page ? (t.color || G) : "#999")} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={t.svg}/></svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: t.blink ? G : (page === t.page ? (t.color || G) : "#999") }}>{t.label}</span>
         </button>
       ))}
     </div>
   )
 
-  if (page === "products") {
-    return <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} onNavigate={(target) => { setPage("home"); setTimeout(() => { const el = document.getElementById(target); if (el) el.scrollIntoView({ behavior: "smooth" }) }, 100) }} showNewsBanner />
+  if (page === "products" || page === "products-sale" || page === "products-event") {
+    const initTab = page === "products-sale" ? "sale" : page === "products-event" ? "event" : "regular"
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
+        <ProductsPage tokubaiItems={tokubaiItems} onBack={() => setPage("home")} onNavigate={() => {}} initialTab={initTab} />
+        <TabBar />
+      </div>
+    )
   }
 
   if (page === "delivery") {

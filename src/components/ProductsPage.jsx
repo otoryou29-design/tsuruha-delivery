@@ -127,8 +127,8 @@ const NAV_CARDS = [
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
 ]
 
-export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner }) {
-  const [tab, setTab] = useState(null) // null=トップ | "regular" | "sale" | "event"
+export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner, initialTab }) {
+  const [tab, setTab] = useState(initialTab || null) // null=トップ | "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
   const [eventProducts, setEventProducts] = useState([])
   const [selectedItem, setSelectedItem] = useState(null)
