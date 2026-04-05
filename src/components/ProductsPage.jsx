@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { onValue, ref, db, set, onDeliveryStatusChange, onStaffPicksChange } from "../firebase"
+import { onValue, ref, db, set, onDeliveryStatusChange, onStaffPicksChange, onStaffArticlesChange } from "../firebase"
 
 // 商品名→画像ファイルマップ
 // ★ 部分一致バグ防止: 長い名前を必ず先に配置
@@ -358,6 +358,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     return () => unsub()
   }, [])
 
+  // スタッフ記事
+  const [staffArticles, setStaffArticles] = useState([])
+  const [openArticle, setOpenArticle] = useState(null)
+  useEffect(() => {
+    const unsub = onStaffArticlesChange((data) => {
+      const arr = Object.entries(data || {}).map(([id, v]) => ({ id, ...v }))
+      setStaffArticles(arr.filter(a => a && a.title).sort((a, b) => (b.at || 0) - (a.at || 0)))
+    })
+    return () => unsub()
+  }, [])
+
   useEffect(() => {
     const unsub = onValue(ref(db, "productLikes"), (snap) => setLikes(snap.val() || {}))
     return () => unsub()
@@ -672,8 +683,79 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
           </div>
         )}
 
+        {/* スタッフ記事 */}
+        {staffArticles.length > 0 && (
+          <div style={{ padding: "0 10px 16px" }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>読みもの</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {staffArticles.slice(0, 4).map((article, i) => {
+                const coverImg = article.coverImg ? getProductImage(article.coverImg) || `/products/${article.coverImg}?${IMG_VERSION}` : null
+                return (
+                  <div key={i} onClick={() => setOpenArticle(article)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden", cursor: "pointer" }}>
+                    {coverImg && (
+                      <div style={{ height: 140, overflow: "hidden" }}>
+                        <img src={coverImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      </div>
+                    )}
+                    <div style={{ padding: "12px 14px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.4 }}>{article.title}</div>
+                      {article.subtitle && <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{article.subtitle}</div>}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 8 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "#4d8c00" }}>{article.author || "OTOKAWA"}</span>
+                        <span style={{ fontSize: 11, color: "#94a3b8" }}>{article.date}</span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         <div style={{ height: 60 }} />
       </>)}
+
+      {/* 記事詳細モーダル */}
+      {openArticle && (
+        <div style={{ position: "fixed", inset: 0, background: "#f7f7f5", zIndex: 200, overflowY: "auto" }}>
+          <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 201, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
+            <button onClick={() => setOpenArticle(null)} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>読みもの</span>
+          </header>
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            {openArticle.coverImg && (
+              <div style={{ height: 220, overflow: "hidden" }}>
+                <img src={getProductImage(openArticle.coverImg) || `/products/${openArticle.coverImg}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+            )}
+            <div style={{ padding: "20px 16px" }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: "#1a1a1a", lineHeight: 1.4 }}>{openArticle.title}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#4d8c00", background: "#f0fdf4", padding: "2px 8px", borderRadius: 4 }}>{openArticle.author || "OTOKAWA"}</span>
+                <span style={{ fontSize: 12, color: "#94a3b8" }}>{openArticle.date}</span>
+              </div>
+              {openArticle.sections && openArticle.sections.map((sec, i) => {
+                if (sec.type === "text") return <p key={i} style={{ fontSize: 14, color: "#333", lineHeight: 1.8, margin: "16px 0" }}>{sec.text}</p>
+                if (sec.type === "heading") return <h3 key={i} style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a", margin: "24px 0 8px", borderLeft: "3px solid #4d8c00", paddingLeft: 10 }}>{sec.text}</h3>
+                if (sec.type === "product") {
+                  const pImg = getProductImage(sec.name)
+                  return (
+                    <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px", margin: "12px 0", display: "flex", gap: 12, alignItems: "center" }}>
+                      {pImg && <div style={{ width: 64, height: 64, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}><img src={pImg} alt={sec.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>}
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>{sec.name}</div>
+                        {sec.comment && <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, lineHeight: 1.5 }}>{sec.comment}</div>}
+                      </div>
+                    </div>
+                  )
+                }
+                return null
+              })}
+            </div>
+          </div>
+          <div style={{ height: 40 }} />
+        </div>
+      )}
 
       {/* 商品リストページ（ホーム以外） */}
       {!isHome && <>

@@ -72,4 +72,11 @@ export function addStaffPick(pick) {
   return push(ref(db, "staffPicks"), pick);
 }
 
+// --- Staff Articles (スタッフ記事) ---
+export function onStaffArticlesChange(callback) {
+  return onValue(ref(db, "staffArticles"), (snap) => {
+    callback(snap.val() || {});
+  });
+}
+
 export { db, ref, set, onValue, update, get, push };
