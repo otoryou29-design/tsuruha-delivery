@@ -73,14 +73,14 @@ const GREEN_SLIDES = [
   {
     title: "FRESH\nSALE",
     sub: "お買い得が満載",
-    products: ["ichigo.jpg", "cucumber.jpg", "cabbage-half.jpg"],
+    products: ["ichigo.jpg", "cucumber.jpg", "cabbage-half.jpg", "piman.jpg"],
     cta: "セールを見る →",
     tab: "sale",
   },
   {
     title: "おいしい！\nランキング",
     sub: "お客様が選んだ人気商品",
-    products: ["tomato.jpg", "spinach.jpg", "maitake.jpg"],
+    products: ["tomato.jpg", "spinach.jpg", "maitake.jpg", "daikon.jpg"],
     cta: "ランキングを見る →",
     tab: "regular",
   },
@@ -257,14 +257,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
               opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
               background: BG, minHeight: 360,
             }}>
-              {/* ロゴ（白・左上） */}
-              <div style={{ position: "absolute", top: 20, left: 20, zIndex: 3 }}>
-                <img src={LOGO_URL} alt="OTOKAWA"
-                  style={{ height: 32, borderRadius: 4, filter: "brightness(0) invert(1)", opacity: 0.9 }} />
-              </div>
-
-              {/* テキスト（左側・余白たっぷり） */}
-              <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "45%", padding: "64px 0 36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
+              {/* テキスト（左側） */}
+              <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", padding: "36px 0 36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
                 <div style={{ fontSize: 38, fontWeight: 900, color: "#fff", lineHeight: 1.1, whiteSpace: "pre-line" }}>{slide.title}</div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>{slide.sub}</div>
                 <div style={{
@@ -273,14 +267,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                 }}>{slide.cta}</div>
               </div>
 
-              {/* 商品画像（右側にゆったり配置） */}
-              <div style={{ position: "absolute", right: 8, top: 0, bottom: 0, width: "50%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "20px 0", zIndex: 1 }}>
+              {/* 商品画像4枚（右側 2x2グリッド） */}
+              <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: "50%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "16px 0", zIndex: 1 }}>
                 {slide.products.map((img, j) => (
                   <div key={j} style={{
-                    width: j === 0 ? 110 : 90, height: j === 0 ? 140 : 110, flexShrink: 0,
-                    borderRadius: 14, overflow: "hidden", background: "#fff",
-                    boxShadow: "0 8px 24px rgba(0,0,0,.2)",
-                    transform: j === 0 ? "translateY(-8px)" : "none",
+                    aspectRatio: "1", borderRadius: 14, overflow: "hidden", background: "#fff",
+                    boxShadow: "0 6px 20px rgba(0,0,0,.2)",
                   }}>
                     <img src={`/products/${img}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
