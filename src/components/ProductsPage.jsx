@@ -406,14 +406,19 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     setReviewName("")
   }
 
-  // ナビカード用ランダム画像（データ変更時に1回だけ決定）
+  // ナビカード用ランダム画像（10秒ごとに切り替え）
+  const [navImgTick, setNavImgTick] = useState(0)
+  useEffect(() => {
+    const timer = setInterval(() => setNavImgTick(t => t + 1), 10000)
+    return () => clearInterval(timer)
+  }, [])
   useEffect(() => {
     const pick = (arr) => {
       const withImg = arr.filter(p => getProductImage(p.name))
       return withImg.length > 0 ? getProductImage(withImg[Math.floor(Math.random() * withImg.length)].name) : null
     }
     setNavCardImgs({ regular: pick(products), sale: pick(tokubaiItems), event: pick(eventProducts) })
-  }, [products.length, tokubaiItems.length, eventProducts.length])
+  }, [navImgTick, products, tokubaiItems, eventProducts])
 
   // 納品状況リアルタイム監視
   const [isDelivering, setIsDelivering] = useState(false)
@@ -597,7 +602,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
               {c.tab !== "stores" ? (
                 <div style={{ height: 100, overflow: "hidden" }}>
-                  <img src={cardImg || `/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  {cardImg ? <img src={cardImg} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "#94a3b8" }}>{c.title}</div>}
                 </div>
               ) : (
                 <div style={{ height: 100, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
