@@ -313,6 +313,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       if (!val) return
       const arr = Array.isArray(val) ? val : Object.values(val)
       setProducts(arr.filter(p => p && p.name))
+      setFbLoaded(prev => ({ ...prev, products: true }))
     })
     return () => unsub()
   }, [])
@@ -333,6 +334,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       if (!val) return
       const arr = Array.isArray(val) ? val : Object.values(val)
       setEventProducts(arr.filter(p => p && p.name))
+      setFbLoaded(prev => ({ ...prev, event: true }))
     })
     return () => unsub()
   }, [])
@@ -406,19 +408,26 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
     setReviewName("")
   }
 
-  // ナビカード用ランダム画像（10秒ごとに切り替え）
+  // ナビカード用ランダム画像（10秒ごとに切り替え、Firebaseデータのみ使用）
   const [navImgTick, setNavImgTick] = useState(0)
+  const [fbLoaded, setFbLoaded] = useState({ products: false, tokubai: false, event: false })
   useEffect(() => {
     const timer = setInterval(() => setNavImgTick(t => t + 1), 10000)
     return () => clearInterval(timer)
   }, [])
   useEffect(() => {
     const pick = (arr) => {
-      const withImg = arr.filter(p => getProductImage(p.name))
+      const withImg = arr.filter(p => p && p.name && getProductImage(p.name))
       return withImg.length > 0 ? getProductImage(withImg[Math.floor(Math.random() * withImg.length)].name) : null
     }
-    setNavCardImgs({ regular: pick(products), sale: pick(tokubaiItems), event: pick(eventProducts) })
-  }, [navImgTick, products, tokubaiItems, eventProducts])
+    // tokubaiはフォールバック(originフィールドあり)でなく実データのみ使用
+    const tokubaiReal = tokubaiItems.length > 0 && !tokubaiItems[0].origin
+    setNavCardImgs({
+      regular: fbLoaded.products ? pick(products) : null,
+      sale: tokubaiReal ? pick(tokubaiItems) : null,
+      event: fbLoaded.event ? pick(eventProducts) : null,
+    })
+  }, [navImgTick, products, tokubaiItems, eventProducts, fbLoaded])
 
   // 納品状況リアルタイム監視
   const [isDelivering, setIsDelivering] = useState(false)
