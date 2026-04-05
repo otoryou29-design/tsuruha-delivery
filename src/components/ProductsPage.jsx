@@ -75,7 +75,7 @@ const IMAGE_MAP = [
   [["日向夏", "こなつ", "小夏"], "hyuganatsu.jpg"],
   [["サンフルーツ"], "sun-fruits.jpg"],
   [["みかん", "ミカン"], "mikan.jpg"],
-  [["いちご", "イチゴ"], "ichigo.jpg"],
+  [["いちご", "イチゴ", "苺"], "ichigo.jpg"],
   [["バナナ"], "banana.jpg"],
   [["りんご", "サンふじ", "サンフジ", "ふじ"], "apple.jpg"],
 ]
@@ -202,11 +202,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
     ...(hasIchigo ? [{ type: "ichigo", tab: "sale" }] : []),
   ]
 
-  // バナー自動切替
-  useEffect(() => {
-    const timer = setInterval(() => setBannerIdx(i => (i + 1) % allSlides.length), 5000)
-    return () => clearInterval(timer)
-  }, [allSlides.length])
+  // バナースワイプ操作
+  const [touchStart, setTouchStart] = useState(null)
+  const handleTouchStart = (e) => setTouchStart(e.touches[0].clientX)
+  const handleTouchEnd = (e) => {
+    if (touchStart === null) return
+    const diff = touchStart - e.changedTouches[0].clientX
+    if (Math.abs(diff) > 50) {
+      setBannerIdx(i => diff > 0 ? (i + 1) % allSlides.length : (i - 1 + allSlides.length) % allSlides.length)
+    }
+    setTouchStart(null)
+  }
 
   const handleLike = async (itemKey) => {
     if (likedItems[itemKey]) return
@@ -257,6 +263,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
 
       {/* ヒーローバナー（全画面幅） */}
       <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
+        onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
         onClick={() => { const s = allSlides[bannerIdx]; if (s.tab === "ranking") { setShowRanking(true) } else { setTab(s.tab); setFilterCat(null) } }}>
         {allSlides.map((slide, i) => {
           if (slide.type === "shun") {
