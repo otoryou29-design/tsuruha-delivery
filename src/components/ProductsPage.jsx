@@ -480,7 +480,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       </header>
 
       {/* ヒーローバナー（ホームのみ） */}
-      {isHome && <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16 }}
+      {isHome && <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16, boxShadow: "0 2px 12px rgba(0,0,0,.08)", border: "1px solid #e5e7eb" }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
         onClick={() => { const s = allSlides[bannerIdx]; if (s.type === "ichigo" && onNavigate) { onNavigate("ichigo") } else if (s.type === "shun" && onNavigate) { onNavigate("shun") } else if (onCardTap) { onCardTap(s.tab) } else { setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) } }}>
         {allSlides.map((slide, i) => {
@@ -490,7 +490,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                background: "#fff", minHeight: 360, overflow: "hidden",
+                background: "#faf8f6", minHeight: 360, overflow: "hidden",
               }}>
                 <style>{`
                   @keyframes sakuraFall {
