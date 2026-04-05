@@ -524,12 +524,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* 納品状況 + AI おトク診断（横並び） */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "10px 10px 8px" }}>
-          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#fff", borderRadius: 12, border: "2px solid #4d8c00", padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", animation: "deliveryBlink 2s ease-in-out infinite" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4d8c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}><path d="M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4m-5 0v4m0-4h4m-4 0H5"/></svg>
-            <div style={{ fontSize: 12, fontWeight: 800, color: "#4d8c00", lineHeight: 1.2 }}>
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#4d8c00", borderRadius: 12, padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", animation: "deliveryBlink 2s ease-in-out infinite" }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
               {isDelivering ? "現在納品中" : "納品状況"}
             </div>
-            <div style={{ fontSize: 9, color: "#64748b", marginTop: 4 }}>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,.7)", marginTop: 4 }}>
               {isDelivering ? "納品を行っています" : "リアルタイムで確認"}
             </div>
           </div>
@@ -547,7 +547,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                 </div>
               ) : (
                 <div style={{ height: 100, background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={BG} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M3 7v1a3 3 0 006 0V7m0 0V7a3 3 0 006 0V7m0 0V7a3 3 0 006 0V7M5 21V10.7M19 21V10.7"/><path d="M5 10.7A3 3 0 008 13a3 3 0 003-2.3m0 0A3 3 0 0014 13a3 3 0 003-2.3m0 0A3 3 0 0019 10.7"/></svg>
+                  <img src={LOGO_URL} alt="OTOKAWA" style={{ height: 60, borderRadius: 8, objectFit: "contain" }} />
                 </div>
               )}
               <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
