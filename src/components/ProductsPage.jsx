@@ -159,13 +159,14 @@ function AiSavingsDiag({ products, inline }) {
   // 閉じた状態: コンパクトなカード（ホーム横並び用）
   if (!open && !inline) {
     return (
-      <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "10px 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", height: "100%", boxSizing: "border-box" }}>
-        <div style={{ width: 30, height: 30, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+      <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 10, border: "1px solid #e5e7eb", padding: "8px 6px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, height: "100%", boxSizing: "border-box" }}>
+        <div style={{ width: 24, height: 24, borderRadius: 6, background: BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
         </div>
-        <div style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.2 }}>AI おトク診断</div>
-        <div style={{ fontSize: 18, fontWeight: 900, color: BG, marginTop: 4 }}>-{avgPct}%</div>
-        <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 2 }}>県内平均より</div>
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.2 }}>AI おトク診断</div>
+          <div style={{ fontSize: 14, fontWeight: 900, color: BG, marginTop: 1 }}>-{avgPct}%<span style={{ fontSize: 8, fontWeight: 600, color: "#94a3b8", marginLeft: 3 }}>県内平均</span></div>
+        </div>
       </div>
     )
   }
@@ -562,14 +563,16 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         <style>{`@keyframes deliveryBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
 
         {/* 納品状況 + AI おトク診断（横並び） */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "8px 10px 6px" }}>
-          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#4d8c00", borderRadius: 12, padding: "10px 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", animation: "deliveryBlink 2s ease-in-out infinite" }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            <div style={{ fontSize: 12, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
-              {isDelivering ? "現在納品中" : "納品状況"}
-            </div>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,.7)", marginTop: 4 }}>
-              {isDelivering ? "納品を行っています" : "リアルタイムで確認"}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "6px 10px 6px" }}>
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#4d8c00", borderRadius: 10, padding: "8px 6px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, animation: "deliveryBlink 2s ease-in-out infinite" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
+                {isDelivering ? "現在納品中" : "納品状況"}
+              </div>
+              <div style={{ fontSize: 8, color: "rgba(255,255,255,.7)", marginTop: 1 }}>
+                {isDelivering ? "納品中" : "リアルタイム確認"}
+              </div>
             </div>
           </div>
           <AiSavingsDiag products={products} />
