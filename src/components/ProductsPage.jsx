@@ -135,9 +135,10 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
   // いちごバナー表示判定（FRESH SALEに「いちご」があれば追加）
   const hasIchigo = tokubaiItems.some(it => it.name && (it.name.includes("いちご") || it.name.includes("イチゴ")))
 
-  // スライド構成（緑バナー + いちごバナー条件付き）
+  // スライド構成
   const allSlides = [
     ...GREEN_SLIDES.map(s => ({ ...s, type: "green" })),
+    { type: "shun", tab: "regular" },
     ...(hasIchigo ? [{ type: "ichigo", tab: "sale" }] : []),
   ]
 
@@ -197,6 +198,34 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
       <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
         onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null) }}>
         {allSlides.map((slide, i) => {
+          if (slide.type === "shun") {
+            // 旬を食べようバナー（イラスト）
+            return (
+              <div key={i} style={{
+                position: i === 0 ? "relative" : "absolute", inset: 0,
+                opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
+                background: "linear-gradient(135deg, #fff9e6 0%, #fff3cc 50%, #ffe8a3 100%)", minHeight: 360,
+                display: "flex", alignItems: "center",
+              }}>
+                {/* テキスト（左側） */}
+                <div style={{ width: "40%", padding: "36px 0 36px 24px", zIndex: 2 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: BG, letterSpacing: 2, marginBottom: 6 }}>OTOKAWA</div>
+                  <div style={{ fontSize: 34, fontWeight: 900, color: "#333", lineHeight: 1.2 }}>旬を<br />食べよう。</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#666", marginTop: 10 }}>今が一番おいしい野菜と果物</div>
+                  <div style={{
+                    display: "inline-block", marginTop: 20, padding: "9px 22px", borderRadius: 22,
+                    background: BG, color: "#fff", fontSize: 13, fontWeight: 800,
+                  }}>旬の商品を見る →</div>
+                </div>
+                {/* イラスト（右側） */}
+                <div style={{ width: "60%", height: "100%", display: "flex", alignItems: "flex-end", justifyContent: "center", overflow: "hidden" }}>
+                  <img src={`/products/shun-people.png?${IMG_VERSION}`} alt="旬を食べよう"
+                    style={{ height: "90%", objectFit: "contain", objectPosition: "bottom" }} />
+                </div>
+              </div>
+            )
+          }
+
           if (slide.type === "ichigo") {
             // いちごバナー（実写写真フル表示）
             return (
