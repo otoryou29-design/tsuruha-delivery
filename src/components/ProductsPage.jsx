@@ -258,15 +258,15 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       `}</style>
 
       {/* ヘッダー */}
-      <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
-        {!isHome && <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>}
+      <header style={{ background: isHome ? "#fff" : G, borderBottom: isHome ? "1px solid #eee" : "none", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
+        {!isHome && <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#fff", padding: "4px 8px" }}>←</button>}
         {isHome ? (
           <>
             <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg" alt="OTOKAWA" style={{ height: 32, borderRadius: 6 }} />
             <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
           </>
         ) : (
-          <span style={{ fontSize: 18, fontWeight: 900, color: initialTab === "sale" ? "#dc2626" : initialTab === "event" ? "#d97706" : G }}>
+          <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>
             {initialTab === "sale" ? "FRESH SALE" : initialTab === "event" ? "近日販売予定" : "定番野菜"}
           </span>
         )}
