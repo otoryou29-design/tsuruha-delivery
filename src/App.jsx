@@ -3,7 +3,7 @@ import CustomerView from "./components/CustomerView";
 import ProductsPage from "./components/ProductsPage";
 import IchigoFeature from "./components/IchigoFeature";
 import ShunFeature from "./components/ShunFeature";
-import { onTokubaiChange } from "./firebase";
+import { onTokubaiChange, onStaffArticlesChange } from "./firebase";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
 const HERO = "/hero-team.png";
@@ -33,11 +33,21 @@ export default function App() {
   const [showNogyo, setShowNogyo] = useState(false);
   const [tokubaiItems, setTokubaiItems] = useState(TOKUBAI_FALLBACK);
   const [productTab, setProductTab] = useState("regular");
+  const [allArticles, setAllArticles] = useState([]);
+  const [viewArticle, setViewArticle] = useState(null);
 
   useEffect(() => {
     const unsub = onTokubaiChange((items) => {
       const arr = Array.isArray(items) ? items : Object.values(items || {});
       if (arr.length > 0) setTokubaiItems(arr);
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    const unsub = onStaffArticlesChange((data) => {
+      const arr = Object.entries(data || {}).map(([id, v]) => ({ id, ...v }));
+      setAllArticles(arr.filter(a => a && a.title).sort((a, b) => (b.at || 0) - (a.at || 0)));
     });
     return () => unsub();
   }, []);
@@ -62,6 +72,95 @@ export default function App() {
       ))}
     </div>
   )
+
+  // 記事一覧ページ
+  if (page === "articles") {
+    // getProductImage相当の簡易版
+    const getImg = (name) => name ? `/products/${name}` : null
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 16, fontWeight: 900, color: "#1a1a1a" }}>旬便り</span>
+        </header>
+        <div style={{ padding: "16px 16px 80px", maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ fontSize: 13, color: "#64748b", marginBottom: 16, fontWeight: 600 }}>最新のおすすめ情報をチェック!</div>
+          {allArticles.map((article, i) => (
+            <div key={i} onClick={() => { setViewArticle(article); setPage("article-detail") }} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden", cursor: "pointer", marginBottom: 12, position: "relative" }}>
+              {i === 0 && <div style={{ position: "absolute", top: 10, left: 10, background: "#dc2626", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 8px", borderRadius: 6, zIndex: 1 }}>最新</div>}
+              {article.coverImg && (
+                <div style={{ height: 160, overflow: "hidden" }}>
+                  <img src={getImg(article.coverImg)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              )}
+              <div style={{ padding: "14px 16px" }}>
+                <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.4 }}>{article.title}</div>
+                {article.subtitle && <div style={{ fontSize: 13, color: "#64748b", marginTop: 6, lineHeight: 1.5 }}>{article.subtitle}</div>}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#4d8c00" }}>{article.author || "OTOKAWA"}</span>
+                  <span style={{ fontSize: 12, color: "#94a3b8" }}>{article.date}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <TabBar />
+      </div>
+    )
+  }
+
+  // 記事詳細ページ
+  if (page === "article-detail" && viewArticle) {
+    const IMG_MAP_SIMPLE = [
+      [["アスパラ"], "asparagus.jpg"], [["ブロッコリー"], "broccoli.jpg"], [["新玉ねぎ","新たまねぎ"], "shin-tamanegi.jpg"],
+      [["小松菜"], "komatsuna.jpg"], [["いちご大粒","いちご大"], "ichigo.jpg"], [["いちご"], "ichigo.jpg"],
+      [["不知火","しらぬい"], "shiranui.jpg"], [["甘夏"], "amanatsu.jpg"], [["デコポン"], "dekopon.jpg"],
+    ]
+    const getArticleImg = (name) => {
+      for (const [keys, file] of IMG_MAP_SIMPLE) { if (keys.some(k => name.includes(k))) return `/products/${file}` }
+      return null
+    }
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => setPage("articles")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>旬便り</span>
+        </header>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          {viewArticle.coverImg && (
+            <div style={{ height: 220, overflow: "hidden" }}>
+              <img src={`/products/${viewArticle.coverImg}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
+          )}
+          <div style={{ padding: "20px 16px 80px" }}>
+            <div style={{ fontSize: 20, fontWeight: 900, color: "#1a1a1a", lineHeight: 1.4 }}>{viewArticle.title}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#4d8c00", background: "#f0fdf4", padding: "2px 8px", borderRadius: 4 }}>{viewArticle.author || "OTOKAWA"}</span>
+              <span style={{ fontSize: 12, color: "#94a3b8" }}>{viewArticle.date}</span>
+            </div>
+            {viewArticle.sections && viewArticle.sections.map((sec, i) => {
+              if (sec.type === "text") return <p key={i} style={{ fontSize: 14, color: "#333", lineHeight: 1.8, margin: "16px 0" }}>{sec.text}</p>
+              if (sec.type === "heading") return <h3 key={i} style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a", margin: "24px 0 8px", borderLeft: "3px solid #4d8c00", paddingLeft: 10 }}>{sec.text}</h3>
+              if (sec.type === "product") {
+                const pImg = getArticleImg(sec.name)
+                return (
+                  <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px", margin: "12px 0", display: "flex", gap: 12, alignItems: "center" }}>
+                    {pImg && <div style={{ width: 64, height: 64, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}><img src={pImg} alt={sec.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>}
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>{sec.name}</div>
+                      {sec.comment && <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, lineHeight: 1.5 }}>{sec.comment}</div>}
+                    </div>
+                  </div>
+                )
+              }
+              return null
+            })}
+          </div>
+        </div>
+        <TabBar />
+      </div>
+    )
+  }
 
   if (page === "stores") {
     const storesByArea = {}
@@ -320,7 +419,7 @@ export default function App() {
   // ── ホーム = 商品トップ（バナー + ナビカード）
   return (
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
-      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo"); if (target === "stores") setPage("stores"); if (target === "shun") setPage("shun") }} isHome
+      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo"); if (target === "stores") setPage("stores"); if (target === "shun") setPage("shun"); if (target === "articles") setPage("articles") }} isHome
         onCardTap={(tab) => { setProductTab(tab); setPage("products") }} />
       <TabBar />
     </div>

@@ -683,15 +683,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
           </div>
         )}
 
-        {/* スタッフ記事 */}
+        {/* 旬便り */}
         {staffArticles.length > 0 && (
           <div style={{ padding: "0 10px 16px" }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>読みもの</div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>旬便り</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {staffArticles.slice(0, 4).map((article, i) => {
+              {staffArticles.slice(0, 2).map((article, i) => {
                 const coverImg = article.coverImg ? getProductImage(article.coverImg) || `/products/${article.coverImg}?${IMG_VERSION}` : null
+                const isNewest = i === 0
                 return (
-                  <div key={i} onClick={() => setOpenArticle(article)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden", cursor: "pointer" }}>
+                  <div key={i} onClick={() => setOpenArticle(article)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden", cursor: "pointer", position: "relative" }}>
+                    {isNewest && <div style={{ position: "absolute", top: 10, left: 10, background: "#dc2626", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 8px", borderRadius: 6, zIndex: 1 }}>最新</div>}
                     {coverImg && (
                       <div style={{ height: 140, overflow: "hidden" }}>
                         <img src={coverImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -709,6 +711,10 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                 )
               })}
             </div>
+            {/* もっと見る */}
+            <div onClick={() => onNavigate && onNavigate("articles")} style={{ margin: "14px auto 0", display: "block", width: 200, padding: "12px 0", border: "1.5px solid #ccc", borderRadius: 30, background: "#fff", fontSize: 14, fontWeight: 700, color: "#666", textAlign: "center", cursor: "pointer" }}>
+              もっと見る
+            </div>
           </div>
         )}
 
@@ -720,7 +726,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         <div style={{ position: "fixed", inset: 0, background: "#f7f7f5", zIndex: 200, overflowY: "auto" }}>
           <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 201, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
             <button onClick={() => setOpenArticle(null)} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>読みもの</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>旬便り</span>
           </header>
           <div style={{ maxWidth: 640, margin: "0 auto" }}>
             {openArticle.coverImg && (
