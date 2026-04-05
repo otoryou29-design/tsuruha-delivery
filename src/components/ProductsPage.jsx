@@ -127,7 +127,7 @@ const NAV_CARDS = [
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
 ]
 
-export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner, initialTab }) {
+export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome, showNewsBanner, initialTab, onCardTap }) {
   const [tab, setTab] = useState(initialTab || null) // null=トップ | "regular" | "sale" | "event"
   const [products, setProducts] = useState([])
   const [eventProducts, setEventProducts] = useState([])
@@ -272,7 +272,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {/* ヒーローバナー */}
       <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16 }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
-        onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) }}>
+        onClick={() => { const s = allSlides[bannerIdx]; if (onCardTap) { onCardTap(s.tab) } else { setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) } }}>
         {allSlides.map((slide, i) => {
           if (slide.type === "shun") {
             // 旬を食べようバナー（Amazon風・テキスト上＋イラスト下ドーン）
@@ -367,7 +367,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {!tab && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: isHome ? "10px 10px 80px" : "10px 10px 40px" }}>
           {NAV_CARDS.map((c, i) => (
-            <div key={i} onClick={() => { setTab(c.tab); setFilterCat(null); window.scrollTo(0, 0) }}
+            <div key={i} onClick={() => { if (onCardTap) { onCardTap(c.tab) } else { setTab(c.tab); setFilterCat(null); window.scrollTo(0, 0) } }}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
               <div style={{ height: 85, overflow: "hidden" }}>
                 <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -386,10 +386,24 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
       {/* ページヘッダー */}
       <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 16px", display: "flex", alignItems: "center", gap: 12 }}>
-        <button onClick={() => { setTab(null); setFilterCat(null) }} style={{ background: "none", border: "none", fontSize: 18, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: tab === "sale" ? "#dc2626" : tab === "event" ? "#d97706" : G }}>
-          {tab === "regular" ? "定番野菜" : tab === "sale" ? "FRESH SALE" : "近日販売予定"}
-        </span>
+        <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 18, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>
+        <span style={{ fontSize: 16, fontWeight: 800, color: G }}>商品</span>
+      </div>
+
+      {/* タブ切替 */}
+      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #eee" }}>
+        {[
+          { key: "regular", label: "定番野菜", color: G },
+          { key: "sale", label: "FRESH SALE", color: "#dc2626" },
+          { key: "event", label: "近日販売予定", color: "#d97706" },
+        ].map(t => (
+          <button key={t.key} onClick={() => { setTab(t.key); setFilterCat(null) }} style={{
+            flex: 1, padding: "12px 4px", border: "none", fontSize: 13, fontWeight: 800, cursor: "pointer",
+            background: "#fff", color: tab === t.key ? t.color : "#999",
+            borderBottom: tab === t.key ? `3px solid ${t.color}` : "3px solid transparent",
+            fontFamily: "inherit",
+          }}>{t.label}</button>
+        ))}
       </div>
 
       {/* カテゴリフィルター（定番野菜のみ） */}
