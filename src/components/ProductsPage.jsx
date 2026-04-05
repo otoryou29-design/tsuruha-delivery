@@ -656,6 +656,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
               {rankingData.map((item, i) => {
                 const imgSrc = getProductImage(item.name)
                 const isTop3 = i < 3
+                const matched = products.find(p => item.name.includes(p.name) || p.name.includes(item.name))
+                const price = matched?.price || 0
                 const medals = ["🥇", "🥈", "🥉"]
                 return (
                   <div key={i} style={{
@@ -683,6 +685,13 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                       <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 4, lineHeight: 1.3 }}>
                         {item.name}
                       </div>
+                      {price > 0 && (
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
+                          <span style={{ fontSize: 11, color: "#64748b", fontWeight: 700 }}>¥</span>
+                          <span style={{ fontSize: 20, fontWeight: 900, color: "#dc2626", lineHeight: 1 }}>{price.toLocaleString()}</span>
+                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 2 }}>税別</span>
+                        </div>
+                      )}
                       {isTop3 && (
                         <span style={{ fontSize: 10, fontWeight: 700, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 4 }}>人気</span>
                       )}
