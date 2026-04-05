@@ -265,12 +265,14 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
             <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
           </>
         ) : (
-          <span style={{ fontSize: 18, fontWeight: 900, color: G }}>商品</span>
+          <span style={{ fontSize: 18, fontWeight: 900, color: initialTab === "sale" ? "#dc2626" : initialTab === "event" ? "#d97706" : G }}>
+            {initialTab === "sale" ? "FRESH SALE" : initialTab === "event" ? "近日販売予定" : "定番野菜"}
+          </span>
         )}
       </header>
 
-      {/* ヒーローバナー */}
-      <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16 }}
+      {/* ヒーローバナー（ホームのみ） */}
+      {isHome && <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16 }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
         onClick={() => { const s = allSlides[bannerIdx]; if (onCardTap) { onCardTap(s.tab) } else { setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) } }}>
         {allSlides.map((slide, i) => {
@@ -361,13 +363,13 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               style={{ width: i === bannerIdx ? 22 : 8, height: 8, borderRadius: 4, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.4)", transition: "all 0.3s", cursor: "pointer" }} />
           ))}
         </div>
-      </div>
+      </div>}
 
-      {/* ナビカード3列 */}
-      {!tab && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: isHome ? "10px 10px 80px" : "10px 10px 40px" }}>
+      {/* ホーム: ナビカード3列 */}
+      {isHome && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 80px" }}>
           {NAV_CARDS.map((c, i) => (
-            <div key={i} onClick={() => { if (onCardTap) { onCardTap(c.tab) } else { setTab(c.tab); setFilterCat(null); window.scrollTo(0, 0) } }}
+            <div key={i} onClick={() => onCardTap && onCardTap(c.tab)}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
               <div style={{ height: 85, overflow: "hidden" }}>
                 <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -381,30 +383,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         </div>
       )}
 
-      {/* 商品リストページ（tabが選択された時のみ表示） */}
-      {tab && <>
-
-      {/* ページヘッダー */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 16px", display: "flex", alignItems: "center", gap: 12 }}>
-        <button onClick={onBack} style={{ background: "none", border: "none", fontSize: 18, cursor: "pointer", color: "#333", padding: "4px 8px" }}>←</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: G }}>商品</span>
-      </div>
-
-      {/* タブ切替 */}
-      <div style={{ display: "flex", background: "#fff", borderBottom: "2px solid #eee" }}>
-        {[
-          { key: "regular", label: "定番野菜", color: G },
-          { key: "sale", label: "FRESH SALE", color: "#dc2626" },
-          { key: "event", label: "近日販売予定", color: "#d97706" },
-        ].map(t => (
-          <button key={t.key} onClick={() => { setTab(t.key); setFilterCat(null) }} style={{
-            flex: 1, padding: "12px 4px", border: "none", fontSize: 13, fontWeight: 800, cursor: "pointer",
-            background: "#fff", color: tab === t.key ? t.color : "#999",
-            borderBottom: tab === t.key ? `3px solid ${t.color}` : "3px solid transparent",
-            fontFamily: "inherit",
-          }}>{t.label}</button>
-        ))}
-      </div>
+      {/* 商品リストページ（ホーム以外） */}
+      {!isHome && <>
 
       {/* カテゴリフィルター（定番野菜のみ） */}
       {isRegular && (
