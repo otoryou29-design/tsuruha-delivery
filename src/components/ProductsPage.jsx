@@ -403,7 +403,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {/* ヒーローバナー（ホームのみ） */}
       {isHome && <div style={{ position: "relative", overflow: "hidden", cursor: "pointer", margin: "10px 10px 0", borderRadius: 16 }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
-        onClick={() => { const s = allSlides[bannerIdx]; if (s.type === "ichigo" && onNavigate) { onNavigate("ichigo") } else if (onCardTap) { onCardTap(s.tab) } else { setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) } }}>
+        onClick={() => { const s = allSlides[bannerIdx]; if (s.type === "ichigo" && onNavigate) { onNavigate("ichigo") } else if (s.type === "shun" && onNavigate) { onNavigate("shun") } else if (onCardTap) { onCardTap(s.tab) } else { setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) } }}>
         {allSlides.map((slide, i) => {
           if (slide.type === "shun") {
             // 旬を食べようバナー（Amazon風・テキスト上＋イラスト下ドーン）
