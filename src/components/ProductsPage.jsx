@@ -496,14 +496,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                minHeight: 360, overflow: "hidden",
+                minHeight: 360, overflow: "hidden", display: "flex",
               }}>
-                <img src={`/products/ichigo-banner.jpg?${IMG_VERSION}`} alt="いちご特集" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.1) 50%, transparent 100%)", zIndex: 1 }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px", zIndex: 2 }}>
-                  <div style={{ fontSize: 34, fontWeight: 900, color: "#fff", lineHeight: 1.15, textShadow: "0 2px 8px rgba(0,0,0,.3)" }}>旬のいちご特集</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.9)", marginTop: 8, textShadow: "0 1px 4px rgba(0,0,0,.3)" }}>福島県産 甘くてジューシー</div>
-                  <div style={{ display: "inline-block", marginTop: 14, padding: "9px 22px", borderRadius: 22, background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800 }}>商品を見る →</div>
+                {/* 左側: 赤背景+テキスト */}
+                <div style={{ width: "45%", background: "#dc2626", display: "flex", flexDirection: "column", justifyContent: "center", padding: "36px 20px", zIndex: 2 }}>
+                  <div style={{ fontSize: 36, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>旬の<br />いちご<br />特集</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>福島県産<br />甘くてジューシー</div>
+                  <div style={{ display: "inline-block", marginTop: 18, padding: "9px 20px", borderRadius: 22, background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800, alignSelf: "flex-start" }}>商品を見る →</div>
+                </div>
+                {/* 右側: 写真 */}
+                <div style={{ width: "55%", position: "relative" }}>
+                  <img src={`/products/ichigo-banner.jpg?${IMG_VERSION}`} alt="いちご特集" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               </div>
             )
