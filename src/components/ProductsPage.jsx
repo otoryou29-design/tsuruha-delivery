@@ -546,7 +546,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                   <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               ) : (
-                <div style={{ height: 100, background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ height: 100, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <img src={LOGO_URL} alt="OTOKAWA" style={{ height: 60, borderRadius: 8, objectFit: "contain" }} />
                 </div>
               )}
