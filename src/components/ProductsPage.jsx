@@ -578,13 +578,22 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {isHome && (<>
         <style>{`@keyframes deliveryBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
 
-        {/* 本日のオトク（緑細長バー） */}
-        <div onClick={() => onCardTap && onCardTap("sale")} style={{ margin: "8px 10px 0", background: "#4d8c00", borderRadius: 10, padding: "12px 16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ fontSize: 15, fontWeight: 900, color: "#fff" }}>本日のオトク</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)" }}>お買い得が満載</div>
+        {/* 本日のオトク（緑バー+商品画像） */}
+        <div onClick={() => onCardTap && onCardTap("sale")} style={{ margin: "8px 10px 0", background: "#4d8c00", borderRadius: 12, padding: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: 1 }}>本日のオトク</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 3 }}>お買い得が満載 →</div>
           </div>
-          <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>→</span>
+          <div style={{ display: "flex", gap: 6 }}>
+            {tokubaiItems.slice(0, 3).map((item, j) => {
+              const img = getProductImage(item.name)
+              return img ? (
+                <div key={j} style={{ width: 44, height: 44, borderRadius: 10, overflow: "hidden", background: "#fff", boxShadow: "0 2px 6px rgba(0,0,0,.2)" }}>
+                  <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              ) : null
+            })}
+          </div>
         </div>
 
         {/* 納品状況 + AI おトク診断（横並び） */}
