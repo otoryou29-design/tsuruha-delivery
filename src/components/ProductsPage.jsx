@@ -564,8 +564,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* 納品状況 + AI おトク診断（横並び） */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "6px 10px 6px" }}>
-          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#4d8c00", borderRadius: 10, padding: "8px 6px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, animation: "deliveryBlink 2s ease-in-out infinite" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#dc2626", borderRadius: 10, padding: "8px 10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", animation: "deliveryBlink 2s ease-in-out infinite" }}>
             <div>
               <div style={{ fontSize: 11, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
                 {isDelivering ? "現在納品中" : "納品状況"}
@@ -574,6 +573,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                 {isDelivering ? "納品中" : "リアルタイム確認"}
               </div>
             </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           </div>
           <AiSavingsDiag products={products} />
         </div>
