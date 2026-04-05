@@ -406,19 +406,37 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         onClick={() => { const s = allSlides[bannerIdx]; if (s.type === "ichigo" && onNavigate) { onNavigate("ichigo") } else if (s.type === "shun" && onNavigate) { onNavigate("shun") } else if (onCardTap) { onCardTap(s.tab) } else { setTab(s.tab); setFilterCat(null); window.scrollTo(0, 0) } }}>
         {allSlides.map((slide, i) => {
           if (slide.type === "shun") {
-            // 旬を食べようバナー（Amazon風・テキスト上＋イラスト下ドーン）
+            // 旬を食べようバナー + 桜の花びら
             return (
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
                 background: BG, minHeight: 360, overflow: "hidden",
               }}>
-                {/* テキスト（上部・左寄せ・大きく） */}
+                <style>{`
+                  @keyframes sakuraFall {
+                    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+                    10% { opacity: 1; }
+                    100% { transform: translateY(380px) rotate(360deg); opacity: 0; }
+                  }
+                `}</style>
+                {/* 桜の花びら */}
+                {[...Array(12)].map((_, j) => (
+                  <div key={j} style={{
+                    position: "absolute", top: -10, left: `${8 + j * 7.5}%`, zIndex: 3,
+                    width: j % 2 === 0 ? 10 : 7, height: j % 2 === 0 ? 10 : 7,
+                    background: `rgba(255,${200 + j * 4},${210 + j * 3},${0.4 + (j % 3) * 0.15})`,
+                    borderRadius: "50% 0 50% 50%",
+                    animation: `sakuraFall ${5 + j * 0.7}s ${j * 0.6}s linear infinite`,
+                  }} />
+                ))}
+                {/* テキスト */}
                 <div style={{ position: "relative", zIndex: 2, padding: "32px 24px 0" }}>
                   <div style={{ fontSize: 40, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>旬を<br />食べよう。</div>
                   <div style={{ fontSize: 15, fontWeight: 600, color: "rgba(255,255,255,.8)", marginTop: 10 }}>今が一番おいしい野菜と果物</div>
+                  <div style={{ display: "inline-block", marginTop: 16, padding: "9px 22px", borderRadius: 22, background: "#fff", color: BG, fontSize: 13, fontWeight: 800 }}>旬を見る →</div>
                 </div>
-                {/* イラスト（下部にドーンと表示） */}
+                {/* イラスト */}
                 <div style={{ position: "absolute", bottom: -10, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 1 }}>
                   <img src={`/products/shun-people.png?${IMG_VERSION}`} alt="旬を食べよう"
                     style={{ width: "110%", maxWidth: 480, objectFit: "contain", filter: "brightness(1.05)" }} />
