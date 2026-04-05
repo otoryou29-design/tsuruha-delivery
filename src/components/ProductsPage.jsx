@@ -66,11 +66,11 @@ const G = "#4a7c59"
 
 // ブランドカラー（鮮やかな緑）
 const BG = "#4d8c00"
+const LOGO_URL = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg"
 
-// ヒーローバナー（自動切替）
-const HERO_SLIDES = [
+// 緑バナースライド（FRESH SALE / おいしいランキング）
+const GREEN_SLIDES = [
   {
-    type: "sale",
     title: "FRESH\nSALE",
     sub: "お買い得が満載",
     products: ["ichigo.jpg", "cucumber.jpg", "cabbage-half.jpg"],
@@ -78,20 +78,11 @@ const HERO_SLIDES = [
     tab: "sale",
   },
   {
-    type: "ranking",
     title: "おいしい！\nランキング",
     sub: "お客様が選んだ人気商品",
     products: ["tomato.jpg", "spinach.jpg", "maitake.jpg"],
     cta: "ランキングを見る →",
     tab: "regular",
-  },
-  {
-    type: "season",
-    title: "旬の\nいちご",
-    sub: "福島県産 甘くてジューシー",
-    products: ["ichigo.jpg"],
-    cta: "今すぐチェック →",
-    tab: "sale",
   },
 ]
 
@@ -141,11 +132,20 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
     return () => unsub()
   }, [])
 
+  // いちごバナー表示判定（FRESH SALEに「いちご」があれば追加）
+  const hasIchigo = tokubaiItems.some(it => it.name && (it.name.includes("いちご") || it.name.includes("イチゴ")))
+
+  // スライド構成（緑バナー + いちごバナー条件付き）
+  const allSlides = [
+    ...GREEN_SLIDES.map(s => ({ ...s, type: "green" })),
+    ...(hasIchigo ? [{ type: "ichigo", tab: "sale" }] : []),
+  ]
+
   // バナー自動切替
   useEffect(() => {
-    const timer = setInterval(() => setBannerIdx(i => (i + 1) % HERO_SLIDES.length), 5000)
+    const timer = setInterval(() => setBannerIdx(i => (i + 1) % allSlides.length), 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [allSlides.length])
 
   const handleLike = async (itemKey) => {
     if (likedItems[itemKey]) return
@@ -195,48 +195,75 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
 
       {/* ヒーローバナー（全画面幅） */}
       <div style={{ position: "relative", overflow: "hidden", cursor: "pointer" }}
-        onClick={() => { const s = HERO_SLIDES[bannerIdx]; setTab(s.tab); setFilterCat(null) }}>
-        {HERO_SLIDES.map((slide, i) => (
-          <div key={i} style={{
-            position: i === 0 ? "relative" : "absolute", inset: 0,
-            opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-            background: BG, minHeight: 340,
-          }}>
-            {/* テキスト側 */}
-            <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "55%", padding: "28px 0 28px 20px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
-              <div style={{ fontSize: 36, fontWeight: 900, color: "#fff", lineHeight: 1.1, whiteSpace: "pre-line" }}>{slide.title}</div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 10 }}>{slide.sub}</div>
-              <div style={{
-                display: "inline-block", marginTop: 18, padding: "8px 20px", borderRadius: 22,
-                background: "#fff", color: BG, fontSize: 13, fontWeight: 800, alignSelf: "flex-start",
-              }}>{slide.cta}</div>
-            </div>
-
-            {/* 商品画像（右側に重なるように配置） */}
-            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "55%", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1 }}>
-              {slide.products.length === 1 ? (
-                <img src={`/products/${slide.products[0]}?${IMG_VERSION}`} alt=""
-                  style={{ width: "85%", height: "85%", objectFit: "contain", filter: "drop-shadow(0 8px 24px rgba(0,0,0,.3))" }} />
-              ) : (
-                <div style={{ display: "flex", gap: 6, alignItems: "flex-end", padding: "20px 10px" }}>
-                  {slide.products.map((img, j) => (
-                    <div key={j} style={{
-                      width: j === 0 ? 100 : 80, height: j === 0 ? 130 : 100,
-                      borderRadius: 12, overflow: "hidden", border: "3px solid rgba(255,255,255,.3)",
-                      boxShadow: "0 6px 20px rgba(0,0,0,.25)", transform: j === 0 ? "scale(1.05)" : "none",
-                    }}>
-                      <img src={`/products/${img}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    </div>
-                  ))}
+        onClick={() => { const s = allSlides[bannerIdx]; setTab(s.tab); setFilterCat(null) }}>
+        {allSlides.map((slide, i) => {
+          if (slide.type === "ichigo") {
+            // いちごバナー（実写写真フル表示）
+            return (
+              <div key={i} style={{
+                position: i === 0 ? "relative" : "absolute", inset: 0,
+                opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
+                minHeight: 360,
+              }}>
+                <img src={`/products/ichigo.jpg?${IMG_VERSION}`} alt="旬のいちご"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,.55) 0%, rgba(0,0,0,.1) 50%, transparent 100%)" }} />
+                <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, padding: "36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 3, marginBottom: 8 }}>OTOKAWA</div>
+                  <div style={{ fontSize: 34, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>旬の<br />いちご</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,.85)", marginTop: 10 }}>福島県産 甘くてジューシー</div>
+                  <div style={{
+                    display: "inline-block", marginTop: 20, padding: "9px 22px", borderRadius: 22,
+                    background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800, alignSelf: "flex-start",
+                  }}>商品を見る →</div>
                 </div>
-              )}
+              </div>
+            )
+          }
+
+          // 緑バナー
+          return (
+            <div key={i} style={{
+              position: i === 0 ? "relative" : "absolute", inset: 0,
+              opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
+              background: BG, minHeight: 360,
+            }}>
+              {/* ロゴ（白・左上） */}
+              <div style={{ position: "absolute", top: 20, left: 20, zIndex: 3 }}>
+                <img src={LOGO_URL} alt="OTOKAWA"
+                  style={{ height: 32, borderRadius: 4, filter: "brightness(0) invert(1)", opacity: 0.9 }} />
+              </div>
+
+              {/* テキスト（左側・余白たっぷり） */}
+              <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "45%", padding: "64px 0 36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
+                <div style={{ fontSize: 38, fontWeight: 900, color: "#fff", lineHeight: 1.1, whiteSpace: "pre-line" }}>{slide.title}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>{slide.sub}</div>
+                <div style={{
+                  display: "inline-block", marginTop: 22, padding: "9px 22px", borderRadius: 22,
+                  background: "#fff", color: BG, fontSize: 13, fontWeight: 800, alignSelf: "flex-start",
+                }}>{slide.cta}</div>
+              </div>
+
+              {/* 商品画像（右側にゆったり配置） */}
+              <div style={{ position: "absolute", right: 8, top: 0, bottom: 0, width: "50%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "20px 0", zIndex: 1 }}>
+                {slide.products.map((img, j) => (
+                  <div key={j} style={{
+                    width: j === 0 ? 110 : 90, height: j === 0 ? 140 : 110, flexShrink: 0,
+                    borderRadius: 14, overflow: "hidden", background: "#fff",
+                    boxShadow: "0 8px 24px rgba(0,0,0,.2)",
+                    transform: j === 0 ? "translateY(-8px)" : "none",
+                  }}>
+                    <img src={`/products/${img}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         {/* ドットインジケーター */}
         <div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 3 }}>
-          {HERO_SLIDES.map((_, i) => (
+          {allSlides.map((_, i) => (
             <div key={i} onClick={e => { e.stopPropagation(); setBannerIdx(i) }}
               style={{ width: i === bannerIdx ? 22 : 8, height: 8, borderRadius: 4, background: i === bannerIdx ? "#fff" : "rgba(255,255,255,.4)", transition: "all 0.3s", cursor: "pointer" }} />
           ))}
