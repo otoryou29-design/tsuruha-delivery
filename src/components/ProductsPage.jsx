@@ -470,8 +470,8 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       </div>}
 
       {/* ホーム: ナビカード3列 */}
-      {isHome && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 80px" }}>
+      {isHome && (<>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 20px" }}>
           {NAV_CARDS.map((c, i) => (
             <div key={i} onClick={() => onCardTap && onCardTap(c.tab)}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
@@ -496,7 +496,9 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
         {/* AI おトク診断 */}
         <AiSavingsDiag products={products} />
-      )}
+
+        <div style={{ height: 60 }} />
+      </>)}
 
       {/* 商品リストページ（ホーム以外） */}
       {!isHome && <>
