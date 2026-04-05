@@ -302,9 +302,9 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
                   <div style={{ fontSize: 15, fontWeight: 600, color: "#666", marginTop: 10 }}>福島県産 甘くてジューシー</div>
                 </div>
                 {/* いちご写真（下部にドーン） */}
-                <div style={{ position: "absolute", bottom: -20, right: -20, width: "75%", zIndex: 1 }}>
+                <div style={{ position: "absolute", bottom: -10, right: -10, width: "70%", zIndex: 1 }}>
                   <img src={`/products/ichigo-box-l.jpg?${IMG_VERSION}`} alt="旬のいちご"
-                    style={{ width: "100%", objectFit: "contain", filter: "drop-shadow(0 8px 30px rgba(0,0,0,.3))" }} />
+                    style={{ width: "100%", objectFit: "contain" }} />
                 </div>
               </div>
             )
