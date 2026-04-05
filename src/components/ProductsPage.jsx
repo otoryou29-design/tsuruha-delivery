@@ -76,9 +76,10 @@ const IMAGE_MAP = [
   [["サンフルーツ"], "sun-fruits.jpg"],
   [["みかん", "ミカン"], "mikan.jpg"],
   [["いちご箱売りS", "いちご小粒箱", "苺箱S"], "ichigo-box-s.jpg"],
-  [["いちご箱売り", "いちご箱", "いちご大粒箱", "苺箱"], "ichigo-box-l.jpg"],
   [["いちごM", "いちご小粒", "苺M"], "ichigo-pack.jpg"],
-  [["いちご", "イチゴ", "苺"], "ichigo-pack.jpg"],
+  [["いちご箱売り", "いちご箱", "苺箱"], "ichigo-box-l.jpg"],
+  [["いちご大粒", "いちご大"], "ichigo.jpg"],
+  [["いちご", "イチゴ", "苺"], "ichigo.jpg"],
   [["バナナ"], "banana.jpg"],
   [["りんご", "サンふじ", "サンフジ", "ふじ"], "apple.jpg"],
 ]
