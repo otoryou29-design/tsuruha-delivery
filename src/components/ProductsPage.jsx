@@ -138,6 +138,7 @@ const MARKET_AVG = {
 }
 
 function AiSavingsDiag({ products }) {
+  const [open, setOpen] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
 
   const comparisons = products.map(p => {
@@ -154,29 +155,48 @@ function AiSavingsDiag({ products }) {
 
   if (comparisons.length === 0) return null
 
+  // 閉じた状態: コンパクトなボタン
+  if (!open) {
+    return (
+      <div onClick={() => setOpen(true)} style={{ margin: "0 10px 20px", background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+          </div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 1 }}>県内大手スーパー5社との価格比較</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 18, fontWeight: 900, color: BG }}>-{avgPct}%</span>
+          <span style={{ fontSize: 16, color: "#cbd5e1" }}>›</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ margin: "0 10px 20px", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
       {/* ヘッダー */}
-      <div style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "24px 20px 20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+      <div onClick={() => setOpen(false)} style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "20px 20px 16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
           </div>
           <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
         </div>
-        <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.7 }}>
-          福島県内スーパーの平均価格と比較して、音川青果の商品がどれだけおトクかをAIが分析しました。
-        </div>
+        <span style={{ fontSize: 14, color: "#94a3b8" }}>閉じる</span>
       </div>
 
       {/* 結果サマリー */}
-      <div style={{ padding: "20px", display: "flex", gap: 12 }}>
-        <div style={{ flex: 1, background: "#f0fdf4", borderRadius: 12, padding: "16px", textAlign: "center" }}>
+      <div style={{ padding: "16px 20px", display: "flex", gap: 12 }}>
+        <div style={{ flex: 1, background: "#f0fdf4", borderRadius: 12, padding: "14px", textAlign: "center" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>平均おトク率</div>
           <div style={{ fontSize: 28, fontWeight: 900, color: BG, lineHeight: 1 }}>{avgPct}%</div>
           <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>県内平均より</div>
         </div>
-        <div style={{ flex: 1, background: "#fef2f2", borderRadius: 12, padding: "16px", textAlign: "center" }}>
+        <div style={{ flex: 1, background: "#fef2f2", borderRadius: 12, padding: "14px", textAlign: "center" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>全品合計おトク額</div>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 2 }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: "#dc2626" }}>¥</span>
@@ -187,10 +207,10 @@ function AiSavingsDiag({ products }) {
       </div>
 
       {/* TOP5 */}
-      <div style={{ padding: "0 20px 16px" }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 10 }}>おトク率 TOP5</div>
+      <div style={{ padding: "0 20px 12px" }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 8 }}>おトク率 TOP5</div>
         {comparisons.slice(0, 5).map((c, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < 4 ? "1px solid #f1f5f9" : "none" }}>
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: i < 4 ? "1px solid #f1f5f9" : "none" }}>
             <div style={{ width: 22, height: 22, borderRadius: 6, background: i < 3 ? BG : "#e5e7eb", color: i < 3 ? "#fff" : "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
             <div style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{c.name}</div>
             <div style={{ textAlign: "right" }}>
@@ -202,29 +222,33 @@ function AiSavingsDiag({ products }) {
         ))}
       </div>
 
-      {/* 詳細トグル */}
-      <button onClick={() => setShowDetail(!showDetail)} style={{ width: "100%", padding: "12px", background: "#f8fafc", border: "none", borderTop: "1px solid #e5e7eb", fontSize: 12, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "inherit" }}>
-        {showDetail ? "閉じる" : `全${comparisons.length}品目の比較を見る`}
-      </button>
-      {showDetail && (
-        <div style={{ padding: "0 20px 16px" }}>
-          {comparisons.slice(5).map((c, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #f1f5f9" }}>
-              <div style={{ width: 22, height: 22, borderRadius: 6, background: "#e5e7eb", color: "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 6}</div>
-              <div style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{c.name}</div>
-              <div style={{ textAlign: "right" }}>
-                <span style={{ fontSize: 12, color: "#94a3b8", textDecoration: "line-through", marginRight: 6 }}>¥{c.marketPrice}</span>
-                <span style={{ fontSize: 14, fontWeight: 800, color: "#dc2626" }}>¥{c.ourPrice}</span>
-              </div>
-              <div style={{ fontSize: 11, fontWeight: 800, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
+      {/* 全品展開 */}
+      {comparisons.length > 5 && (
+        <>
+          <button onClick={() => setShowDetail(!showDetail)} style={{ width: "100%", padding: "10px", background: "#f8fafc", border: "none", borderTop: "1px solid #e5e7eb", fontSize: 12, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "inherit" }}>
+            {showDetail ? "閉じる" : `全${comparisons.length}品目の比較を見る`}
+          </button>
+          {showDetail && (
+            <div style={{ padding: "0 20px 12px" }}>
+              {comparisons.slice(5).map((c, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid #f1f5f9" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 6, background: "#e5e7eb", color: "#666", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{i + 6}</div>
+                  <div style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{c.name}</div>
+                  <div style={{ textAlign: "right" }}>
+                    <span style={{ fontSize: 12, color: "#94a3b8", textDecoration: "line-through", marginRight: 6 }}>¥{c.marketPrice}</span>
+                    <span style={{ fontSize: 14, fontWeight: 800, color: "#dc2626" }}>¥{c.ourPrice}</span>
+                  </div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 6, flexShrink: 0 }}>-{c.pct}%</div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
-      {/* フッター注記 */}
+      {/* 注記 */}
       <div style={{ padding: "8px 20px 14px", fontSize: 10, color: "#cbd5e1", lineHeight: 1.6 }}>
-        ※ 県内主要スーパー（ヨークベニマル・リオンドール・イオン等）の平均価格との比較です。価格は時期により変動します。
+        ※ 福島県内の大手スーパー5社の平均価格との比較です。価格は時期により変動します。
       </div>
     </div>
   )
