@@ -516,26 +516,19 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
           }
 
           if (slide.type === "ichigo") {
-            // いちご特集バナー（Amazon風・テキスト上+実写下ドーン）
+            // いちご特集バナー（全面写真）
             return (
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                background: "#dc2626", minHeight: 360, overflow: "hidden",
+                minHeight: 360, overflow: "hidden",
               }}>
-                {/* テキスト（左側） */}
-                <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", padding: "36px 0 36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
-                  <div style={{ fontSize: 38, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>旬の<br />いちご特集</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>福島県産 甘くてジューシー</div>
-                  <div style={{ display: "inline-block", marginTop: 22, padding: "9px 22px", borderRadius: 22, background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800, alignSelf: "flex-start" }}>商品を見る →</div>
-                </div>
-                {/* いちご写真4枚（右側 2x2グリッド） */}
-                <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: "50%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "16px 0", zIndex: 1 }}>
-                  {["ichigo-pack.jpg", "ichigo-box-l.jpg", "ichigo-box-s.jpg", "ichigo-pack.jpg"].map((img, j) => (
-                    <div key={j} style={{ aspectRatio: "1", borderRadius: 14, overflow: "hidden", background: "#fff", boxShadow: "0 6px 20px rgba(0,0,0,.2)" }}>
-                      <img src={`/products/${img}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    </div>
-                  ))}
+                <img src={`/products/ichigo-banner.jpg?${IMG_VERSION}`} alt="いちご特集" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.1) 50%, transparent 100%)", zIndex: 1 }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px", zIndex: 2 }}>
+                  <div style={{ fontSize: 34, fontWeight: 900, color: "#fff", lineHeight: 1.15, textShadow: "0 2px 8px rgba(0,0,0,.3)" }}>旬のいちご特集</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.9)", marginTop: 8, textShadow: "0 1px 4px rgba(0,0,0,.3)" }}>福島県産 甘くてジューシー</div>
+                  <div style={{ display: "inline-block", marginTop: 14, padding: "9px 22px", borderRadius: 22, background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800 }}>商品を見る →</div>
                 </div>
               </div>
             )
