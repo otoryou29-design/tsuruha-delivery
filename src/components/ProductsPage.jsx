@@ -120,11 +120,12 @@ const GREEN_SLIDES = [
   },
 ]
 
-// 下段カード（3列）→ メインナビゲーション
+// 下段カード → メインナビゲーション
 const NAV_CARDS = [
   { img: "komatsuna.jpg", title: "定番野菜", sub: "レギュラー商品", tab: "regular" },
   { img: "tomato.jpg", title: "FRESH SALE", sub: "お買い得商品", tab: "sale" },
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
+  { img: null, title: "導入店舗一覧", sub: "ツルハドラッグ", tab: "stores", icon: true },
 ]
 
 // 県内スーパー平均相場（リサーチベース）
@@ -495,13 +496,19 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
       {/* ホーム: ナビカード3列 */}
       {isHome && (<>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, padding: "10px 10px 20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "10px 10px 20px" }}>
           {NAV_CARDS.map((c, i) => (
-            <div key={i} onClick={() => onCardTap && onCardTap(c.tab)}
+            <div key={i} onClick={() => c.tab === "stores" ? (onNavigate && onNavigate("stores")) : (onCardTap && onCardTap(c.tab))}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
-              <div style={{ height: 85, overflow: "hidden" }}>
-                <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
+              {c.img ? (
+                <div style={{ height: 100, overflow: "hidden" }}>
+                  <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              ) : (
+                <div style={{ height: 100, background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={BG} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M3 7v1a3 3 0 006 0V7m0 0V7a3 3 0 006 0V7m0 0V7a3 3 0 006 0V7M5 21V10.7M19 21V10.7"/><path d="M5 10.7A3 3 0 008 13a3 3 0 003-2.3m0 0A3 3 0 0014 13a3 3 0 003-2.3m0 0A3 3 0 0019 10.7"/></svg>
+                </div>
+              )}
               <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
                 <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{c.title}</div>
                 <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>

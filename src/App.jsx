@@ -63,6 +63,40 @@ export default function App() {
     </div>
   )
 
+  if (page === "stores") {
+    const storesByArea = {}
+    const { STORES } = require("./stores")
+    STORES.forEach(s => { if (!storesByArea[s.area]) storesByArea[s.area] = []; storesByArea[s.area].push(s) })
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#4d8c00", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#fff", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>導入店舗一覧</span>
+        </header>
+        <div style={{ padding: "20px 16px 80px", maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ fontSize: 13, color: "#64748b", marginBottom: 16, fontWeight: 600 }}>ツルハドラッグ OTOKAWA導入店舗 {STORES.length}店舗</div>
+          {Object.entries(storesByArea).map(([area, stores]) => (
+            <div key={area} style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 14, fontWeight: 800, color: "#4d8c00", marginBottom: 8, paddingLeft: 4, borderLeft: "4px solid #4d8c00", paddingLeft: 10 }}>{area}エリア（{stores.length}店舗）</div>
+              <div style={{ display: "grid", gap: 6 }}>
+                {stores.map(s => (
+                  <div key={s.id} style={{ background: "#fff", borderRadius: 10, padding: "12px 16px", border: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a" }}>{s.name}</div>
+                      <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>納品: {s.deliveryDays}</div>
+                    </div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#4d8c00", background: "#f0fdf4", padding: "3px 10px", borderRadius: 6 }}>{s.rank || "-"}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <TabBar />
+      </div>
+    )
+  }
+
   if (page === "ichigo") {
     return (
       <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
@@ -289,7 +323,7 @@ export default function App() {
           ドン・キホーテ米沢店で青果納品 4月20日からスタート！
         </div>
       </div>
-      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo") }} isHome
+      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo"); if (target === "stores") setPage("stores") }} isHome
         onCardTap={(tab) => { setProductTab(tab); setPage("products") }} />
       <TabBar />
     </div>
