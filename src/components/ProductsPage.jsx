@@ -124,7 +124,19 @@ const GREEN_SLIDES = [
 const NAV_CARDS = [
   { img: "komatsuna.jpg", title: "定番野菜", sub: "レギュラー商品", tab: "regular" },
   { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
-  { img: null, title: "導入店舗一覧", sub: "ツルハドラッグ", tab: "stores", icon: true },
+]
+
+// 旬の果物
+const SEASONAL_FRUITS = [
+  { name: "いちご", img: "ichigo.jpg" },
+  { name: "デコポン", img: "dekopon.jpg" },
+  { name: "不知火", img: "shiranui.jpg" },
+  { name: "伊予柑", img: "iyokan.jpg" },
+  { name: "八朔", img: "hassaku.jpg" },
+  { name: "甘夏", img: "amanatsu.jpg" },
+  { name: "日向夏", img: "hyuganatsu.jpg" },
+  { name: "キウイ", img: "kiwi.jpg" },
+  { name: "りんご", img: "apple.jpg" },
 ]
 
 // 県内スーパー平均相場（リサーチベース）
@@ -592,23 +604,32 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         {/* ナビカード */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "0 10px 20px" }}>
           {NAV_CARDS.map((c, i) => (
-            <div key={i} onClick={() => c.tab === "stores" ? (onNavigate && onNavigate("stores")) : (onCardTap && onCardTap(c.tab))}
+            <div key={i} onClick={() => onCardTap && onCardTap(c.tab)}
               style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,.04)" }}>
-              {c.img ? (
-                <div style={{ height: 100, overflow: "hidden" }}>
-                  <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-              ) : (
-                <div style={{ height: 100, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <img src={LOGO_URL} alt="OTOKAWA" style={{ height: 60, borderRadius: 8, objectFit: "contain" }} />
-                </div>
-              )}
+              <div style={{ height: 100, overflow: "hidden" }}>
+                <img src={`/products/${c.img}?${IMG_VERSION}`} alt={c.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
               <div style={{ padding: "8px 8px 10px", textAlign: "center" }}>
                 <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", letterSpacing: 1 }}>{c.title}</div>
                 <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* 旬の果物（横スクロール） */}
+        <div style={{ padding: "0 10px 16px" }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8 }}>旬の果物</div>
+          <div style={{ display: "flex", gap: 10, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 4 }}>
+            {SEASONAL_FRUITS.map((f, i) => (
+              <div key={i} style={{ flexShrink: 0, width: 80, cursor: "pointer" }}>
+                <div style={{ width: 80, height: 80, borderRadius: 12, overflow: "hidden", background: "#fff", border: "1px solid #e5e7eb" }}>
+                  <img src={`/products/${f.img}?${IMG_VERSION}`} alt={f.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#1a1a1a", textAlign: "center", marginTop: 4 }}>{f.name}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div style={{ height: 60 }} />
