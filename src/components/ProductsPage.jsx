@@ -112,10 +112,10 @@ const LOGO_URL = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_06
 // 緑バナースライド（FRESH SALE / おいしいランキング）
 const GREEN_SLIDES = [
   {
-    title: "本日の\nオトク",
+    title: "本日の\nおトク",
     sub: "お買い得が満載",
     products: ["ichigo-pack.jpg", "cucumber.jpg", "cabbage-half.jpg", "piman.jpg"],
-    cta: "オトクを見る →",
+    cta: "おトクを見る →",
     tab: "sale",
   },
 ]
@@ -123,7 +123,7 @@ const GREEN_SLIDES = [
 // 下段カード → メインナビゲーション
 const NAV_CARDS = [
   { img: "komatsuna.jpg", title: "定番野菜", sub: "レギュラー商品", tab: "regular" },
-  { img: "ichigo.jpg", title: "近日販売予定", sub: "オトクな商品", tab: "event" },
+  { img: "ichigo.jpg", title: "近日販売予定", sub: "おトクな商品", tab: "event" },
 ]
 
 // 人気の果物
@@ -453,7 +453,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
           </>
         ) : (
           <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>
-            {initialTab === "sale" ? "本日のオトク" : initialTab === "event" ? "近日販売予定" : "定番野菜"}
+            {initialTab === "sale" ? "本日のおトク" : initialTab === "event" ? "近日販売予定" : "定番野菜"}
           </span>
         )}
       </header>
@@ -568,10 +568,10 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
 
       {/* ホーム */}
       {isHome && (<>
-        {/* 本日のオトク（緑バー+商品画像） */}
+        {/* 本日のおトク（緑バー+商品画像） */}
         <div onClick={() => onCardTap && onCardTap("sale")} style={{ margin: "8px 10px 0", background: "#4d8c00", borderRadius: 12, padding: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: 1 }}>本日のオトク</div>
+            <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: 1 }}>本日のおトク</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,.7)", marginTop: 3 }}>お買い得が満載 →</div>
           </div>
           <div style={{ display: "flex", gap: 6 }}>
@@ -671,12 +671,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
         )}
         {tab === "sale" && (
           <div style={{ fontSize: 13, color: "#dc2626", marginBottom: 12, fontWeight: 600 }}>
-            本日のオトク {items.length}品目
+            本日のおトク {items.length}品目
           </div>
         )}
         {isEvent && (
           <div style={{ fontSize: 13, color: "#d97706", marginBottom: 12, fontWeight: 600 }}>
-            近日販売予定のオトクな商品 {items.length}品目
+            近日販売予定のおトクな商品 {items.length}品目
           </div>
         )}
 
@@ -713,7 +713,7 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
                       background: catStyle.bg, color: catStyle.tx, padding: "2px 8px", borderRadius: 4,
                     }}>{item.cat}</span>
                   )}
-                  {/* セール/オトクタグ */}
+                  {/* セール/おトクタグ */}
                   {!isRegular && item.tag && (
                     <span style={{
                       position: "absolute", top: 8, left: 8, fontSize: 10, fontWeight: 800,
