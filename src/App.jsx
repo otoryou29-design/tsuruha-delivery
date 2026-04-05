@@ -244,9 +244,9 @@ export default function App() {
   if (page === "business") {
     return (
       <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", paddingBottom: 70 }}>
-        <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
-          <img src={LOGO} alt="" style={{ height: 32, borderRadius: 6 }} />
-          <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
+        <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
+          <button onClick={() => setPage("home")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 16, fontWeight: 900, color: "#1a1a1a" }}>事業紹介</span>
         </header>
 
         {/* ヒーロー */}
@@ -379,34 +379,137 @@ export default function App() {
     );
   }
 
-  // ── その他ページ（お問合せ・求人）
+  // ── お問い合わせページ
+  if (page === "contact") {
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => setPage("more")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 16, fontWeight: 900 }}>お問い合わせ</span>
+        </header>
+        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px 80px" }}>
+          <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "24px 20px" }}>
+            <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 16 }}>お気軽にお問い合わせください</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>お電話</div>
+                <a href="tel:024-956-6606" style={{ fontSize: 20, fontWeight: 900, color: G, textDecoration: "none" }}>024-956-6606</a>
+                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>受付時間: 平日 8:00〜17:00</div>
+              </div>
+              <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>メール</div>
+                <a href="mailto:info@otokawa.com" style={{ fontSize: 15, fontWeight: 700, color: G, textDecoration: "none" }}>info@otokawa.com</a>
+              </div>
+              <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>所在地</div>
+                <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>〒963-8071<br />福島県郡山市富久山町久保田字太郎殿前2</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ marginTop: 16, background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px" }}>
+            <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>取引をご検討の方へ</div>
+            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8 }}>青果の仕入れ・納品についてのご相談は、お電話またはメールにてお気軽にお問い合わせください。担当者より折り返しご連絡いたします。</div>
+          </div>
+        </div>
+        <TabBar />
+      </div>
+    );
+  }
+
+  // ── 採用情報ページ
+  if (page === "recruit") {
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => setPage("more")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 16, fontWeight: 900 }}>採用情報</span>
+        </header>
+        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px 80px" }}>
+          <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "24px 20px", marginBottom: 14 }}>
+            <div style={{ fontSize: 18, fontWeight: 900, color: G, marginBottom: 12 }}>一緒に働く仲間を募集中!</div>
+            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8, marginBottom: 16 }}>音川青果では、青果の仕分け・配送・営業スタッフを募集しています。未経験の方も歓迎です。</div>
+          </div>
+          {[
+            { title: "配送スタッフ", type: "正社員 / パート", desc: "青果の店舗配送業務。普通免許(AT可)をお持ちの方。" },
+            { title: "仕分け・加工スタッフ", type: "パート", desc: "倉庫内での青果の仕分け・袋詰め作業。早朝勤務あり。" },
+            { title: "営業スタッフ", type: "正社員", desc: "取引先への提案営業・新規開拓。青果業界の経験者優遇。" },
+          ].map((job, i) => (
+            <div key={i} style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px", marginBottom: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>{job.title}</div>
+                <span style={{ fontSize: 10, fontWeight: 700, color: G, background: "#f0fdf4", padding: "2px 8px", borderRadius: 4 }}>{job.type}</span>
+              </div>
+              <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>{job.desc}</div>
+            </div>
+          ))}
+          <div style={{ marginTop: 16, background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "20px" }}>
+            <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>応募方法</div>
+            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8 }}>お電話(<a href="tel:024-956-6606" style={{ color: G, fontWeight: 700 }}>024-956-6606</a>)またはメール(<a href="mailto:info@otokawa.com" style={{ color: G, fontWeight: 700 }}>info@otokawa.com</a>)にてご連絡ください。</div>
+          </div>
+        </div>
+        <TabBar />
+      </div>
+    );
+  }
+
+  // ── よくある質問ページ
+  if (page === "faq") {
+    const faqs = [
+      { q: "どこで商品を買えますか？", a: "ツルハドラッグの導入店舗にて、青果コーナーでお買い求めいただけます。店舗一覧はタブバーの「店舗」からご確認ください。" },
+      { q: "配送エリアはどこですか？", a: "福島県内のツルハドラッグ各店舗に配送しています。詳しくは導入店舗一覧をご覧ください。" },
+      { q: "取引を始めたいのですが", a: "お電話(024-956-6606)またはメール(info@otokawa.com)にてお気軽にお問い合わせください。" },
+      { q: "商品の価格はどのくらいですか？", a: "市場価格に連動しますが、独自の仕入れネットワークにより県内平均より20〜30%お手頃な価格で提供しています。" },
+      { q: "鮮度管理はどうしていますか？", a: "温度管理システムによる鮮度維持、トレーサビリティによる産地管理、独自の検品基準による品質保証を行っています。" },
+      { q: "求人はしていますか？", a: "配送スタッフ・仕分けスタッフ・営業スタッフを募集しています。詳しくは採用情報ページをご覧ください。" },
+    ];
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#fff", padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: 12 }}>
+          <button onClick={() => setPage("more")} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#1a1a1a", padding: "4px 8px" }}>←</button>
+          <span style={{ fontSize: 16, fontWeight: 900 }}>よくある質問</span>
+        </header>
+        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px 80px" }}>
+          {faqs.map((faq, i) => (
+            <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "16px 18px", marginBottom: 10 }}>
+              <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 8, display: "flex", gap: 8 }}>
+                <span style={{ color: G, fontWeight: 900, flexShrink: 0 }}>Q.</span>{faq.q}
+              </div>
+              <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, paddingLeft: 22 }}>{faq.a}</div>
+            </div>
+          ))}
+        </div>
+        <TabBar />
+      </div>
+    );
+  }
+
+  // ── その他ページ（メニュー）
   if (page === "more") {
     return (
-      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", paddingBottom: 70 }}>
-        <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "10px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a", minHeight: "100vh", background: "#f7f7f5" }}>
+        <header style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, zIndex: 100 }}>
           <img src={LOGO} alt="" style={{ height: 32, borderRadius: 6 }} />
-          <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA SEIKA</span>
+          <span style={{ fontSize: 15, fontWeight: 900, color: G, letterSpacing: 2 }}>OTOKAWA</span>
         </header>
-
-        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px" }}>
-          <h2 style={{ fontSize: 20, fontWeight: 900, marginBottom: 20 }}>メニュー</h2>
-          <div style={{ display: "grid", gap: 12 }}>
+        <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 16px 80px" }}>
+          <div style={{ display: "grid", gap: 10 }}>
             {[
-              { label: "お問い合わせ", sub: "取引・一般のお問い合わせ", action: () => { setPage("home"); setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 100) } },
-              { label: "採用情報", sub: "正社員・パートの募集", action: () => { setPage("home"); setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 100); setContactType("recruit") } },
-              { label: "Instagram", sub: "@otokawa_official", action: () => window.open("https://instagram.com/otokawa_official", "_blank") },
-              { label: "よくある質問", sub: "FAQ", action: () => { setPage("home"); setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100) } },
+              { label: "お問い合わせ", sub: "取引・一般のお問い合わせ", page: "contact" },
+              { label: "採用情報", sub: "正社員・パートの募集", page: "recruit" },
+              { label: "よくある質問", sub: "FAQ", page: "faq" },
+              { label: "旬便り", sub: "スタッフのおすすめ記事", page: "articles" },
+              { label: "Instagram", sub: "@otokawa_official", external: "https://instagram.com/otokawa_official" },
             ].map(item => (
-              <button key={item.label} onClick={item.action} style={{
+              <button key={item.label} onClick={() => item.external ? window.open(item.external, "_blank") : setPage(item.page)} style={{
                 width: "100%", background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12,
-                padding: "16px 20px", textAlign: "left", cursor: "pointer", fontFamily: "inherit",
+                padding: "14px 18px", textAlign: "left", cursor: "pointer", fontFamily: "inherit",
                 display: "flex", justifyContent: "space-between", alignItems: "center",
               }}>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a" }}>{item.label}</div>
-                  <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>{item.sub}</div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>{item.label}</div>
+                  <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{item.sub}</div>
                 </div>
-                <span style={{ color: "#cbd5e1", fontSize: 20 }}>→</span>
+                <span style={{ color: "#cbd5e1", fontSize: 18 }}>→</span>
               </button>
             ))}
           </div>
