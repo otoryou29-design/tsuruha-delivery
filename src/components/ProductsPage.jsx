@@ -294,17 +294,21 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                background: "#fff", minHeight: 360, overflow: "hidden",
+                background: "#dc2626", minHeight: 360, overflow: "hidden",
               }}>
-                {/* テキスト（上部・左寄せ） */}
-                <div style={{ position: "relative", zIndex: 2, padding: "32px 24px 0" }}>
-                  <div style={{ fontSize: 40, fontWeight: 900, color: "#dc2626", lineHeight: 1.1 }}>旬の<br />いちご特集</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "#666", marginTop: 10 }}>福島県産 甘くてジューシー</div>
+                {/* テキスト（左側） */}
+                <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", padding: "36px 0 36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
+                  <div style={{ fontSize: 38, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>旬の{"\n"}いちご{"\n"}特集</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,.85)", marginTop: 12 }}>福島県産{"\n"}甘くてジューシー</div>
+                  <div style={{ display: "inline-block", marginTop: 22, padding: "9px 22px", borderRadius: 22, background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800, alignSelf: "flex-start" }}>商品を見る →</div>
                 </div>
-                {/* いちご写真（下部にドーン） */}
-                <div style={{ position: "absolute", bottom: -10, right: -10, width: "70%", zIndex: 1 }}>
-                  <img src={`/products/ichigo-box-l.jpg?${IMG_VERSION}`} alt="旬のいちご"
-                    style={{ width: "100%", objectFit: "contain" }} />
+                {/* いちご写真4枚（右側 2x2グリッド） */}
+                <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: "50%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "16px 0", zIndex: 1 }}>
+                  {["ichigo-pack.jpg", "ichigo-box-l.jpg", "ichigo-box-s.jpg", "ichigo-pack.jpg"].map((img, j) => (
+                    <div key={j} style={{ aspectRatio: "1", borderRadius: 14, overflow: "hidden", background: "#fff", boxShadow: "0 6px 20px rgba(0,0,0,.2)" }}>
+                      <img src={`/products/${img}?${IMG_VERSION}`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
+                  ))}
                 </div>
               </div>
             )
