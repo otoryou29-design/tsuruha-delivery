@@ -202,7 +202,12 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
     ...(hasIchigo ? [{ type: "ichigo", tab: "sale" }] : []),
   ]
 
-  // バナースワイプ操作
+  // バナー自動切替（ゆっくり）+ スワイプ
+  useEffect(() => {
+    const timer = setInterval(() => setBannerIdx(i => (i + 1) % allSlides.length), 8000)
+    return () => clearInterval(timer)
+  }, [allSlides.length])
+
   const [touchStart, setTouchStart] = useState(null)
   const handleTouchStart = (e) => setTouchStart(e.touches[0].clientX)
   const handleTouchEnd = (e) => {
@@ -643,47 +648,49 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
           </header>
 
           <div style={{ padding: "16px 12px 40px", maxWidth: 640, margin: "0 auto" }}>
-            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 16, fontWeight: 600, textAlign: "center" }}>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,.7)", marginBottom: 16, fontWeight: 600, textAlign: "center" }}>
               お客様に支持された人気商品ランキング
             </div>
 
-            {rankingData.map((item, i) => {
-              const imgSrc = getProductImage(item.name)
-              const isTop3 = i < 3
-              const medals = ["🥇", "🥈", "🥉"]
-              return (
-                <div key={i} style={{
-                  display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
-                  background: "#fff", borderRadius: 14, marginBottom: 8,
-                  border: isTop3 ? `2px solid ${i === 0 ? "#fbbf24" : i === 1 ? "#d1d5db" : "#d97706"}` : "1px solid #e5e7eb",
-                  boxShadow: isTop3 ? "0 2px 8px rgba(0,0,0,.06)" : "none",
-                }}>
-                  {/* 順位 */}
-                  <div style={{ width: 36, textAlign: "center", flexShrink: 0 }}>
-                    {isTop3 ? (
-                      <span style={{ fontSize: 28 }}>{medals[i]}</span>
-                    ) : (
-                      <span style={{ fontSize: 18, fontWeight: 900, color: "#94a3b8" }}>{item.rank}</span>
-                    )}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {rankingData.map((item, i) => {
+                const imgSrc = getProductImage(item.name)
+                const isTop3 = i < 3
+                const medals = ["🥇", "🥈", "🥉"]
+                return (
+                  <div key={i} style={{
+                    background: "#fff", borderRadius: 12, overflow: "hidden",
+                    border: isTop3 ? `2px solid ${i === 0 ? "#fbbf24" : i === 1 ? "#d1d5db" : "#d97706"}` : "1px solid #e5e7eb",
+                    boxShadow: "0 1px 4px rgba(0,0,0,.04)",
+                  }}>
+                    <div style={{
+                      height: 140, background: "#f8faf8", display: "flex",
+                      alignItems: "center", justifyContent: "center",
+                      position: "relative", overflow: "hidden",
+                    }}>
+                      {imgSrc
+                        ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        : <span style={{ fontSize: 48, opacity: 0.5 }}>🥗</span>
+                      }
+                      <span style={{
+                        position: "absolute", top: 8, left: 8, fontSize: isTop3 ? 24 : 13, fontWeight: 900,
+                        background: isTop3 ? "rgba(255,255,255,.9)" : "rgba(255,255,255,.85)",
+                        color: "#333", padding: isTop3 ? "2px 8px" : "2px 10px", borderRadius: 8,
+                        minWidth: 28, textAlign: "center",
+                      }}>{isTop3 ? medals[i] : item.rank}</span>
+                    </div>
+                    <div style={{ padding: "10px 12px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", marginBottom: 4, lineHeight: 1.3 }}>
+                        {item.name}
+                      </div>
+                      {isTop3 && (
+                        <span style={{ fontSize: 10, fontWeight: 700, color: BG, background: "#dcfce7", padding: "2px 8px", borderRadius: 4 }}>人気</span>
+                      )}
+                    </div>
                   </div>
-                  {/* 画像 */}
-                  <div style={{ width: 56, height: 56, borderRadius: 10, overflow: "hidden", flexShrink: 0, background: "#f8faf8" }}>
-                    {imgSrc
-                      ? <img src={imgSrc} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>🥗</div>
-                    }
-                  </div>
-                  {/* 商品名 */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a" }}>{item.name}</div>
-                    <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>{item.qty.toLocaleString()}個 販売</div>
-                  </div>
-                  {isTop3 && (
-                    <span style={{ fontSize: 11, fontWeight: 700, color: BG, background: "#dcfce7", padding: "3px 10px", borderRadius: 10 }}>人気</span>
-                  )}
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
       )}
