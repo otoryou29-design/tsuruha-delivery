@@ -75,7 +75,10 @@ const IMAGE_MAP = [
   [["日向夏", "こなつ", "小夏"], "hyuganatsu.jpg"],
   [["サンフルーツ"], "sun-fruits.jpg"],
   [["みかん", "ミカン"], "mikan.jpg"],
-  [["いちご", "イチゴ", "苺"], "ichigo.jpg"],
+  [["いちご箱売りS", "いちご小粒箱", "苺箱S"], "ichigo-box-s.jpg"],
+  [["いちご箱売り", "いちご箱", "いちご大粒箱", "苺箱"], "ichigo-box-l.jpg"],
+  [["いちごM", "いちご小粒", "苺M"], "ichigo-pack.jpg"],
+  [["いちご", "イチゴ", "苺"], "ichigo-pack.jpg"],
   [["バナナ"], "banana.jpg"],
   [["りんご", "サンふじ", "サンフジ", "ふじ"], "apple.jpg"],
 ]
@@ -110,7 +113,7 @@ const GREEN_SLIDES = [
   {
     title: "FRESH\nSALE",
     sub: "お買い得が満載",
-    products: ["ichigo.jpg", "cucumber.jpg", "cabbage-half.jpg", "piman.jpg"],
+    products: ["ichigo-pack.jpg", "cucumber.jpg", "cabbage-half.jpg", "piman.jpg"],
     cta: "セールを見る →",
     tab: "sale",
   },
@@ -286,24 +289,22 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate }) {
           }
 
           if (slide.type === "ichigo") {
-            // いちごバナー（実写写真フル表示）
+            // いちご特集バナー（Amazon風・テキスト上+実写下ドーン）
             return (
               <div key={i} style={{
                 position: i === 0 ? "relative" : "absolute", inset: 0,
                 opacity: i === bannerIdx ? 1 : 0, transition: "opacity 0.8s ease",
-                minHeight: 360,
+                background: "#dc2626", minHeight: 360, overflow: "hidden",
               }}>
-                <img src={`/products/ichigo.jpg?${IMG_VERSION}`} alt="旬のいちご"
-                  style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,.55) 0%, rgba(0,0,0,.1) 50%, transparent 100%)" }} />
-                <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, padding: "36px 24px", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.8)", letterSpacing: 3, marginBottom: 8 }}>OTOKAWA</div>
-                  <div style={{ fontSize: 34, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>旬の<br />いちご</div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,.85)", marginTop: 10 }}>福島県産 甘くてジューシー</div>
-                  <div style={{
-                    display: "inline-block", marginTop: 20, padding: "9px 22px", borderRadius: 22,
-                    background: "#fff", color: "#dc2626", fontSize: 13, fontWeight: 800, alignSelf: "flex-start",
-                  }}>商品を見る →</div>
+                {/* テキスト（上部・左寄せ） */}
+                <div style={{ position: "relative", zIndex: 2, padding: "32px 24px 0" }}>
+                  <div style={{ fontSize: 40, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>旬の<br />いちご特集</div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: "rgba(255,255,255,.85)", marginTop: 10 }}>福島県産 甘くてジューシー</div>
+                </div>
+                {/* いちご写真（下部にドーン） */}
+                <div style={{ position: "absolute", bottom: -20, right: -20, width: "75%", zIndex: 1 }}>
+                  <img src={`/products/ichigo-box-l.jpg?${IMG_VERSION}`} alt="旬のいちご"
+                    style={{ width: "100%", objectFit: "contain", filter: "drop-shadow(0 8px 30px rgba(0,0,0,.3))" }} />
                 </div>
               </div>
             )
