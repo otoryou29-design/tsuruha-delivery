@@ -156,29 +156,23 @@ function AiSavingsDiag({ products }) {
 
   if (comparisons.length === 0) return null
 
-  // 閉じた状態: コンパクトなボタン
+  // 閉じた状態: コンパクトなカード（横並び用）
   if (!open) {
     return (
-      <div onClick={() => setOpen(true)} style={{ margin: "0 10px 20px", background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
-          </div>
-          <div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>AI おトク診断</div>
-            <div style={{ fontSize: 11, color: "#64748b", marginTop: 1 }}>県内大手スーパー5社との価格比較</div>
-          </div>
+      <div onClick={() => setOpen(true)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", height: "100%", boxSizing: "border-box" }}>
+        <div style={{ width: 30, height: 30, borderRadius: 8, background: BG, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ fontSize: 18, fontWeight: 900, color: BG }}>-{avgPct}%</span>
-          <span style={{ fontSize: 16, color: "#cbd5e1" }}>›</span>
-        </div>
+        <div style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", lineHeight: 1.2 }}>AI おトク診断</div>
+        <div style={{ fontSize: 18, fontWeight: 900, color: BG, marginTop: 4 }}>-{avgPct}%</div>
+        <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 2 }}>県内平均より</div>
       </div>
     )
   }
 
   return (
-    <div style={{ margin: "0 10px 20px", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,.4)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={() => setOpen(false)}>
+    <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 400, maxHeight: "80vh", overflowY: "auto", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
       {/* ヘッダー */}
       <div onClick={() => setOpen(false)} style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", padding: "20px 20px 16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -251,6 +245,7 @@ function AiSavingsDiag({ products }) {
       <div style={{ padding: "8px 20px 14px", fontSize: 10, color: "#cbd5e1", lineHeight: 1.6 }}>
         ※ 福島県内の大手スーパー5社の平均価格との比較です。価格は時期により変動します。
       </div>
+    </div>
     </div>
   )
 }
@@ -527,21 +522,17 @@ export default function ProductsPage({ tokubaiItems, onBack, onNavigate, isHome,
       {isHome && (<>
         <style>{`@keyframes deliveryBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
 
-        {/* 納品状況（バナー下・商品タブ上） */}
-        <div onClick={() => onNavigate && onNavigate("delivery")} style={{ margin: "10px 10px 0", background: "#fff", borderRadius: 14, border: "2px solid #4d8c00", padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", animation: "deliveryBlink 2s ease-in-out infinite" }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: "#4d8c00" }}>
+        {/* 納品状況 + AI おトク診断（横並び） */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: "10px 10px 8px" }}>
+          <div onClick={() => onNavigate && onNavigate("delivery")} style={{ background: "#fff", borderRadius: 12, border: "2px solid #4d8c00", padding: "12px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", animation: "deliveryBlink 2s ease-in-out infinite" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4d8c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}><path d="M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4m-5 0v4m0-4h4m-4 0H5"/></svg>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#4d8c00", lineHeight: 1.2 }}>
               {isDelivering ? "現在納品中" : "納品状況"}
             </div>
-            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
-              {isDelivering ? "スタッフが納品を行っています" : "本日の納品をリアルタイムで確認"}
+            <div style={{ fontSize: 9, color: "#64748b", marginTop: 4 }}>
+              {isDelivering ? "納品を行っています" : "リアルタイムで確認"}
             </div>
           </div>
-          <span style={{ fontSize: 20, color: "#4d8c00" }}>→</span>
-        </div>
-
-        {/* AI おトク診断 */}
-        <div style={{ marginTop: 10 }}>
           <AiSavingsDiag products={products} />
         </div>
 
