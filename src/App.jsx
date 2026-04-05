@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import CustomerView from "./components/CustomerView";
 import ProductsPage from "./components/ProductsPage";
+import IchigoFeature from "./components/IchigoFeature";
 import { onTokubaiChange } from "./firebase";
 
 const LOGO = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_0663-lCbdMnM7y4KISTs8XZ0nH6vY73RvmP.jpg";
@@ -61,6 +62,15 @@ export default function App() {
       ))}
     </div>
   )
+
+  if (page === "ichigo") {
+    return (
+      <div style={{ fontFamily: "'Noto Sans JP', sans-serif", color: "#1a1a1a" }}>
+        <IchigoFeature onBack={() => setPage("home")} />
+        <TabBar />
+      </div>
+    )
+  }
 
   if (page === "products") {
     return (
@@ -279,7 +289,7 @@ export default function App() {
           ドン・キホーテ米沢店で青果納品 4月20日からスタート！
         </div>
       </div>
-      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery") }} isHome
+      <ProductsPage tokubaiItems={tokubaiItems} onBack={() => {}} onNavigate={(target) => { if (target === "delivery") setPage("delivery"); if (target === "ichigo") setPage("ichigo") }} isHome
         onCardTap={(tab) => { setProductTab(tab); setPage("products") }} />
       <TabBar />
     </div>
